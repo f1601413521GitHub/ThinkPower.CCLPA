@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,8 +9,16 @@ namespace ThinkPower.CCLPA.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+
         public ActionResult Index()
         {
+            _logger.Debug("Debug");
+            _logger.Info("Info");
+            _logger.Warn("Warn");
+            _logger.Error("Error");
+            _logger.Fatal("Fatal");
+
             return View();
         }
 
