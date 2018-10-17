@@ -38,14 +38,6 @@ namespace ThinkPower.CCLPA.DataAccess.DAO
 
                 return _dbConnectionICRS;
             }
-            set
-            {
-                if ((value == null) ||
-                    (value.GetType() == typeof(SqlConnection)))
-                {
-                    _dbConnectionICRS = value;
-                }
-            }
         }
 
         /// <summary>
@@ -62,14 +54,6 @@ namespace ThinkPower.CCLPA.DataAccess.DAO
                 }
 
                 return _dbConnectionCMPN;
-            }
-            set
-            {
-                if ((value == null) ||
-                    (value.GetType() == typeof(SqlConnection)))
-                {
-                    _dbConnectionCMPN = value;
-                }
             }
         }
 
@@ -88,14 +72,6 @@ namespace ThinkPower.CCLPA.DataAccess.DAO
 
                 return _dbConnectionCDRM;
             }
-            set
-            {
-                if ((value == null) ||
-                    (value.GetType() == typeof(SqlConnection)))
-                {
-                    _dbConnectionCDRM = value;
-                }
-            }
         }
 
         /// <summary>
@@ -108,7 +84,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO
         /// </summary>
         /// <param name="key">資料庫連線鍵值</param>
         /// <returns></returns>
-        protected SqlConnection GetConnection(string key)
+        private SqlConnection GetConnection(string key)
         {
             if (String.IsNullOrEmpty(key))
             {
