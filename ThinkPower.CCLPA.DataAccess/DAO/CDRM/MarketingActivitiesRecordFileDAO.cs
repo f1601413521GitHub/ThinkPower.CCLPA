@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 {
-    public class COD_ADJUSTLEVEL : BaseDAO
+    /// <summary>
+    /// 行銷活動匯入紀錄檔資料存取類別
+    /// </summary>
+    public class MarketingActivitiesRecordFileDAO : BaseDAO
     {
         /// <summary>
         /// 取得資料筆數
@@ -19,7 +22,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             using (SqlConnection connection = DbConnectionCDRM)
             {
-                SqlCommand command = new SqlCommand("SELECT Count(1) FROM COD_ADJUSTLEVEL", connection);
+                SqlCommand command = new SqlCommand("SELECT Count(1) FROM LOG_RG_ILRC", connection);
 
                 connection.Open();
 

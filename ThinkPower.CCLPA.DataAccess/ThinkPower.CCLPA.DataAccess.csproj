@@ -43,9 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAO\BaseDAO.cs" />
-    <Compile Include="DAO\CMPN\CMPN.cs" />
-    <Compile Include="DAO\CDRM\COD_ADJUSTLEVEL.cs" />
-    <Compile Include="DAO\ICRS\RG_ID.cs" />
+    <Compile Include="DAO\CDRM\MarketingActivitiesRecordFileDAO.cs" />
+    <Compile Include="DAO\CDRM\TemporaryAdjustmentPreTrialProcessingFileDAO.cs" />
+    <Compile Include="DAO\CMPN\MarketingActivityFileDAO.cs" />
+    <Compile Include="DAO\CDRM\TemporaryAdjustmentPrivilegeProfileDAO.cs" />
+    <Compile Include="DAO\ICRS\HouseholdBasicDataDAO.cs" />
     <Compile Include="Helper\DbHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

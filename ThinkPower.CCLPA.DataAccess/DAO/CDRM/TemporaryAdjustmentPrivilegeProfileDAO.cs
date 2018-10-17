@@ -5,9 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ThinkPower.CCLPA.DataAccess.DAO.CMPN
+namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 {
-    public class CMPN : BaseDAO
+    /// <summary>
+    /// 臨調權限設定檔資料存取類別
+    /// </summary>
+    public class TemporaryAdjustmentPrivilegeProfileDAO : BaseDAO
     {
         /// <summary>
         /// 取得資料筆數
@@ -17,9 +20,9 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CMPN
         {
             int count = 0;
 
-            using (SqlConnection connection = DbConnectionCMPN)
+            using (SqlConnection connection = DbConnectionCDRM)
             {
-                SqlCommand command = new SqlCommand("SELECT Count(1) FROM CMPN", connection);
+                SqlCommand command = new SqlCommand("SELECT Count(1) FROM COD_ADJUSTLEVEL", connection);
 
                 connection.Open();
 
