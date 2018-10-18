@@ -58,7 +58,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
                     validateResult = $"此行銷活動已於{recordList.ImportDate}匯入過，無法再進行匯入。";
                 }
 
-                campaignListCount = new MarketingCampaignListFileDAO().GetCampaignListCount(
+                campaignListCount = new CampaignListDAO().Count(
                    activityInfo.CampaignId);
             }
 
