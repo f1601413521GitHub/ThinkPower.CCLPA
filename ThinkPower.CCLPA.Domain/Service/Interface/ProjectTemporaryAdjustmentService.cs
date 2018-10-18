@@ -32,13 +32,13 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
                 throw new ArgumentNullException("cmpnId");
             }
 
-            MarketingActivityFileDO activityInfo = new MarketingActivityFileDAO().Get(cmpnId);
+            CampaignDO activityInfo = new CampaignDAO().Get(cmpnId);
 
             if (activityInfo == null)
             {
                 validateResult = "ILRC行銷活動編碼，輸入錯誤。";
             }
-            else if (!DateTime.TryParseExact(activityInfo.CMPN_EXPC_CLOSE_DT, "yyyyMMdd", null,
+            else if (!DateTime.TryParseExact(activityInfo.ExpectedCloseDate, "yyyyMMdd", null,
                 System.Globalization.DateTimeStyles.None, out DateTime tempCloseDate))
             {
                 throw new InvalidOperationException("Convert CMPN_EXPC_CLOSE_DT Fail");
@@ -51,7 +51,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
             if (String.IsNullOrEmpty(validateResult))
             {
                 CampaignImportLogDO recordList = new CampaignImportLogDAO().Get(
-                    activityInfo.CMPN_ID);
+                    activityInfo.CampaignId);
 
                 if (recordList != null)
                 {
@@ -59,7 +59,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
                 }
 
                 campaignListCount = new MarketingCampaignListFileDAO().GetCampaignListCount(
-                   activityInfo.CMPN_ID);
+                   activityInfo.CampaignId);
             }
 
             result = new TemporaryAdjustmentEntity()
