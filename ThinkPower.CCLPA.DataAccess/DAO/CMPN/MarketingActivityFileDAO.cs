@@ -15,28 +15,6 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CMPN
     public class MarketingActivityFileDAO : BaseDAO
     {
         /// <summary>
-        /// 取得資料筆數
-        /// </summary>
-        /// <returns>資料筆數</returns>
-        public override int Count()
-        {
-            int count = 0;
-
-            using (SqlConnection connection = DbConnectionCMPN)
-            {
-                SqlCommand command = new SqlCommand("SELECT Count(1) FROM CMPN", connection);
-
-                connection.Open();
-
-                count = Convert.ToInt32(command.ExecuteScalar());
-
-                command = null;
-            }
-
-            return count;
-        }
-
-        /// <summary>
         /// 取得行銷活動資訊
         /// </summary>
         /// <param name="cmpnId">行銷活動編號</param>
@@ -59,7 +37,7 @@ SELECT
 FROM [CMPN]
 WHERE CMPN_ID = @CMPN_ID;";
 
-            using (SqlConnection connection = DbConnectionCMPN)
+            using (SqlConnection connection = DbConnection(Connection.CMPN))
             {
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CMPN_ID", SqlDbType.VarChar) { Value = cmpnId });

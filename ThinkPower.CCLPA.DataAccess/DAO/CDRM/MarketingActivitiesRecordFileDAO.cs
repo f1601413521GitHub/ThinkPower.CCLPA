@@ -15,28 +15,6 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
     public class MarketingActivitiesRecordFileDAO : BaseDAO
     {
         /// <summary>
-        /// 取得資料筆數
-        /// </summary>
-        /// <returns>資料筆數</returns>
-        public override int Count()
-        {
-            int count = 0;
-
-            using (SqlConnection connection = DbConnectionCDRM)
-            {
-                SqlCommand command = new SqlCommand("SELECT Count(1) FROM LOG_RG_ILRC", connection);
-
-                connection.Open();
-
-                count = Convert.ToInt32(command.ExecuteScalar());
-
-                command = null;
-            }
-
-            return count;
-        }
-
-        /// <summary>
         /// 取得行銷活動匯入紀錄檔
         /// </summary>
         /// <param name="cmpnId">行銷活動編號</param>
@@ -57,7 +35,7 @@ SELECT
 FROM [LOG_RG_ILRC]
 WHERE CMPN_ID = @CMPN_ID;";
 
-            using (SqlConnection connection = DbConnectionCDRM)
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CMPN_ID", SqlDbType.VarChar) { Value = cmpnId });
