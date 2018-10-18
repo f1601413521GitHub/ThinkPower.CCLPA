@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ThinkPower.CCLPA.DataAccess.DO;
+using ThinkPower.CCLPA.DataAccess.DO.CMPN;
 
 namespace ThinkPower.CCLPA.DataAccess.DAO.CMPN
 {

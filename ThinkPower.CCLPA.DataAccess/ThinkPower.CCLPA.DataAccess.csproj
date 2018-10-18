@@ -49,11 +49,15 @@
     <Compile Include="DAO\CDRM\AdjustPermissionDAO.cs" />
     <Compile Include="DAO\CMPN\CampaignListDAO.cs" />
     <Compile Include="DAO\ICRS\AboutDataDAO.cs" />
-    <Compile Include="DO\CampaignImportLogDO.cs" />
-    <Compile Include="DO\CampaignDO.cs" />
+    <Compile Include="DO\CDRM\CampaignImportLogDO.cs" />
+    <Compile Include="DO\CMPN\CampaignDO.cs" />
+    <Compile Include="DO\CMPN\CampaignListDO.cs" />
+    <Compile Include="DO\CDRM\PreAdjustDO.cs" />
     <Compile Include="Helper\DbHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DO\ICRS\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ThinkPower.CCLPA.DataAccess.DO
+namespace ThinkPower.CCLPA.DataAccess.DO.CMPN
 {
     /// <summary>
     /// 行銷活動檔資料物件類別
