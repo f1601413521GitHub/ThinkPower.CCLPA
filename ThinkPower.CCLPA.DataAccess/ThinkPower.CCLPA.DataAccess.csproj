@@ -44,11 +44,11 @@
   <ItemGroup>
     <Compile Include="DAO\BaseDAO.cs" />
     <Compile Include="DAO\CDRM\CampaignImportLogDAO.cs" />
-    <Compile Include="DAO\CDRM\TemporaryAdjustmentPreTrialProcessingFileDAO.cs" />
+    <Compile Include="DAO\CDRM\PreAdjustDAO.cs" />
     <Compile Include="DAO\CMPN\MarketingActivityFileDAO.cs" />
-    <Compile Include="DAO\CDRM\TemporaryAdjustmentPrivilegeProfileDAO.cs" />
+    <Compile Include="DAO\CDRM\AdjustPermissionDAO.cs" />
     <Compile Include="DAO\CMPN\MarketingCampaignListFileDAO.cs" />
-    <Compile Include="DAO\ICRS\HouseholdBasicDataDAO.cs" />
+    <Compile Include="DAO\ICRS\AboutDataDAO.cs" />
     <Compile Include="DO\CampaignImportLogDO.cs" />
     <Compile Include="DO\MarketingActivityFileDO.cs" />
     <Compile Include="Helper\DbHelper.cs" />

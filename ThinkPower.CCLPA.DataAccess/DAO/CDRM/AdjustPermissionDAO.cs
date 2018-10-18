@@ -10,7 +10,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
     /// <summary>
     /// 臨調權限設定檔資料存取類別
     /// </summary>
-    public class TemporaryAdjustmentPrivilegeProfileDAO : BaseDAO
+    public class AdjustPermissionDAO : BaseDAO
     {
     }
 }

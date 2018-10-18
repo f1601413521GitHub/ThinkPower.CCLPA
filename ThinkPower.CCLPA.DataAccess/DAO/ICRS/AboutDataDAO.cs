@@ -11,7 +11,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
     /// <summary>
     /// 歸戶基本資料資料存取類別
     /// </summary>
-    public class HouseholdBasicDataDAO : BaseDAO
+    public class AboutDataDAO : BaseDAO
     {
     }
 }

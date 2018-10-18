@@ -10,7 +10,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
     /// <summary>
     /// 臨調預審處理檔資料存取類別
     /// </summary>
-    public class TemporaryAdjustmentPreTrialProcessingFileDAO : BaseDAO
+    public class PreAdjustDAO : BaseDAO
     {
     }
 }
