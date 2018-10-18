@@ -12,20 +12,20 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
     /// <summary>
     /// 行銷活動匯入紀錄檔資料存取類別
     /// </summary>
-    public class MarketingActivitiesRecordFileDAO : BaseDAO
+    public class CampaignImportLogDAO : BaseDAO
     {
         /// <summary>
         /// 取得行銷活動匯入紀錄檔
         /// </summary>
-        /// <param name="cmpnId">行銷活動編號</param>
+        /// <param name="campaignId">行銷活動編號</param>
         /// <returns>行銷活動匯入紀錄檔</returns>
-        public MarketingActivitiesRecordFileDO Get(string cmpnId)
+        public CampaignImportLogDO Get(string campaignId)
         {
-            MarketingActivitiesRecordFileDO result = null;
+            CampaignImportLogDO result = null;
 
-            if (String.IsNullOrEmpty(cmpnId))
+            if (String.IsNullOrEmpty(campaignId))
             {
-                throw new ArgumentNullException("cmpnId");
+                throw new ArgumentNullException("campaignId");
             }
 
             string query = @"
@@ -33,12 +33,15 @@ SELECT
     [CMPN_ID],[CMPN_EXPC_STRT_DT],[CMPN_EXPC_END_DT],[CNT],
     [IMPORT_USERID],[IMPORT_USERNAME],[IMPORT_DT]
 FROM [LOG_RG_ILRC]
-WHERE CMPN_ID = @CMPN_ID;";
+WHERE CMPN_ID = @CampaignId;";
 
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CMPN_ID", SqlDbType.VarChar) { Value = cmpnId });
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.VarChar)
+                {
+                    Value = campaignId
+                });
 
                 connection.Open();
 
@@ -48,7 +51,7 @@ WHERE CMPN_ID = @CMPN_ID;";
 
                 if (dt.Rows.Count == 1)
                 {
-                    result = ConvertDataObject(dt.Rows[0]);
+                    result = ConvertCampaignImportLogDO(dt.Rows[0]);
                 }
 
                 adapter = null;
@@ -62,19 +65,19 @@ WHERE CMPN_ID = @CMPN_ID;";
         /// <summary>
         /// 轉換行銷活動匯入紀錄資訊
         /// </summary>
-        /// <param name="recordInfo">行銷活動匯入紀錄資訊</param>
+        /// <param name="importLog">行銷活動匯入紀錄資訊</param>
         /// <returns>行銷活動匯入紀錄資訊</returns>
-        private MarketingActivitiesRecordFileDO ConvertDataObject(DataRow recordInfo)
+        private CampaignImportLogDO ConvertCampaignImportLogDO(DataRow importLog)
         {
-            return new MarketingActivitiesRecordFileDO()
+            return new CampaignImportLogDO()
             {
-                CMPN_ID = recordInfo.Field<string>("CMPN_ID"),
-                CMPN_EXPC_STRT_DT = recordInfo.Field<string>("CMPN_EXPC_STRT_DT"),
-                CMPN_EXPC_END_DT = recordInfo.Field<string>("CMPN_EXPC_END_DT"),
-                CNT = recordInfo.Field<decimal?>("CNT"),
-                IMPORT_USERID = recordInfo.Field<string>("IMPORT_USERID"),
-                IMPORT_USERNAME = recordInfo.Field<string>("IMPORT_USERNAME"),
-                IMPORT_DT = recordInfo.Field<string>("IMPORT_DT"),
+                CampaignId = importLog.Field<string>("CMPN_ID"),
+                ExpectedStartDate = importLog.Field<string>("CMPN_EXPC_STRT_DT"),
+                ExpectedEndDate = importLog.Field<string>("CMPN_EXPC_END_DT"),
+                Count = importLog.Field<decimal?>("CNT"),
+                ImportUserId = importLog.Field<string>("IMPORT_USERID"),
+                ImportUserName = importLog.Field<string>("IMPORT_USERNAME"),
+                ImportDate = importLog.Field<string>("IMPORT_DT"),
             };
         }
     }

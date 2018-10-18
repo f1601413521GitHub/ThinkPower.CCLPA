@@ -50,12 +50,12 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
 
             if (String.IsNullOrEmpty(validateResult))
             {
-                MarketingActivitiesRecordFileDO recordList = new MarketingActivitiesRecordFileDAO().Get(
+                CampaignImportLogDO recordList = new CampaignImportLogDAO().Get(
                     activityInfo.CMPN_ID);
 
                 if (recordList != null)
                 {
-                    validateResult = $"此行銷活動已於{recordList.IMPORT_DT}匯入過，無法再進行匯入。";
+                    validateResult = $"此行銷活動已於{recordList.ImportDate}匯入過，無法再進行匯入。";
                 }
 
                 campaignListCount = new MarketingCampaignListFileDAO().GetCampaignListCount(
