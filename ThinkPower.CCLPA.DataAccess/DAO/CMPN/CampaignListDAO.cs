@@ -13,8 +13,9 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CMPN
         /// 取得行銷活動名單數量
         /// </summary>
         /// <param name="campaignId">行銷活動編號</param>
+        /// <param name="executionPathway">預估執行通路</param>
         /// <returns>行銷活動名單數量</returns>
-        public int Count(string campaignId)
+        public int Count(string campaignId, decimal? executionPathway)
         {
             int result = 0;
 
@@ -26,7 +27,8 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CMPN
             string query = @"
 SELECT COUNT(1)
 FROM [CMPN_AVY_CNL_EXBOOK]
-WHERE CMPN_ID = @CampaignId;";
+WHERE CMPN_ID = @CampaignId
+    AND CMPN_CNL_ID = @ExecutionPathway;";
 
             using (SqlConnection connection = DbConnection(Connection.CMPN))
             {
@@ -34,6 +36,10 @@ WHERE CMPN_ID = @CampaignId;";
                 command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.VarChar)
                 {
                     Value = campaignId
+                });
+                command.Parameters.Add(new SqlParameter("@ExecutionPathway", SqlDbType.Decimal)
+                {
+                    Value = executionPathway
                 });
 
                 connection.Open();

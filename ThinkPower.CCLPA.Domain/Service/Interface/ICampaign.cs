@@ -26,7 +26,8 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// 取得行銷活動名單數量
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
+        /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        int? CampaignListCount(string campaignId);
+        int? CampaignListCount(string campaignId, decimal? executionPathway);
     }
 }
