@@ -48,6 +48,11 @@ body {
         font-weight: bold;
     }
 
+
+.layout-body-right {
+    padding: 30px;
+}
+
 .layout-footer {
     background-color: #C2C2C2;
 }
