@@ -44,18 +44,18 @@ VALUES
                 foreach (PreAdjustDO preAdjust in preAdjustList)
                 {
                     command.Parameters.Clear();
-                    command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.VarChar) { Value = preAdjust.CampaignId ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@Id", SqlDbType.VarChar) { Value = preAdjust.Id ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.VarChar) { Value = preAdjust.ProjectName ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.Id ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.NVarChar) { Value = preAdjust.ProjectName ?? Convert.DBNull });
                     command.Parameters.Add(new SqlParameter("@ProjectAmount", SqlDbType.Decimal) { Value = preAdjust.ProjectAmount ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.VarChar) { Value = preAdjust.CloseDate ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ImportDate", SqlDbType.VarChar) { Value = preAdjust.ImportDate ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ChineseName", SqlDbType.VarChar) { Value = preAdjust.ChineseName ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@Kind", SqlDbType.VarChar) { Value = preAdjust.Kind ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@Status", SqlDbType.VarChar) { Value = preAdjust.Status ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ClosingDay", SqlDbType.VarChar) { Value = preAdjust.ClosingDay ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@PayDeadline", SqlDbType.VarChar) { Value = preAdjust.PayDeadline ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@MobileTel", SqlDbType.VarChar) { Value = preAdjust.MobileTel ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar) { Value = preAdjust.CloseDate ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@ImportDate", SqlDbType.NVarChar) { Value = preAdjust.ImportDate ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@ChineseName", SqlDbType.NVarChar) { Value = preAdjust.ChineseName ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@Kind", SqlDbType.NVarChar) { Value = preAdjust.Kind ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@Status", SqlDbType.NVarChar) { Value = preAdjust.Status ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@ClosingDay", SqlDbType.NVarChar) { Value = preAdjust.ClosingDay ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@PayDeadline", SqlDbType.NVarChar) { Value = preAdjust.PayDeadline ?? Convert.DBNull });
+                    command.Parameters.Add(new SqlParameter("@MobileTel", SqlDbType.NVarChar) { Value = preAdjust.MobileTel ?? Convert.DBNull });
 
                     command.ExecuteNonQuery();
                 }

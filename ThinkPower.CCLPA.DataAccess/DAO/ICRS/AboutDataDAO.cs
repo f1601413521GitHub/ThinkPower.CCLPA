@@ -37,7 +37,7 @@ WHERE ACCT_ID =@CustomerId;";
             using (SqlConnection connection = DbConnection(Connection.ICRS))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CustomerId", SqlDbType.VarChar)
+                command.Parameters.Add(new SqlParameter("@CustomerId", SqlDbType.NVarChar)
                 {
                     Value = customerId
                 });

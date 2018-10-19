@@ -38,7 +38,7 @@ WHERE CMPN_ID = @CampaignId;";
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.VarChar)
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
                 {
                     Value = campaignId
                 });
@@ -101,13 +101,13 @@ VALUES
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.VarChar) { Value = importLog.CampaignId });
-                command.Parameters.Add(new SqlParameter("@ExpectedStartDate", SqlDbType.VarChar) { Value = importLog.ExpectedStartDate });
-                command.Parameters.Add(new SqlParameter("@ExpectedEndDate", SqlDbType.VarChar) { Value = importLog.ExpectedEndDate });
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = importLog.CampaignId });
+                command.Parameters.Add(new SqlParameter("@ExpectedStartDate", SqlDbType.NVarChar) { Value = importLog.ExpectedStartDate });
+                command.Parameters.Add(new SqlParameter("@ExpectedEndDate", SqlDbType.NVarChar) { Value = importLog.ExpectedEndDate });
                 command.Parameters.Add(new SqlParameter("@Count", SqlDbType.Decimal) { Value = importLog.Count ?? Convert.DBNull });
-                command.Parameters.Add(new SqlParameter("@ImportUserId", SqlDbType.VarChar) { Value = importLog.ImportUserId });
-                command.Parameters.Add(new SqlParameter("@ImportUserName", SqlDbType.VarChar) { Value = importLog.ImportUserName });
-                command.Parameters.Add(new SqlParameter("@ImportDate", SqlDbType.VarChar) { Value = importLog.ImportDate });
+                command.Parameters.Add(new SqlParameter("@ImportUserId", SqlDbType.NVarChar) { Value = importLog.ImportUserId });
+                command.Parameters.Add(new SqlParameter("@ImportUserName", SqlDbType.NVarChar) { Value = importLog.ImportUserName });
+                command.Parameters.Add(new SqlParameter("@ImportDate", SqlDbType.NVarChar) { Value = importLog.ImportDate });
 
                 connection.Open();
                 command.ExecuteNonQuery();

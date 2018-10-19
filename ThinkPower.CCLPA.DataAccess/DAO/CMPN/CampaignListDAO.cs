@@ -35,7 +35,7 @@ WHERE CMPN_ID = @CampaignId
             using (SqlConnection connection = DbConnection(Connection.CMPN))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.VarChar)
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
                 {
                     Value = campaignId
                 });
@@ -82,7 +82,7 @@ WHERE CMPN_ID = @CampaignId
             using (SqlConnection connection = DbConnection(Connection.CMPN))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.VarChar)
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
                 {
                     Value = campaignId
                 });
