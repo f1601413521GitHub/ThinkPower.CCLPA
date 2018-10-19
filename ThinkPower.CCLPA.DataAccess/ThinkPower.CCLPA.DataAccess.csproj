@@ -53,11 +53,10 @@
     <Compile Include="DO\CMPN\CampaignDO.cs" />
     <Compile Include="DO\CMPN\CampaignListDO.cs" />
     <Compile Include="DO\CDRM\PreAdjustDO.cs" />
+    <Compile Include="DO\ICRS\AboutDataDO.cs" />
     <Compile Include="Helper\DbHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DO\ICRS\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
