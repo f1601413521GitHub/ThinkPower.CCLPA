@@ -23,8 +23,10 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// 匯入預審名單
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
+        /// <param name="userId">登入帳號</param>
+        /// <param name="userName">登入姓名</param>
         /// <returns></returns>
-        object ImportPreAdjust(string campaignId);
+        ValidatePreAdjustResultDTO ImportPreAdjust(string campaignId, string userId, string userName);
 
         /// <summary>
         /// 處理預審名單
