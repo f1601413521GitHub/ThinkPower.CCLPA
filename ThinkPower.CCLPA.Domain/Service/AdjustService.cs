@@ -123,12 +123,16 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
             else if (!String.IsNullOrEmpty(validateResult.ErrorMessage))
             {
-                result.ValidateMessage = validateResult.ErrorMessage;
+                result = new ImportPreAdjustResultDTO()
+                {
+                    ValidateMessage = validateResult.ErrorMessage,
+                };
+
                 return result;
             }
 
 
-            //新增到行銷活動匯入紀錄檔(LOG_RG_ILRC)、臨調預審處理檔(RG_PADJUST)
+
             CampaignDO campaignInfo = CampaignService.GetCampaign(campaignId);
 
             if (campaignInfo == null)
@@ -226,6 +230,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             SaveCampaignData(importLog, preAdjustList);
 
+            result = new ImportPreAdjustResultDTO();
 
             return result;
         }
