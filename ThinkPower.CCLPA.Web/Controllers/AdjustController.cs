@@ -9,7 +9,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
     /// <summary>
     /// 專案臨調
     /// </summary>
-    public class TemporaryAdjustmentController : Controller
+    public class AdjustController : Controller
     {
         /// <summary>
         /// 預設首頁
