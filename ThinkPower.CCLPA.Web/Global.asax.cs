@@ -20,7 +20,7 @@ namespace ThinkPower.CCLPA.Web
 
         protected void Session_Start(Object send, EventArgs e)
         {
-            Session["UserId"] = 14260;
+            Session["UserId"] = "14260";
             Session["UserName"] = "User14260";
         }
     }

@@ -1,9 +1,9 @@
 ﻿namespace ThinkPower.CCLPA.Web.ActionModels
 {
     /// <summary>
-    /// 檢核預審名單資料模型類別
+    /// 匯入預審名單資料模型類別
     /// </summary>
-    public class ValidatePreAdjustActionModel
+    public class ImportPreAdjustActionModel
     {
         /// <summary>
         /// 行銷活動代碼

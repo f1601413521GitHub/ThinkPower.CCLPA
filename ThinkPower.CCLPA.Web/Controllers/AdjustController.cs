@@ -49,6 +49,16 @@ namespace ThinkPower.CCLPA.Web.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 顯示預審名單匯入畫面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult PreAdjustImportPage()
+        {
+            return View("ValidatePreAdjust");
+        }
+
         /// <summary>
         /// 進行預審名單檢核動作
         /// </summary>
@@ -66,13 +76,54 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     throw new ArgumentNullException("actionModel");
                 }
 
-                ValidatePreAdjustResultDTO validatePreAdjustResult = AdjService.
+                ValidatePreAdjustResultDTO validateResult = AdjService.
                     ValidatePreAdjust(actionModel.CampaignId);
 
                 viewModel = new ValidatePreAdjustViewModel()
                 {
-                    ValidatePreAdjustResult = validatePreAdjustResult ??
+                    CampaignId = actionModel.CampaignId,
+                    ValidatePreAdjustResult = validateResult ??
                             throw new InvalidOperationException("ValidatePreAdjustResult not found")
+                };
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                ModelState.AddModelError("", _systemErrorMsg);
+            }
+
+            return View(viewModel);
+        }
+
+
+        /// <summary>
+        /// 進行預審名單匯入動作
+        /// </summary>
+        /// <param name="actionModel">來源資料</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult ImportPreAdjust(ImportPreAdjustActionModel actionModel)
+        {
+            ImportPreAdjustViewModel viewModel = null;
+
+            try
+            {
+                if (actionModel == null)
+                {
+                    throw new ArgumentNullException("actionModel");
+                }
+
+                ImportPreAdjustResultDTO importResult = AdjService.ImportPreAdjust(actionModel.CampaignId,
+                    Session["UserId"] as string, Session["UserName"] as string);
+
+                if (importResult == null)
+                {
+                    throw new InvalidOperationException("importResult not found");
+                }
+
+                viewModel = new ImportPreAdjustViewModel()
+                {
+                    ValidateMessage = importResult.ValidateMessage,
                 };
             }
             catch (Exception e)
