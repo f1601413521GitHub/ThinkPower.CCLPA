@@ -80,5 +80,40 @@ WHERE CMPN_ID = @CampaignId;";
                 ImportDate = importLog.Field<string>("IMPORT_DT"),
             };
         }
+
+        /// <summary>
+        /// 新增行銷活動匯入資料
+        /// </summary>
+        /// <param name="importLog">行銷活動匯入資料</param>
+        public void Insert(CampaignImportLogDO importLog)
+        {
+            if (importLog == null)
+            {
+                throw new ArgumentNullException("importLog");
+            }
+
+            string query = @"
+INSERT INTO [LOG_RG_ILRC]
+    ([CMPN_ID],[CMPN_EXPC_STRT_DT],[CMPN_EXPC_END_DT],[CNT],[IMPORT_USERID],[IMPORT_USERNAME],[IMPORT_DT])
+VALUES
+    (@CampaignId,@ExpectedStartDate,@ExpectedEndDate,@Count,@ImportUserId,@ImportUserName,@ImportDate);";
+
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.VarChar) { Value = importLog.CampaignId });
+                command.Parameters.Add(new SqlParameter("@ExpectedStartDate", SqlDbType.VarChar) { Value = importLog.ExpectedStartDate });
+                command.Parameters.Add(new SqlParameter("@ExpectedEndDate", SqlDbType.VarChar) { Value = importLog.ExpectedEndDate });
+                command.Parameters.Add(new SqlParameter("@Count", SqlDbType.Decimal) { Value = importLog.Count ?? Convert.DBNull });
+                command.Parameters.Add(new SqlParameter("@ImportUserId", SqlDbType.VarChar) { Value = importLog.ImportUserId });
+                command.Parameters.Add(new SqlParameter("@ImportUserName", SqlDbType.VarChar) { Value = importLog.ImportUserName });
+                command.Parameters.Add(new SqlParameter("@ImportDate", SqlDbType.VarChar) { Value = importLog.ImportDate });
+
+                connection.Open();
+                command.ExecuteNonQuery();
+
+                command = null;
+            }
+        }
     }
 }
