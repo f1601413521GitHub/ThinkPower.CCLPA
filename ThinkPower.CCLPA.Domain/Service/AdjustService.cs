@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DAO.CMPN;
-using ThinkPower.CCLPA.DataAccess.DO;
+using ThinkPower.CCLPA.DataAccess.DO.CDRM;
+using ThinkPower.CCLPA.DataAccess.DO.CMPN;
 using ThinkPower.CCLPA.Domain.DTO;
-using ThinkPower.CCLPA.Domain.Entity;
 using ThinkPower.CCLPA.Domain.Service.Interface;
 
 namespace ThinkPower.CCLPA.Domain.Service
@@ -17,28 +17,35 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// </summary>
     public class AdjustService : IAdjust
     {
-        private CampaignDO _campaignInfo;
-        private CampaignImportLogDO _importLog;
+        private CampaignService _campaignService;
 
+        /// <summary>
+        /// 行銷活動服務
+        /// </summary>
+        public CampaignService CampaignService
+        {
+            get
+            {
+                if (_campaignService == null)
+                {
+                    _campaignService = new CampaignService();
+                }
 
+                return _campaignService;
+            }
+        }
 
         public AdjustService() { }
 
         /// <summary>
-        /// 此建構函式可設定：行銷活動預估結案日期、行銷活動匯入紀錄檔。
+        /// 此建構函示可設定行銷活動服務來源。
         /// </summary>
-        /// <param name="campaignInfo">行銷活動檔</param>
-        /// <param name="importLog">行銷活動匯入紀錄檔</param>
-        public AdjustService(CampaignDO campaignInfo, CampaignImportLogDO importLog = null)
+        /// <param name="campaignService"></param>
+        public AdjustService(CampaignService campaignService)
         {
-            if (campaignInfo != null)
+            if (campaignService != null)
             {
-                _campaignInfo = campaignInfo;
-            }
-
-            if (importLog != null)
-            {
-                _importLog = importLog;
+                _campaignService = campaignService;
             }
         }
 
@@ -60,12 +67,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new ArgumentNullException("campaignId");
             }
 
-            CampaignDO campaignInfo = new CampaignDAO().Get(campaignId);
-
-            if (_campaignInfo != null)
-            {
-                campaignInfo = _campaignInfo;
-            }
+            CampaignDO campaignInfo = CampaignService.GetCampaign(campaignId);
 
             if (campaignInfo == null)
             {
@@ -82,13 +84,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
             else
             {
-                CampaignImportLogDO importLogInfo = new CampaignImportLogDAO().
-                    Get(campaignInfo.CampaignId);
-
-                if (_importLog != null)
-                {
-                    importLogInfo = _importLog;
-                }
+                CampaignImportLogDO importLogInfo = CampaignService.GetImportLog(campaignInfo.CampaignId);
 
                 if (importLogInfo != null)
                 {
@@ -97,9 +93,11 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
+
             if (String.IsNullOrEmpty(validateMsg))
             {
-                campaignListCount = new CampaignListDAO().Count(campaignInfo.CampaignId);
+                campaignListCount = CampaignService.CampaignListCount(campaignInfo.CampaignId, 
+                    campaignInfo.ExecutionPathway);
             }
 
 
@@ -122,11 +120,8 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
         /// <returns></returns>
-        public void ImportPreAdjust(string campaignId)
+        public object ImportPreAdjust(string campaignId)
         {
-            //Entity: 新增到行銷活動匯入紀錄檔(LOG_RG_ILRC)、臨調預審處理檔(RG_PADJUST)
-            //MarketingActivitiesRecordEntity
-            //TemporaryAdjustmentPreTrialProcessingEntity
             throw new NotImplementedException();
         }
 

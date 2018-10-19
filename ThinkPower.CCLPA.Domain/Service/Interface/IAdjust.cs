@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ThinkPower.CCLPA.Domain.DTO;
-using ThinkPower.CCLPA.Domain.Entity;
 
 namespace ThinkPower.CCLPA.Domain.Service.Interface
 {
@@ -25,7 +24,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
         /// <returns></returns>
-        void ImportPreAdjust(string campaignId);
+        object ImportPreAdjust(string campaignId);
 
         /// <summary>
         /// 處理預審名單
