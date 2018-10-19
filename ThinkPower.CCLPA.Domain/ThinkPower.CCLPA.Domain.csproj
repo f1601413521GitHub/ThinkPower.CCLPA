@@ -44,8 +44,10 @@
     <Compile Include="DTO\ValidatePreAdjustResultDTO.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\CampaignService.cs" />
     <Compile Include="Service\Interface\IAdjust.cs" />
     <Compile Include="Service\AdjustService.cs" />
+    <Compile Include="Service\Interface\ICampaign.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resource\" />
