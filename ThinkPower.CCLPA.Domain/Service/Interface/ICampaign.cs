@@ -1,4 +1,5 @@
-﻿using ThinkPower.CCLPA.DataAccess.DO.CDRM;
+﻿using System.Collections.Generic;
+using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DO.CMPN;
 
 namespace ThinkPower.CCLPA.Domain.Service.Interface
@@ -28,6 +29,14 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        int? CampaignListCount(string campaignId, decimal? executionPathway);
+        int? GetCampaignListCount(string campaignId, decimal? executionPathway);
+
+        /// <summary>
+        /// 取得行銷活動名單
+        /// </summary>
+        /// <param name="campaignId">行銷活動代號</param>
+        /// <param name="executionPathway">預估執行通路</param>
+        /// <returns></returns>
+        IEnumerable<CampaignListDO> GetCampaignList(string campaignId, decimal? executionPathway);
     }
 }

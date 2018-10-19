@@ -11,11 +11,6 @@
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        /// 行銷活動代號
-        /// </summary>
-        public string CampaignId { get; set; }
-
-        /// <summary>
         /// 預審名單數量
         /// </summary>
         public int? CampaignListCount { get; set; }
