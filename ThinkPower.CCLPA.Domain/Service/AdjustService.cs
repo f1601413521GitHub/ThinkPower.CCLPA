@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
+using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DAO.ICRS;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DO.CMPN;
@@ -33,33 +35,11 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
         }
 
-
-
-
-
-        public AdjustService() { }
-
-        /// <summary>
-        /// 此建構函示可設定行銷活動服務來源。
-        /// </summary>
-        /// <param name="campaignService"></param>
-        public AdjustService(CampaignService campaignService)
-        {
-            if (campaignService != null)
-            {
-                _campaignService = campaignService;
-            }
-        }
-
-
-
-
-
         /// <summary>
         /// 檢核預審名單
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
-        /// <returns></returns>
+        /// <returns>檢核結果</returns>
         public ValidatePreAdjustResultDTO ValidatePreAdjust(string campaignId)
         {
             ValidatePreAdjustResultDTO result = null;
@@ -122,10 +102,11 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="userId">登入帳號</param>
         /// <param name="userName">登入姓名</param>
-        /// <returns></returns>
-        public ValidatePreAdjustResultDTO ImportPreAdjust(string campaignId, string userId, 
+        /// <returns>處理結果</returns>
+        public ImportPreAdjustResultDTO ImportPreAdjust(string campaignId, string userId,
             string userName)
         {
+            ImportPreAdjustResultDTO result = null;
 
             if (String.IsNullOrEmpty(campaignId))
             {
@@ -142,7 +123,8 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
             else if (!String.IsNullOrEmpty(validateResult.ErrorMessage))
             {
-                return validateResult;
+                result.ValidateMessage = validateResult.ErrorMessage;
+                return result;
             }
 
 
@@ -226,7 +208,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 }
 
                 tempPreAdjust = null;
-                tempPreAdjust = preAdjustList.FirstOrDefault(x=>x.Id == item.CustomerId);
+                tempPreAdjust = preAdjustList.FirstOrDefault(x => x.Id == item.CustomerId);
 
                 if (tempPreAdjust == null)
                 {
@@ -241,7 +223,11 @@ namespace ThinkPower.CCLPA.Domain.Service
                 tempPreAdjust.MobileTel = aboutData.MobileTel;
             }
 
-            return validateResult;
+
+            SaveCampaignData(importLog, preAdjustList);
+
+
+            return result;
         }
 
         /// <summary>
@@ -261,5 +247,35 @@ namespace ThinkPower.CCLPA.Domain.Service
         }
 
 
+
+
+
+
+
+        /// <summary>
+        /// 紀錄行銷活動匯入紀錄與臨調預審處理檔
+        /// </summary>
+        /// <param name="importLog">行銷活動匯入紀錄</param>
+        /// <param name="preAdjustList">臨調預審處理檔資料集合</param>
+        /// <returns></returns>
+        private void SaveCampaignData(CampaignImportLogDO importLog, List<PreAdjustDO> preAdjustList)
+        {
+            if (importLog == null)
+            {
+                throw new ArgumentNullException("importLog");
+            }
+            else if ((preAdjustList == null) || (preAdjustList.Count == 0))
+            {
+                throw new ArgumentNullException("preAdjustList");
+            }
+
+            using (TransactionScope scope = new TransactionScope())
+            {
+                new CampaignImportLogDAO().Insert(importLog);
+                new PreAdjustDAO().Insert(preAdjustList);
+
+                scope.Complete();
+            }
+        }
     }
 }

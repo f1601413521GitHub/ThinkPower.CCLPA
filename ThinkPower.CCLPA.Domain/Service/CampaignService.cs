@@ -13,35 +13,6 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// </summary>
     public class CampaignService : ICampaign
     {
-        private CampaignDO _campaignInfo;
-        private CampaignImportLogDO _importLog;
-
-
-
-
-        public CampaignService() { }
-
-        /// <summary>
-        /// 此建構函式可設定：行銷活動檔、行銷活動匯入紀錄檔。
-        /// </summary>
-        /// <param name="campaignInfo">行銷活動檔</param>
-        /// <param name="importLog">行銷活動匯入紀錄檔</param>
-        public CampaignService(CampaignDO campaignInfo, CampaignImportLogDO importLog = null)
-        {
-            if (campaignInfo != null)
-            {
-                _campaignInfo = campaignInfo;
-            }
-
-            if (importLog != null)
-            {
-                _importLog = importLog;
-            }
-        }
-
-
-
-
         /// <summary>
         /// 取得行銷活動資訊
         /// </summary>
@@ -56,14 +27,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new ArgumentNullException("campaignId");
             }
 
-            if (_campaignInfo != null)
-            {
-                campaign = _campaignInfo;
-            }
-            else
-            {
-                campaign = new CampaignDAO().Get(campaignId);
-            }
+            campaign = new CampaignDAO().Get(campaignId);
 
             return campaign;
         }
@@ -82,14 +46,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new ArgumentNullException("campaignId");
             }
 
-            if (_importLog != null)
-            {
-                importLogInfo = _importLog;
-            }
-            else
-            {
-                importLogInfo = new CampaignImportLogDAO().Get(campaignId);
-            }
+            importLogInfo = new CampaignImportLogDAO().Get(campaignId);
 
             return importLogInfo;
         }
