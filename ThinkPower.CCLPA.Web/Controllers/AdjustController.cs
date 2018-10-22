@@ -33,12 +33,20 @@ namespace ThinkPower.CCLPA.Web.Controllers
             {
                 if (_adjustService == null)
                 {
-                    _adjustService = new AdjustService();
+                    _adjustService = new AdjustService(new UserInfoDTO()
+                    {
+                        Id = Session["UserId"] as string,
+                        Name = Session["UserName"] as string,
+                    });
                 }
 
                 return _adjustService;
             }
         }
+
+
+
+
 
         /// <summary>
         /// 預設首頁
@@ -56,45 +64,8 @@ namespace ThinkPower.CCLPA.Web.Controllers
         /// <returns></returns>
         public ActionResult PreAdjustImportPage()
         {
-            return View("ValidatePreAdjust");
+            return View("PreAdjustImport");
         }
-
-        /// <summary>
-        /// 進行預審名單檢核動作
-        /// </summary>
-        /// <param name="actionModel">來源資料</param>
-        /// <returns></returns>
-        [HttpGet]
-        public ActionResult ValidatePreAdjust(ValidatePreAdjustActionModel actionModel)
-        {
-            ValidatePreAdjustViewModel viewModel = null;
-
-            try
-            {
-                if (actionModel == null)
-                {
-                    throw new ArgumentNullException("actionModel");
-                }
-
-                ValidatePreAdjustResultDTO validateResult = AdjService.
-                    ValidatePreAdjust(actionModel.CampaignId);
-
-                viewModel = new ValidatePreAdjustViewModel()
-                {
-                    CampaignId = actionModel.CampaignId,
-                    ValidatePreAdjustResult = validateResult ??
-                            throw new InvalidOperationException("ValidatePreAdjustResult not found")
-                };
-            }
-            catch (Exception e)
-            {
-                logger.Error(e);
-                ModelState.AddModelError("", _systemErrorMsg);
-            }
-
-            return View(viewModel);
-        }
-
 
         /// <summary>
         /// 進行預審名單匯入動作
@@ -102,9 +73,13 @@ namespace ThinkPower.CCLPA.Web.Controllers
         /// <param name="actionModel">來源資料</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult ImportPreAdjust(ImportPreAdjustActionModel actionModel)
+        public ActionResult PreAdjustImport(PreAdjustImportActionModel actionModel)
         {
-            ImportPreAdjustViewModel viewModel = null;
+            PreAdjustImportViewModel viewModel = null;
+            string campaignId = null;
+            string errorMessage = null;
+            int? campaignDetailCount = null;
+            bool executeImport = false;
 
             try
             {
@@ -113,24 +88,40 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     throw new ArgumentNullException("actionModel");
                 }
 
-                ImportPreAdjustResultDTO importResult = AdjService.ImportPreAdjust(actionModel.CampaignId,
-                    Session["UserId"] as string, Session["UserName"] as string);
+                campaignDetailCount = AdjService.ImportPreAdjust(actionModel.CampaignId,
+                    actionModel.ExecuteImport);
 
-                if (importResult == null)
+                campaignId = actionModel.CampaignId;
+                executeImport = actionModel.ExecuteImport;
+            }
+            catch (InvalidOperationException e)
+            {
+                string errorMsg = e.Data["ErrorMsg"] as string;
+
+                if (!String.IsNullOrEmpty(errorMsg))
                 {
-                    throw new InvalidOperationException("importResult not found");
+                    errorMessage = errorMsg;
+                }
+                else
+                {
+                    logger.Error(e);
+                    errorMessage = _systemErrorMsg;
                 }
 
-                viewModel = new ImportPreAdjustViewModel()
-                {
-                    ValidateMessage = importResult.ValidateMessage,
-                };
             }
             catch (Exception e)
             {
                 logger.Error(e);
-                ModelState.AddModelError("", _systemErrorMsg);
+                errorMessage = _systemErrorMsg;
             }
+
+            viewModel = new PreAdjustImportViewModel()
+            {
+                CampaignId = campaignId,
+                ErrorMessage = errorMessage,
+                CampaignDetailCount = campaignDetailCount,
+                ExecuteImport = executeImport,
+            };
 
             return View(viewModel);
         }

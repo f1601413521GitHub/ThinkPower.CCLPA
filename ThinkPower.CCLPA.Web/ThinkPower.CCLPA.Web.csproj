@@ -153,8 +153,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionModels\ImportPreAdjustActionModel.cs" />
-    <Compile Include="ActionModels\ValidatePreAdjustActionModel.cs" />
+    <Compile Include="ActionModels\PreAdjustImportActionModel.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -163,8 +162,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\ImportPreAdjustViewModel.cs" />
-    <Compile Include="ViewModels\ValidatePreAdjustViewModel.cs" />
+    <Compile Include="ViewModels\PreAdjustImportViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -249,8 +247,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Adjust\Index.cshtml" />
-    <Content Include="Views\Adjust\ValidatePreAdjust.cshtml" />
-    <Content Include="Views\Adjust\ImportPreAdjust.cshtml" />
+    <Content Include="Views\Adjust\PreAdjustImport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

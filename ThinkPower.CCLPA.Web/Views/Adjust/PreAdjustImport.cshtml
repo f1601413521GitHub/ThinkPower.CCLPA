@@ -1,11 +1,7 @@
-﻿@model ThinkPower.CCLPA.Web.ViewModels.ValidatePreAdjustViewModel
+﻿@model ThinkPower.CCLPA.Web.ViewModels.PreAdjustImportViewModel
 
 @{
-    ViewBag.Title = "ValidatePreAdjust";
-
-    var validateInfo = (Model == null) || (Model.ValidatePreAdjustResult == null) ? null :
-        Model.ValidatePreAdjustResult;
-
+    ViewBag.Title = "PreAdjustImport";
 }
 
 
@@ -13,7 +9,12 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 </div>
 
-@using (Html.BeginForm("ValidatePreAdjust", "Adjust", FormMethod.Get))
+
+
+
+
+
+@using (Html.BeginForm("PreAdjustImport", "Adjust", FormMethod.Get))
 {
     <div class="row">
         <div class="col col-auto">
@@ -36,26 +37,36 @@
     </div>
 }
 
+
+
+
+
+
 <div class="row">
 
-    @if (validateInfo != null)
+    @if (Model != null)
     {
         var title = String.Empty;
         var msg = String.Empty;
-        var importFlag = false;
+        var executeImport = false;
 
-        if (!String.IsNullOrEmpty(validateInfo.ErrorMessage))
+        if (Model.ExecuteImport)
+        {
+            title = "提示訊息";
+            msg = "名單匯入完成";
+        }
+        else if (!String.IsNullOrEmpty(Model.ErrorMessage))
         {
             title = "檢核錯誤提示訊息";
-            msg = validateInfo.ErrorMessage;
+            msg = Model.ErrorMessage;
         }
-        else if (String.IsNullOrEmpty(validateInfo.ErrorMessage))
+        else if (String.IsNullOrEmpty(Model.ErrorMessage))
         {
-            if (validateInfo.CampaignListCount > 0)
+            if (Model.CampaignDetailCount > 0)
             {
                 title = "提示訊息";
-                msg = $"您確定要將行銷活動編號「{Model.CampaignId}」合計{validateInfo.CampaignListCount}筆資料，進行匯入作業嗎?";
-                importFlag = true;
+                msg = $"您確定要將行銷活動編號「{Model.CampaignId}」合計{Model.CampaignDetailCount}筆資料，進行匯入作業嗎?";
+                executeImport = true;
             }
             else
             {
@@ -77,9 +88,13 @@
                         <p>@msg</p>
                     </div>
                     <div class="modal-footer">
-                        @if (importFlag)
+                        @if (Model.ExecuteImport)
                         {
-                            @Html.ActionLink("確定", "ImportPreAdjust", "Adjust",new { CampaignId = Model.CampaignId },new { @class = "btn btn-primary" })
+                            @Html.ActionLink("確定", "PreAdjustImportPage", "Adjust", new { }, new { @class = "btn btn-primary" })
+                        }
+                        else if (executeImport)
+                        {
+                            @Html.ActionLink("確定", "PreAdjustImport", "Adjust", new { CampaignId = Model.CampaignId, ExecuteImport = executeImport }, new { @class = "btn btn-primary" })
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                         }
                         else
