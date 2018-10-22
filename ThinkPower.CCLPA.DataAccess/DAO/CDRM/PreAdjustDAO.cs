@@ -38,11 +38,11 @@ VALUES
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
 
-                SqlCommand command = new SqlCommand(query, connection);
                 connection.Open();
 
                 foreach (PreAdjustDO preAdjust in preAdjustList)
                 {
+                    SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.Clear();
                     command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId ?? Convert.DBNull });
                     command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.Id ?? Convert.DBNull });
@@ -59,8 +59,6 @@ VALUES
 
                     command.ExecuteNonQuery();
                 }
-
-                command = null;
             }
         }
 
@@ -68,7 +66,7 @@ VALUES
         /// 取得所有等待區的預審資訊
         /// </summary>
         /// <returns>等待區預審處理資料</returns>
-        public IEnumerable<PreAdjustDO> GetAllWaitZoneData()
+        public IEnumerable<PreAdjustDO> GetAllWaitData()
         {
             List<PreAdjustDO> result = null;
 
@@ -123,7 +121,7 @@ WHERE CLOSE_DT >= @CloseDate
         /// 取得所有生效區的預審資訊
         /// </summary>
         /// <returns>生效區預審處理資料</returns>
-        public IEnumerable<PreAdjustDO> GetAllEffectZoneData()
+        public IEnumerable<PreAdjustDO> GetAllEffectData()
         {
             List<PreAdjustDO> result = null;
 
@@ -177,35 +175,36 @@ WHERE CLOSE_DT >= @CloseDate
         /// <summary>
         /// 轉換預審處理資料
         /// </summary>
-        /// <param name="preAdjustInfo">預審處理資料</param>
+        /// <param name="preAdjustData">預審處理資料</param>
         /// <returns></returns>
-        private PreAdjustDO ConvertPreAdjustDO(DataRow preAdjustInfo)
+        private PreAdjustDO ConvertPreAdjustDO(DataRow preAdjustData)
         {
-           return new PreAdjustDO(){
-               CampaignId = preAdjustInfo.Field<string>("CMPN_ID"),
-               Id = preAdjustInfo.Field<string>("ID"),
-               ProjectName = preAdjustInfo.Field<string>("PJNAME"),
-               ProjectAmount = preAdjustInfo.Field<decimal?>("PRE_AMT"),
-               CloseDate = preAdjustInfo.Field<string>("CLOSE_DT"),
-               ImportDate = preAdjustInfo.Field<string>("IMPORT_DT"),
-               ChineseName = preAdjustInfo.Field<string>("CHI_NAME"),
-               Kind = preAdjustInfo.Field<string>("KIND"),
-               SmsCheckResult = preAdjustInfo.Field<string>("SMS_CHECK"),
-               Status = preAdjustInfo.Field<string>("STATUS"),
-               ProcessingDateTime = preAdjustInfo.Field<string>("USER_PROC_DTTM"),
-               ProcessingUserId = preAdjustInfo.Field<string>("USER_ID"),
-               DeleteDateTime = preAdjustInfo.Field<string>("DEL_PROC_DTTM"),
-               DeleteUserId = preAdjustInfo.Field<string>("DEL_ID"),
-               Remark = preAdjustInfo.Field<string>("REMARK"),
-               ClosingDay = preAdjustInfo.Field<string>("STMT_CYCLE_DESC"),
-               PayDeadline = preAdjustInfo.Field<string>("PAY_DEADLINE"),
-               AgreeUserId = preAdjustInfo.Field<string>("SAGREE_ID"),
-               MobileTel = preAdjustInfo.Field<string>("MOBIL_TEL"),
-               RejectReasonCode = preAdjustInfo.Field<string>("REJECTREASON"),
-               CcasReplyCode = preAdjustInfo.Field<string>("CCAS_CODE"),
-               CcasReplyStatus = preAdjustInfo.Field<string>("CCAS_STATUS"),
-               CcasReplyDateTime = preAdjustInfo.Field<string>("CCAS_DT"),
-           };
+            return new PreAdjustDO()
+            {
+                CampaignId = preAdjustData.Field<string>("CMPN_ID"),
+                Id = preAdjustData.Field<string>("ID"),
+                ProjectName = preAdjustData.Field<string>("PJNAME"),
+                ProjectAmount = preAdjustData.Field<decimal?>("PRE_AMT"),
+                CloseDate = preAdjustData.Field<string>("CLOSE_DT"),
+                ImportDate = preAdjustData.Field<string>("IMPORT_DT"),
+                ChineseName = preAdjustData.Field<string>("CHI_NAME"),
+                Kind = preAdjustData.Field<string>("KIND"),
+                SmsCheckResult = preAdjustData.Field<string>("SMS_CHECK"),
+                Status = preAdjustData.Field<string>("STATUS"),
+                ProcessingDateTime = preAdjustData.Field<string>("USER_PROC_DTTM"),
+                ProcessingUserId = preAdjustData.Field<string>("USER_ID"),
+                DeleteDateTime = preAdjustData.Field<string>("DEL_PROC_DTTM"),
+                DeleteUserId = preAdjustData.Field<string>("DEL_ID"),
+                Remark = preAdjustData.Field<string>("REMARK"),
+                ClosingDay = preAdjustData.Field<string>("STMT_CYCLE_DESC"),
+                PayDeadline = preAdjustData.Field<string>("PAY_DEADLINE"),
+                AgreeUserId = preAdjustData.Field<string>("SAGREE_ID"),
+                MobileTel = preAdjustData.Field<string>("MOBIL_TEL"),
+                RejectReasonCode = preAdjustData.Field<string>("REJECTREASON"),
+                CcasReplyCode = preAdjustData.Field<string>("CCAS_CODE"),
+                CcasReplyStatus = preAdjustData.Field<string>("CCAS_STATUS"),
+                CcasReplyDateTime = preAdjustData.Field<string>("CCAS_DT"),
+            };
         }
 
 
@@ -214,7 +213,7 @@ WHERE CLOSE_DT >= @CloseDate
         /// </summary>
         /// <param name="id">身分證字號</param>
         /// <returns>等待區預審處理資料</returns>
-        public IEnumerable<PreAdjustDO> GetWaitZoneData(string id)
+        public IEnumerable<PreAdjustDO> GetWaitData(string id)
         {
             if (String.IsNullOrEmpty(id))
             {
@@ -281,7 +280,7 @@ WHERE CLOSE_DT >= @CloseDate
         /// </summary>
         /// <param name="id">身分證字號</param>
         /// <returns>生效區預審處理資料</returns>
-        public IEnumerable<PreAdjustDO> GetEffectZoneData(string id)
+        public IEnumerable<PreAdjustDO> GetEffectData(string id)
         {
             if (String.IsNullOrEmpty(id))
             {

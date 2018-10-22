@@ -47,11 +47,11 @@
     <Compile Include="DAO\CDRM\PreAdjustDAO.cs" />
     <Compile Include="DAO\CMPN\CampaignDAO.cs" />
     <Compile Include="DAO\CDRM\AdjustPermissionDAO.cs" />
-    <Compile Include="DAO\CMPN\CampaignListDAO.cs" />
+    <Compile Include="DAO\CMPN\CampaignDetailDAO.cs" />
     <Compile Include="DAO\ICRS\CustomerDAO.cs" />
     <Compile Include="DO\CDRM\CampaignImportLogDO.cs" />
     <Compile Include="DO\CMPN\CampaignDO.cs" />
-    <Compile Include="DO\CMPN\CampaignListDO.cs" />
+    <Compile Include="DO\CMPN\CampaignDetailDO.cs" />
     <Compile Include="DO\CDRM\PreAdjustDO.cs" />
     <Compile Include="DO\ICRS\CustomerDO.cs" />
     <Compile Include="DO\ICRS\CustomerShortDO.cs" />

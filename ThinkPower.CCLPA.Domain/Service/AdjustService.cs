@@ -144,7 +144,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            IEnumerable<CampaignListDO> campaignList = CampaignService.GetCampaignList(
+            IEnumerable<CampaignDetailDO> campaignList = CampaignService.GetCampaignList(
                 campaignInfo.CampaignId, campaignInfo.ExecutionPathway);
 
             if ((campaignList == null) || (campaignList.Count() == 0))
@@ -172,7 +172,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             List<PreAdjustDO> preAdjustList = new List<PreAdjustDO>();
             PreAdjustDO preAdjust = null;
 
-            foreach (CampaignListDO item in campaignList)
+            foreach (CampaignDetailDO item in campaignList)
             {
                 preAdjust = null;
                 preAdjust = new PreAdjustDO()
@@ -199,7 +199,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             CustomerShortDO aboutData = null;
             PreAdjustDO tempPreAdjust = null;
 
-            foreach (CampaignListDO item in campaignList)
+            foreach (CampaignDetailDO item in campaignList)
             {
                 aboutData = aboutDataDAO.GetShortData(item.CustomerId);
 

@@ -55,6 +55,10 @@ WHERE CMPN_ID = @CampaignId;";
                 {
                     result = ConvertCampaignDO(dt.Rows[0]);
                 }
+                else
+                {
+                    throw new InvalidOperationException("Campaign not the only");
+                }
 
                 adapter = null;
                 dt = null;

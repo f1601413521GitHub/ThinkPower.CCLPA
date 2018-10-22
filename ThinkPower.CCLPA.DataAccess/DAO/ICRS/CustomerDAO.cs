@@ -15,7 +15,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
     public class CustomerDAO : BaseDAO
     {
         /// <summary>
-        /// 僅取得預審處理檔所需欄位資料
+        /// 取得歸戶部分基本資料
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
@@ -66,7 +66,7 @@ WHERE ACCT_ID =@CustomerId;";
         }
 
         /// <summary>
-        /// 轉換預審處理檔所需的歸戶基本資料
+        /// 轉換歸戶部分基本資料
         /// </summary>
         /// <param name="customerInfo">歸戶基本資料</param>
         /// <returns></returns>

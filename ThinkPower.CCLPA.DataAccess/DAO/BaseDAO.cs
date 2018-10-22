@@ -19,12 +19,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO
         /// <summary>
         /// SQL資料庫連線鍵值
         /// </summary>
-        protected enum Connection
-        {
-            ICRS,
-            CMPN,
-            CDRM,
-        }
+        protected enum Connection { ICRS, CMPN, CDRM, }
 
         /// <summary>
         /// SQL資料庫連線物件

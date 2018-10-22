@@ -9,7 +9,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CMPN
     /// <summary>
     /// 行銷活動名單檔資料存取類別
     /// </summary>
-    public class CampaignListDAO : BaseDAO
+    public class CampaignDetailDAO : BaseDAO
     {
         /// <summary>
         /// 取得行銷活動名單數量
@@ -60,9 +60,9 @@ WHERE CMPN_ID = @CampaignId
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        public IEnumerable<CampaignListDO> Get(string campaignId, decimal? executionPathway)
+        public IEnumerable<CampaignDetailDO> Get(string campaignId, decimal? executionPathway)
         {
-            List<CampaignListDO> result = null;
+            List<CampaignDetailDO> result = null;
 
             if (String.IsNullOrEmpty(campaignId))
             {
@@ -99,9 +99,9 @@ WHERE CMPN_ID = @CampaignId
 
                 if (dt.Rows.Count > 0)
                 {
-                    result = new List<CampaignListDO>();
+                    result = new List<CampaignDetailDO>();
 
-                    CampaignListDO campaignListDO = null;
+                    CampaignDetailDO campaignListDO = null;
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -122,43 +122,43 @@ WHERE CMPN_ID = @CampaignId
         /// <summary>
         /// 轉換行銷活動名單資料
         /// </summary>
-        /// <param name="campaignListInfo">行銷活動名單資料</param>
+        /// <param name="campaignDetail">行銷活動名單資料</param>
         /// <returns></returns>
-        private CampaignListDO ConvertCampaignListDO(DataRow campaignListInfo)
+        private CampaignDetailDO ConvertCampaignListDO(DataRow campaignDetail)
         {
-            return new CampaignListDO()
+            return new CampaignDetailDO()
             {
-                CampaignId = campaignListInfo.Field<string>("CMPN_ID"),
-                Sequence = campaignListInfo.Field<decimal>("CMPN_SEQ"),
-                SchemeId = campaignListInfo.Field<decimal?>("CMPN_AVY_ID"),
-                PathwayId = campaignListInfo.Field<decimal?>("CMPN_CNL_ID"),
-                GroupId = campaignListInfo.Field<decimal?>("CMPN_CELL_ID"),
-                CustomerId = campaignListInfo.Field<string>("CUSTOMER_ID"),
-                PerformStartDate = campaignListInfo.Field<string>("CMPN_ACT_STRT_DT"),
-                PerformEndDate = campaignListInfo.Field<string>("CMPN_ACT_END_DT"),
-                Col1 = campaignListInfo.Field<string>("COL_1"),
-                Col2 = campaignListInfo.Field<string>("COL_2"),
-                Col3 = campaignListInfo.Field<string>("COL_3"),
-                Col4 = campaignListInfo.Field<string>("COL_4"),
-                Col5 = campaignListInfo.Field<string>("COL_5"),
-                Col6 = campaignListInfo.Field<string>("COL_6"),
-                Col7 = campaignListInfo.Field<string>("COL_7"),
-                Col8 = campaignListInfo.Field<string>("COL_8"),
-                Col9 = campaignListInfo.Field<string>("COL_9"),
-                Col10 = campaignListInfo.Field<string>("COL_10"),
-                Col11 = campaignListInfo.Field<string>("COL_11"),
-                Col12 = campaignListInfo.Field<string>("COL_12"),
-                Col13 = campaignListInfo.Field<string>("COL_13"),
-                Col14 = campaignListInfo.Field<string>("COL_14"),
-                Col15 = campaignListInfo.Field<string>("COL_15"),
-                Col16 = campaignListInfo.Field<string>("COL_16"),
-                Col17 = campaignListInfo.Field<string>("COL_17"),
-                Col18 = campaignListInfo.Field<string>("COL_18"),
-                Col19 = campaignListInfo.Field<string>("COL_19"),
-                Col20 = campaignListInfo.Field<string>("COL_20"),
-                UpdateDate = campaignListInfo.Field<string>("UPDT_DT"),
-                UpdateFileName = campaignListInfo.Field<string>("UPL_FILE_NM"),
-                MtnDt = campaignListInfo.Field<string>("MTN_DT"),
+                CampaignId = campaignDetail.Field<string>("CMPN_ID"),
+                Sequence = campaignDetail.Field<decimal>("CMPN_SEQ"),
+                SchemeId = campaignDetail.Field<decimal?>("CMPN_AVY_ID"),
+                PathwayId = campaignDetail.Field<decimal?>("CMPN_CNL_ID"),
+                GroupId = campaignDetail.Field<decimal?>("CMPN_CELL_ID"),
+                CustomerId = campaignDetail.Field<string>("CUSTOMER_ID"),
+                PerformStartDate = campaignDetail.Field<string>("CMPN_ACT_STRT_DT"),
+                PerformEndDate = campaignDetail.Field<string>("CMPN_ACT_END_DT"),
+                Col1 = campaignDetail.Field<string>("COL_1"),
+                Col2 = campaignDetail.Field<string>("COL_2"),
+                Col3 = campaignDetail.Field<string>("COL_3"),
+                Col4 = campaignDetail.Field<string>("COL_4"),
+                Col5 = campaignDetail.Field<string>("COL_5"),
+                Col6 = campaignDetail.Field<string>("COL_6"),
+                Col7 = campaignDetail.Field<string>("COL_7"),
+                Col8 = campaignDetail.Field<string>("COL_8"),
+                Col9 = campaignDetail.Field<string>("COL_9"),
+                Col10 = campaignDetail.Field<string>("COL_10"),
+                Col11 = campaignDetail.Field<string>("COL_11"),
+                Col12 = campaignDetail.Field<string>("COL_12"),
+                Col13 = campaignDetail.Field<string>("COL_13"),
+                Col14 = campaignDetail.Field<string>("COL_14"),
+                Col15 = campaignDetail.Field<string>("COL_15"),
+                Col16 = campaignDetail.Field<string>("COL_16"),
+                Col17 = campaignDetail.Field<string>("COL_17"),
+                Col18 = campaignDetail.Field<string>("COL_18"),
+                Col19 = campaignDetail.Field<string>("COL_19"),
+                Col20 = campaignDetail.Field<string>("COL_20"),
+                UpdateDate = campaignDetail.Field<string>("UPDT_DT"),
+                UpdateFileName = campaignDetail.Field<string>("UPL_FILE_NM"),
+                MtnDt = campaignDetail.Field<string>("MTN_DT"),
             };
         }
     }

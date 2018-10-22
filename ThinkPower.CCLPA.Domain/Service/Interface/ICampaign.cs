@@ -37,6 +37,6 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        IEnumerable<CampaignListDO> GetCampaignList(string campaignId, decimal? executionPathway);
+        IEnumerable<CampaignDetailDO> GetCampaignList(string campaignId, decimal? executionPathway);
     }
 }

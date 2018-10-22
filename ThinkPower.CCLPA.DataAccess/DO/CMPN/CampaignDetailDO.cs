@@ -9,7 +9,7 @@ namespace ThinkPower.CCLPA.DataAccess.DO.CMPN
     /// <summary>
     /// 行銷活動名單檔資料物件類別
     /// </summary>
-    public class CampaignListDO
+    public class CampaignDetailDO
     {
         /// <summary>
         /// 行銷專案代碼

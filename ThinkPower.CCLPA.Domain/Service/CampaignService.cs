@@ -64,7 +64,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new ArgumentNullException("campaignId");
             }
 
-            return new CampaignListDAO().Count(campaignId, executionPathway);
+            return new CampaignDetailDAO().Count(campaignId, executionPathway);
         }
 
         /// <summary>
@@ -73,14 +73,14 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        public IEnumerable<CampaignListDO> GetCampaignList(string campaignId, decimal? executionPathway)
+        public IEnumerable<CampaignDetailDO> GetCampaignList(string campaignId, decimal? executionPathway)
         {
             if (String.IsNullOrEmpty(campaignId))
             {
                 throw new ArgumentNullException("campaignId");
             }
 
-            return new CampaignListDAO().Get(campaignId, executionPathway);
+            return new CampaignDetailDAO().Get(campaignId, executionPathway);
         }
     }
 }
