@@ -53,7 +53,7 @@ WHERE CMPN_ID = @CampaignId;";
                 {
                     result = ConvertCampaignImportLogDO(dt.Rows[0]);
                 }
-                else
+                else if(dt.Rows.Count > 1)
                 {
                     throw new InvalidOperationException("CampaignImportLog not the only");
                 }

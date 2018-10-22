@@ -55,7 +55,7 @@ WHERE CMPN_ID = @CampaignId;";
                 {
                     result = ConvertCampaignDO(dt.Rows[0]);
                 }
-                else
+                else if(dt.Rows.Count > 1)
                 {
                     throw new InvalidOperationException("Campaign not the only");
                 }
