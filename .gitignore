@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /ThinkPower.CCLPA.DataAccessTests
 /ThinkPower.CCLPA.DataAccessEF
+/ThinkPower.CCLPA.DomainTests

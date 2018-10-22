@@ -17,5 +17,11 @@ namespace ThinkPower.CCLPA.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+        protected void Session_Start(Object send, EventArgs e)
+        {
+            Session["UserId"] = "14260";
+            Session["UserName"] = "User14260";
+        }
     }
 }

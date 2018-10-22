@@ -1,0 +1,107 @@
+﻿@model ThinkPower.CCLPA.Web.ViewModels.ValidatePreAdjustViewModel
+
+@{
+    ViewBag.Title = "ValidatePreAdjust";
+
+    var validateInfo = (Model == null) || (Model.ValidatePreAdjustResult == null) ? null :
+        Model.ValidatePreAdjustResult;
+
+}
+
+
+<div class="row">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+</div>
+
+@using (Html.BeginForm("ValidatePreAdjust", "Adjust", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col col-auto">
+            <span>ILRC行銷活動編碼</span>
+        </div>
+
+        <div class="col col-auto">
+            @Html.TextBox("CampaignId", null, new { @class = "form-control" })
+        </div>
+
+        <div class="col col-auto">
+            <input type="submit" value="名單匯入" class="btn btn-success" />
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col col-auto text-danger">
+            <span>說明：請先於ILRC提案，上雙向簡訊、預審名單</span>
+        </div>
+    </div>
+}
+
+<div class="row">
+
+    @if (validateInfo != null)
+    {
+        var title = String.Empty;
+        var msg = String.Empty;
+        var importFlag = false;
+
+        if (!String.IsNullOrEmpty(validateInfo.ErrorMessage))
+        {
+            title = "檢核錯誤提示訊息";
+            msg = validateInfo.ErrorMessage;
+        }
+        else if (String.IsNullOrEmpty(validateInfo.ErrorMessage))
+        {
+            if (validateInfo.CampaignListCount > 0)
+            {
+                title = "提示訊息";
+                msg = $"您確定要將行銷活動編號「{Model.CampaignId}」合計{validateInfo.CampaignListCount}筆資料，進行匯入作業嗎?";
+                importFlag = true;
+            }
+            else
+            {
+                title = "檢核提示訊息";
+                msg = "行銷活動編號已失效或無可匯入名單。";
+            }
+        }
+
+        <div class="modal" tabindex="-1" role="dialog" id="tip-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">@title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>@msg</p>
+                    </div>
+                    <div class="modal-footer">
+                        @if (importFlag)
+                        {
+                            @Html.ActionLink("確定", "ImportPreAdjust", "Adjust",new { CampaignId = Model.CampaignId },new { @class = "btn btn-primary" })
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">確定</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+@section scripts{
+    <script>
+
+        if ($('#tip-modal').length > 0) {
+            $('#tip-modal').modal('show');
+        }
+
+    </script>
+}

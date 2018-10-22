@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,13 +42,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\ImportPreAdjustResultDTO.cs" />
+    <Compile Include="DTO\ValidatePreAdjustResultDTO.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\Interface\IProjectTemporaryAdjustment.cs" />
+    <Compile Include="Service\CampaignService.cs" />
+    <Compile Include="Service\Interface\IAdjust.cs" />
+    <Compile Include="Service\AdjustService.cs" />
+    <Compile Include="Service\Interface\ICampaign.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DTO\" />
     <Folder Include="Resource\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ThinkPower.CCLPA.DataAccess\ThinkPower.CCLPA.DataAccess.csproj">
+      <Project>{BC4AEA7F-F435-43FD-8F0C-86CB3C22E7AC}</Project>
+      <Name>ThinkPower.CCLPA.DataAccess</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
