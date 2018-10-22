@@ -195,14 +195,13 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new InvalidOperationException("preAdjustList not found");
             }
 
-            AboutDataDAO aboutDataDAO = new AboutDataDAO();
-            AboutDataDO aboutData = null;
+            CustomerDAO aboutDataDAO = new CustomerDAO();
+            CustomerShortDO aboutData = null;
             PreAdjustDO tempPreAdjust = null;
 
             foreach (CampaignListDO item in campaignList)
             {
-                aboutData = null;
-                aboutData = aboutDataDAO.GetPreAdjustNeeded(item.CustomerId);
+                aboutData = aboutDataDAO.GetShortData(item.CustomerId);
 
                 if (aboutData == null)
                 {
@@ -211,7 +210,6 @@ namespace ThinkPower.CCLPA.Domain.Service
                     throw e;
                 }
 
-                tempPreAdjust = null;
                 tempPreAdjust = preAdjustList.FirstOrDefault(x => x.Id == item.CustomerId);
 
                 if (tempPreAdjust == null)

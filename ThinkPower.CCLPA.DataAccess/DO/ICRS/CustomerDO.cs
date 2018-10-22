@@ -5,7 +5,7 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
     /// <summary>
     /// 歸戶基本資料資料物件類別
     /// </summary>
-    public class AboutDataDO
+    public class CustomerDO
     {
         /// <summary>
         /// 身份證字號 
