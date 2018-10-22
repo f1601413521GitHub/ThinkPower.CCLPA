@@ -50,6 +50,8 @@
     <Compile Include="Service\Interface\IAdjust.cs" />
     <Compile Include="Service\AdjustService.cs" />
     <Compile Include="Service\Interface\ICampaign.cs" />
+    <Compile Include="Service\Interface\IPreAdjust.cs" />
+    <Compile Include="Service\PreAdjustService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resource\" />
