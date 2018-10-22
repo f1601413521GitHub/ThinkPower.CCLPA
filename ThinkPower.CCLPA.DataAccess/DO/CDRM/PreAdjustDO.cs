@@ -60,7 +60,7 @@ namespace ThinkPower.CCLPA.DataAccess.DO.CDRM
         /// <summary>
         /// 處理日期時間
         /// </summary>
-        public string ProcessingDateTim { get; set; }
+        public string ProcessingDateTime { get; set; }
 
         /// <summary>
         /// 處理人員
