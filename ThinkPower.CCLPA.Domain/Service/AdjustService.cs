@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Transactions;
 using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
@@ -17,7 +18,10 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// </summary>
     public class AdjustService : IAdjust
     {
+        private UserInfoDTO _userInfo;
         private CampaignService _campaignService;
+
+
 
         /// <summary>
         /// 行銷活動服務
@@ -36,123 +40,81 @@ namespace ThinkPower.CCLPA.Domain.Service
         }
 
         /// <summary>
-        /// 檢核預審名單
+        /// 此建構式將設定使用者資訊
         /// </summary>
-        /// <param name="campaignId">行銷活動代號</param>
-        /// <returns>檢核結果</returns>
-        public ValidatePreAdjustResultDTO ValidatePreAdjust(string campaignId)
+        /// <param name="userInfo"></param>
+        public AdjustService(UserInfoDTO userInfo)
         {
-            ValidatePreAdjustResultDTO result = null;
-            string validateMsg = null;
-            int? campaignListCount = null;
-
-
-
-            if (String.IsNullOrEmpty(campaignId))
+            if (userInfo != null)
             {
-                throw new ArgumentNullException("campaignId");
+                _userInfo = userInfo;
             }
-
-            CampaignDO campaignInfo = CampaignService.GetCampaign(campaignId);
-
-            if (campaignInfo == null)
-            {
-                validateMsg = "ILRC行銷活動編碼，輸入錯誤。";
-            }
-            else if (!DateTime.TryParseExact(campaignInfo.ExpectedCloseDate, "yyyyMMdd", null,
-                System.Globalization.DateTimeStyles.None, out DateTime tempCloseDate))
-            {
-                throw new InvalidOperationException("Convert ExpectedCloseDate Fail");
-            }
-            else if (tempCloseDate < DateTime.Now.Date)
-            {
-                validateMsg = "此行銷活動已結案，無法進入匯入作業。";
-            }
-            else
-            {
-                CampaignImportLogDO importLogInfo = CampaignService.GetImportLog(campaignInfo.CampaignId);
-
-                if (importLogInfo != null)
-                {
-                    validateMsg = $"此行銷活動已於{importLogInfo.ImportDate}匯入過，無法再進行匯入。";
-                }
-            }
-
-
-
-            if (String.IsNullOrEmpty(validateMsg))
-            {
-                campaignListCount = CampaignService.GetCampaignListCount(campaignInfo.CampaignId,
-                    campaignInfo.ExecutionPathway);
-            }
-
-
-            result = new ValidatePreAdjustResultDTO()
-            {
-                ErrorMessage = validateMsg,
-                CampaignListCount = campaignListCount,
-            };
-
-            return result;
         }
+
+
 
         /// <summary>
         /// 匯入預審名單
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
-        /// <param name="userId">登入帳號</param>
-        /// <param name="userName">登入姓名</param>
-        /// <returns>處理結果</returns>
-        public ImportPreAdjustResultDTO ImportPreAdjust(string campaignId, string userId,
-            string userName)
+        /// <param name="executeImport">是否執行匯入</param>
+        /// <returns>行銷活動名單數量</returns>
+        public int? ImportPreAdjust(string campaignId, bool executeImport = false)
         {
-            ImportPreAdjustResultDTO result = null;
+            int? campaignDetailCount = null;
 
             if (String.IsNullOrEmpty(campaignId))
             {
                 throw new ArgumentNullException("campaignId");
             }
 
-            ValidatePreAdjustResultDTO validateResult = ValidatePreAdjust(campaignId);
 
-            if (validateResult == null)
+            CampaignDO campaign = CampaignService.GetCampaign(campaignId);
+
+            if (campaign == null)
             {
-                var e = new InvalidOperationException("ValidateResult not found");
-                e.Data["campaignId"] = campaignId;
+                var e = new InvalidOperationException("Campaign not found");
+                e.Data["ErrorMsg"] = "ILRC行銷活動編碼，輸入錯誤。";
                 throw e;
+
             }
-            else if (!String.IsNullOrEmpty(validateResult.ErrorMessage))
+            else if (!DateTime.TryParseExact(campaign.ExpectedCloseDate, "yyyyMMdd", null,
+                DateTimeStyles.None, out DateTime tempCloseDate))
             {
-                result = new ImportPreAdjustResultDTO()
-                {
-                    ValidateMessage = validateResult.ErrorMessage,
-                };
-
-                return result;
+                throw new InvalidOperationException("Convert ExpectedCloseDate Fail");
             }
-
-
-
-            CampaignDO campaignInfo = CampaignService.GetCampaign(campaignId);
-
-            if (campaignInfo == null)
+            else if (tempCloseDate < DateTime.Now.Date)
             {
-                var e = new InvalidOperationException("CampaignInfo not found");
-                e.Data["campaignId"] = campaignId;
+                var e = new InvalidOperationException("Campaign closed, not can't import data");
+                e.Data["ErrorMsg"] = "此行銷活動已結案，無法進入匯入作業。";
                 throw e;
             }
 
+            CampaignImportLogDO importLogInfo = CampaignService.GetImportLog(campaign.CampaignId);
 
-
-            IEnumerable<CampaignDetailDO> campaignList = CampaignService.GetCampaignList(
-                campaignInfo.CampaignId, campaignInfo.ExecutionPathway);
-
-            if ((campaignList == null) || (campaignList.Count() == 0))
+            if (importLogInfo != null)
             {
-                var e = new InvalidOperationException("CampaignList not found");
-                e.Data["CampaignId"] = campaignInfo.CampaignId;
-                e.Data["ExecutionPathway"] = campaignInfo.ExecutionPathway;
+                var e = new InvalidOperationException("Campaign imported, not can't again import");
+                e.Data["ErrorMsg"] = $"此行銷活動已於{importLogInfo.ImportDate}匯入過，無法再進行匯入。";
                 throw e;
+            }
+
+
+            if (!executeImport)
+            {
+                campaignDetailCount = CampaignService.GetCampaignDetailCount(
+                    campaign.CampaignId, campaign.ExecutionPathway);
+
+                return campaignDetailCount;
+            }
+
+
+            IEnumerable<CampaignDetailDO> campaignDetailList = CampaignService.GetDetailList(
+                campaign.CampaignId, campaign.ExecutionPathway);
+
+            if ((campaignDetailList == null) || (campaignDetailList.Count() == 0))
+            {
+                throw new InvalidOperationException("CampaignDetailList not found");
             }
 
 
@@ -160,24 +122,23 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             CampaignImportLogDO importLog = new CampaignImportLogDO()
             {
-                CampaignId = campaignInfo.CampaignId,
-                ExpectedStartDate = campaignInfo.ExpectedStartDateTime,
-                ExpectedEndDate = campaignInfo.ExpectedEndDateTime,
-                Count = campaignList.Count(),
-                ImportUserId = userId,
-                ImportUserName = userName,
+                CampaignId = campaign.CampaignId,
+                ExpectedStartDate = campaign.ExpectedStartDateTime,
+                ExpectedEndDate = campaign.ExpectedEndDateTime,
+                Count = campaignDetailList.Count(),
+                ImportUserId = _userInfo.Id,
+                ImportUserName = _userInfo.Name,
                 ImportDate = currentTime.ToString("yyyy/MM/dd"),
             };
 
             List<PreAdjustDO> preAdjustList = new List<PreAdjustDO>();
             PreAdjustDO preAdjust = null;
 
-            foreach (CampaignDetailDO item in campaignList)
+            foreach (CampaignDetailDO item in campaignDetailList)
             {
-                preAdjust = null;
                 preAdjust = new PreAdjustDO()
                 {
-                    CampaignId = campaignInfo.CampaignId,
+                    CampaignId = campaign.CampaignId,
                     Id = item.CustomerId,
                     ProjectName = item.Col1,
                     ProjectAmount = Convert.ToDecimal(item.Col2),
@@ -190,48 +151,40 @@ namespace ThinkPower.CCLPA.Domain.Service
                 preAdjustList.Add(preAdjust);
             }
 
-            if (preAdjustList.Count == 0)
-            {
-                throw new InvalidOperationException("preAdjustList not found");
-            }
 
-            CustomerDAO aboutDataDAO = new CustomerDAO();
-            CustomerShortDO aboutData = null;
+
+            CustomerDAO customerDAO = new CustomerDAO();
+            CustomerShortDO customerShortData = null;
             PreAdjustDO tempPreAdjust = null;
 
-            foreach (CampaignDetailDO item in campaignList)
+            foreach (CampaignDetailDO item in campaignDetailList)
             {
-                aboutData = aboutDataDAO.GetShortData(item.CustomerId);
+                customerShortData = customerDAO.GetShortData(item.CustomerId);
 
-                if (aboutData == null)
+                if (customerShortData == null)
                 {
-                    var e = new InvalidOperationException("AboutData not found");
-                    e.Data["CustomerId"] = item.CustomerId;
-                    throw e;
+                    throw new InvalidOperationException("CustomerShortData not found");
                 }
 
                 tempPreAdjust = preAdjustList.FirstOrDefault(x => x.Id == item.CustomerId);
 
                 if (tempPreAdjust == null)
                 {
-                    var e = new InvalidOperationException("tempPreAdjust not found");
-                    e.Data["CustomerId"] = item.CustomerId;
-                    throw e;
+                    throw new InvalidOperationException("tempPreAdjust not found");
                 }
 
-                tempPreAdjust.ChineseName = aboutData.ChineseName;
-                tempPreAdjust.ClosingDay = aboutData.ClosingDay;
-                tempPreAdjust.PayDeadline = aboutData.PayDeadline;
-                tempPreAdjust.MobileTel = aboutData.MobileTel;
+                tempPreAdjust.ChineseName = customerShortData.ChineseName;
+                tempPreAdjust.ClosingDay = customerShortData.ClosingDay;
+                tempPreAdjust.PayDeadline = customerShortData.PayDeadline;
+                tempPreAdjust.MobileTel = customerShortData.MobileTel;
             }
 
 
             SaveCampaignData(importLog, preAdjustList);
 
-            result = new ImportPreAdjustResultDTO();
-
-            return result;
+            return campaignDetailCount;
         }
+
 
         /// <summary>
         /// 處理預審名單

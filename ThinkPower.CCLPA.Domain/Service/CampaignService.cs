@@ -57,7 +57,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        public int? GetCampaignListCount(string campaignId, decimal? executionPathway)
+        public int? GetCampaignDetailCount(string campaignId, decimal? executionPathway)
         {
             if (String.IsNullOrEmpty(campaignId))
             {
@@ -73,7 +73,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        public IEnumerable<CampaignDetailDO> GetCampaignList(string campaignId, decimal? executionPathway)
+        public IEnumerable<CampaignDetailDO> GetDetailList(string campaignId, decimal? executionPathway)
         {
             if (String.IsNullOrEmpty(campaignId))
             {

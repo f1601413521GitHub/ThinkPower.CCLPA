@@ -29,7 +29,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        int? GetCampaignListCount(string campaignId, decimal? executionPathway);
+        int? GetCampaignDetailCount(string campaignId, decimal? executionPathway);
 
         /// <summary>
         /// 取得行銷活動名單
@@ -37,6 +37,6 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executionPathway">預估執行通路</param>
         /// <returns></returns>
-        IEnumerable<CampaignDetailDO> GetCampaignList(string campaignId, decimal? executionPathway);
+        IEnumerable<CampaignDetailDO> GetDetailList(string campaignId, decimal? executionPathway);
     }
 }
