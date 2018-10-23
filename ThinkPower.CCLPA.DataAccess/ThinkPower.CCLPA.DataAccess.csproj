@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="DAO\BaseDAO.cs" />
     <Compile Include="DAO\CDRM\AccountCorrespondDAO.cs" />
+    <Compile Include="DAO\CDRM\AdjustLevelPermissionDAO.cs" />
     <Compile Include="DAO\CDRM\AdjustUserLevelDAO.cs" />
     <Compile Include="DAO\CDRM\CampaignImportLogDAO.cs" />
     <Compile Include="DAO\CDRM\PreAdjustDAO.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="DAO\CMPN\CampaignDetailDAO.cs" />
     <Compile Include="DAO\ICRS\CustomerDAO.cs" />
     <Compile Include="DO\CDRM\AccountCorrespondDO.cs" />
+    <Compile Include="DO\CDRM\AdjustLevelPermissionDO.cs" />
     <Compile Include="DO\CDRM\AdjustUserLevelDO.cs" />
     <Compile Include="DO\CDRM\CampaignImportLogDO.cs" />
     <Compile Include="DO\CMPN\CampaignDO.cs" />
