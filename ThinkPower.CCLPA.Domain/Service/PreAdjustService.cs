@@ -267,26 +267,40 @@ namespace ThinkPower.CCLPA.Domain.Service
             {
                 if ((data.WaitZone == null) || (data.WaitZone.Count() == 0))
                 {
-                    var e = new InvalidOperationException("");
+                    var e = new InvalidOperationException("PreAdjust not found");
                     e.Data["ErrorMsg"] = "請先於《等待區中》勾選資料後，再進行後續作業。";
                     throw e;
                 }
-                else
+
+                PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
+
+                List<PreAdjustDO> waitZoneData = new List<PreAdjustDO>();
+                List<PreAdjustDO> effectZoneData = new List<PreAdjustDO>();
+
+                PreAdjustDO preAdjust = null;
+
+                foreach (PreAdjustEntity waitItem in data.WaitZone)
                 {
-                    PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
+                    preAdjust = preAdjustDAO.GetWaitData(waitItem.CampaignId, waitItem.Id);
 
-                    List<PreAdjustDO> preAdjustList = new List<PreAdjustDO>();
-                    PreAdjustDO preAdjust = null;
+                    waitZoneData.Add(preAdjust);
+                }
 
-                    foreach (PreAdjustEntity waitItem in data.WaitZone)
-                    {
-                        preAdjust = preAdjustDAO.GetWaitData(waitItem.CampaignId, waitItem.Id);
+                foreach (PreAdjustEntity effectItem in data.EffectZone)
+                {
+                    preAdjust = preAdjustDAO.GetEffectData(effectItem.CampaignId, effectItem.Id);
 
-                        preAdjustList.Add(preAdjust);
-                    }
+                    effectZoneData.Add(preAdjust);
+                }
 
+
+
+                if (!executeDel)
+                {
 
                 }
+
+                // TOOD
             }
             else
             {

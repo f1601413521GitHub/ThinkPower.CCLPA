@@ -311,11 +311,13 @@ WHERE CLOSE_DT >= @CloseDate
 
 
 
+
+
         /// <summary>
         /// 取得特定等待區的預審名單
         /// </summary>
-        /// <param name="campaignId"></param>
-        /// <param name="id"></param>
+        /// <param name="campaignId">行銷活動代號</param>
+        /// <param name="id">客戶ID</param>
         /// <returns>等待區預審名單</returns>
         public PreAdjustDO GetWaitData(string campaignId, string id)
         {
@@ -385,6 +387,82 @@ WHERE CLOSE_DT >= @CloseDate
 
             return result;
         }
+
+        /// <summary>
+        /// 取得特定生效區的預審名單
+        /// </summary>
+        /// <param name="campaignId">行銷活動代號</param>
+        /// <param name="id">客戶ID</param>
+        /// <returns>生效區的預審名單</returns>
+        public PreAdjustDO GetEffectData(string campaignId, string id)
+        {
+            PreAdjustDO result = null;
+
+            if (String.IsNullOrEmpty(campaignId))
+            {
+                throw new ArgumentNullException("campaignId");
+            }
+            else if (String.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            string query = @"
+SELECT 
+    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
+    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
+    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
+FROM [RG_PADJUST]
+WHERE CLOSE_DT >= @CloseDate
+    AND (CCAS_CODE = '00')
+    AND ID = @Id
+    AND CMPN_ID = @CampaignId;";
+
+
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            {
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
+                {
+                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
+                });
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
+                {
+                    Value = id,
+                });
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
+                {
+                    Value = campaignId,
+                });
+
+                connection.Open();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count == 1)
+                {
+                    result = ConvertPreAdjustDO(dt.Rows[0]);
+                }
+                else if (dt.Rows.Count == 0)
+                {
+                    throw new InvalidOperationException("PreAdjust not found");
+                }
+                else
+                {
+                    throw new InvalidOperationException("PreAdjust not the only");
+                }
+
+                adapter = null;
+                dt = null;
+                command = null;
+            }
+
+            return result;
+        }
+
 
 
         #region Private Method
