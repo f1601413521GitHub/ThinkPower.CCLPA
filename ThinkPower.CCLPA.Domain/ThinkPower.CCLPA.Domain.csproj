@@ -47,6 +47,7 @@
     <Compile Include="Entity\CampaignEntity.cs" />
     <Compile Include="Entity\CampaignImportLogEntity.cs" />
     <Compile Include="Entity\PreAdjustEntity.cs" />
+    <Compile Include="Entity\PreAdjustInfoEntity.cs" />
     <Compile Include="VO\UserInfoVO.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

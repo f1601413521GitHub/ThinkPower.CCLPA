@@ -25,15 +25,16 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// </summary>
         /// <param name="id">身分證字號</param>
         /// <returns>臨調預審名單</returns>
-        PreAdjustEntity Search(string id);
+        PreAdjustInfoEntity Search(string id);
 
         /// <summary>
         /// 刪除臨調預審名單
         /// </summary>
         /// <param name="data">來源資料</param>
-        /// <param name="effectZone">是否為生效區</param>
+        /// <param name="isWaitZone">是否為等待區</param>
+        /// <param name="executeDel">是否執行刪除</param>
         /// <returns></returns>
-        object Delete(object data, bool effectZone = false);
+        PreAdjustInfoEntity Delete(PreAdjustInfoEntity data, bool isWaitZone, bool executeDel);
 
         /// <summary>
         /// 同意執行臨調預審名單

@@ -207,9 +207,9 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="id">身分證字號</param>
         /// <returns></returns>
-        public PreAdjustEntity Search(string id)
+        public PreAdjustInfoEntity Search(string id)
         {
-            PreAdjustEntity result = null;
+            PreAdjustInfoEntity result = null;
 
             IEnumerable<PreAdjustDO> waitZoneData = null;
             IEnumerable<PreAdjustDO> effectZoneData = null;
@@ -234,26 +234,58 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
-            result = new PreAdjustEntity()
+            result = new PreAdjustInfoEntity()
             {
-                WaitZone = waitZoneData,
-                EffectZone = effectZoneData,
+                WaitZone = ConvertPreAdjustEntity(waitZoneData),
+                EffectZone = ConvertPreAdjustEntity(effectZoneData),
             };
 
 
             return result;
         }
 
+
         /// <summary>
         /// 刪除臨調預審名單
         /// </summary>
         /// <param name="data">來源資料</param>
-        /// <param name="effectZone">是否為生效區</param>
+        /// <param name="isWaitZone">是否為等待區</param>
+        /// <param name="executeDel">是否執行刪除</param>
         /// <returns></returns>
-        public object Delete(object data, bool effectZone = false)
+        public PreAdjustInfoEntity Delete(PreAdjustInfoEntity data, bool isWaitZone, bool executeDel)
         {
-            // TODO Delete
-            throw new NotImplementedException();
+            PreAdjustInfoEntity result = null;
+
+            //if (data == null)
+            //{
+            //    throw new ArgumentNullException("data");
+            //}
+
+
+
+            //if (isWaitZone)
+            //{
+            //    if ((data.WaitZone == null) || (data.WaitZone.Count() == 0))
+            //    {
+            //        var e = new InvalidOperationException("");
+            //        e.Data["ErrorMsg"] = "請先於《等待區中》勾選資料後，再進行後續作業。";
+            //        throw e;
+            //    }
+            //    else
+            //    {
+            //        foreach (PreAdjustDO item in data.WaitZone)
+            //        { 
+            //        }
+            //        waitZoneData = new PreAdjustDAO().GetAllWaitData();
+            //    }
+            //}
+            //else
+            //{
+            //    // TODO EffectZone
+            //}
+
+
+            return result;
         }
 
         /// <summary>
@@ -334,6 +366,42 @@ namespace ThinkPower.CCLPA.Domain.Service
 
                 scope.Complete();
             }
+        }
+
+        /// <summary>
+        /// 轉換臨調預審名單資料
+        /// </summary>
+        /// <param name="preAdjustDOList">臨調預審名單資料</param>
+        /// <returns></returns>
+        private IEnumerable<PreAdjustEntity> ConvertPreAdjustEntity(
+            IEnumerable<PreAdjustDO> preAdjustDOList)
+        {
+            return preAdjustDOList.Select(x => new PreAdjustEntity()
+            {
+                CampaignId = x.CampaignId,
+                Id = x.Id,
+                ProjectName = x.ProjectName,
+                ProjectAmount = x.ProjectAmount,
+                CloseDate = x.CloseDate,
+                ImportDate = x.ImportDate,
+                ChineseName = x.ChineseName,
+                Kind = x.Kind,
+                SmsCheckResult = x.SmsCheckResult,
+                Status = x.Status,
+                ProcessingDateTime = x.ProcessingDateTime,
+                ProcessingUserId = x.ProcessingUserId,
+                DeleteDateTime = x.DeleteDateTime,
+                DeleteUserId = x.DeleteUserId,
+                Remark = x.Remark,
+                ClosingDay = x.ClosingDay,
+                PayDeadline = x.PayDeadline,
+                AgreeUserId = x.AgreeUserId,
+                MobileTel = x.MobileTel,
+                RejectReasonCode = x.RejectReasonCode,
+                CcasReplyCode = x.CcasReplyCode,
+                CcasReplyStatus = x.CcasReplyStatus,
+                CcasReplyDateTime = x.CcasReplyDateTime,
+            });
         }
 
         #endregion
