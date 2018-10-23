@@ -213,7 +213,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
             var correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
-            //var userLevelInfo = new AdjustUserLevelDAO().Get(correspondInfo.IcrsId);
+            var userLevelInfo = new AdjustUserLevelDAO().Get(correspondInfo.IcrsId);
             //var permissionInfo = new AdjustLevelPermissionDAO().Get(userLevelInfo.LevelCode);
 
 
