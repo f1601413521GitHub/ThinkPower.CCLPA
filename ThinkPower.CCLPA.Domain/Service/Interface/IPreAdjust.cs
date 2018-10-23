@@ -24,8 +24,8 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// 查詢臨調預審名單
         /// </summary>
         /// <param name="id">身分證字號</param>
-        /// <returns></returns>
-        object Search(string id);
+        /// <returns>臨調預審名單</returns>
+        PreAdjustEntity Search(string id);
 
         /// <summary>
         /// 刪除臨調預審名單

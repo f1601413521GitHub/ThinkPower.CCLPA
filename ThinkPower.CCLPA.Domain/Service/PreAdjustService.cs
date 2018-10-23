@@ -207,15 +207,39 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="id">身分證字號</param>
         /// <returns></returns>
-        public object Search(string id)
+        public PreAdjustEntity Search(string id)
         {
-            object result = null;
+            PreAdjustEntity result = null;
+
+            IEnumerable<PreAdjustDO> waitZoneData = null;
+            IEnumerable<PreAdjustDO> effectZoneData = null;
 
             if (String.IsNullOrEmpty(id))
             {
-                var w = new PreAdjustDAO().GetAllWaitData();
-                var e = new PreAdjustDAO().GetAllEffectData();
+                waitZoneData = new PreAdjustDAO().GetAllWaitData();
+                effectZoneData = new PreAdjustDAO().GetAllEffectData();
             }
+            else
+            {
+                waitZoneData = new PreAdjustDAO().GetWaitData(id);
+                effectZoneData = new PreAdjustDAO().GetEffectData(id);
+
+                if (((waitZoneData == null) || (waitZoneData.Count() == 0)) &&
+                    ((effectZoneData == null) || (effectZoneData.Count() == 0)))
+                {
+                    var e = new InvalidOperationException("PreAdjust not found");
+                    e.Data["ErrorMsg"] = "查無相關資料，請確認是否有輸入錯誤。";
+                    throw e;
+                }
+            }
+
+
+            result = new PreAdjustEntity()
+            {
+                WaitZone = waitZoneData,
+                EffectZone = effectZoneData,
+            };
+
 
             return result;
         }
@@ -228,6 +252,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <returns></returns>
         public object Delete(object data, bool effectZone = false)
         {
+            // TODO Delete
             throw new NotImplementedException();
         }
 
@@ -239,6 +264,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <returns></returns>
         public object Agree(object data, bool forceConsent = false)
         {
+            // TODO Agree
             throw new NotImplementedException();
         }
 
