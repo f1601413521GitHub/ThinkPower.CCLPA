@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\CampaignDetailEntity.cs" />
+    <Compile Include="Entity\CampaignEntity.cs" />
+    <Compile Include="Entity\CampaignImportLogEntity.cs" />
     <Compile Include="VO\UserInfoVO.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -10,6 +10,7 @@ using ThinkPower.CCLPA.DataAccess.DAO.ICRS;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DO.CMPN;
 using ThinkPower.CCLPA.DataAccess.DO.ICRS;
+using ThinkPower.CCLPA.Domain.Entity;
 using ThinkPower.CCLPA.Domain.Service.Interface;
 using ThinkPower.CCLPA.Domain.VO;
 
@@ -61,16 +62,16 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            CampaignDO campaign = CampaignService.GetCampaign(campaignId);
+            CampaignEntity campaignEntity = CampaignService.GetCampaign(campaignId);
 
-            if (campaign == null)
+            if (campaignEntity == null)
             {
                 var e = new InvalidOperationException("Campaign not found");
                 e.Data["ErrorMsg"] = "ILRC行銷活動編碼，輸入錯誤。";
                 throw e;
 
             }
-            else if (!DateTime.TryParseExact(campaign.ExpectedCloseDate, "yyyyMMdd", null,
+            else if (!DateTime.TryParseExact(campaignEntity.ExpectedCloseDate, "yyyyMMdd", null,
                 DateTimeStyles.None, out DateTime tempCloseDate))
             {
                 throw new InvalidOperationException("Convert ExpectedCloseDate Fail");
@@ -85,12 +86,12 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            CampaignImportLogDO campaignImportLog = CampaignService.GetImportLog(campaign.CampaignId);
+            CampaignImportLogEntity importLogEntity = GetImportLog(campaignEntity.CampaignId);
 
-            if (campaignImportLog != null)
+            if (importLogEntity != null)
             {
                 var e = new InvalidOperationException("Campaign imported, not can't again import");
-                e.Data["ErrorMsg"] = $"此行銷活動已於{campaignImportLog.ImportDate}匯入過，無法再進行匯入。";
+                e.Data["ErrorMsg"] = $"此行銷活動已於{importLogEntity.ImportDate}匯入過，無法再進行匯入。";
                 throw e;
             }
 
@@ -99,17 +100,16 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (!executeImport)
             {
-                campaignDetailCount = CampaignService.GetCampaignDetailCount(
-                    campaign.CampaignId, campaign.ExecutionChannel);
+                campaignDetailCount = campaignEntity.GetDetailCount();
 
                 return campaignDetailCount;
             }
 
 
 
+            campaignEntity.LoadDetailList();
 
-            IEnumerable<CampaignDetailDO> campaignDetailList = CampaignService.GetDetailList(
-                campaign.CampaignId, campaign.ExecutionChannel);
+            IEnumerable<CampaignDetailEntity> campaignDetailList = campaignEntity.DetailList;
 
             if ((campaignDetailList == null) || (campaignDetailList.Count() == 0))
             {
@@ -123,9 +123,9 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             CampaignImportLogDO importLog = new CampaignImportLogDO()
             {
-                CampaignId = campaign.CampaignId,
-                ExpectedStartDate = campaign.ExpectedStartDateTime,
-                ExpectedEndDate = campaign.ExpectedEndDateTime,
+                CampaignId = campaignEntity.CampaignId,
+                ExpectedStartDate = campaignEntity.ExpectedStartDateTime,
+                ExpectedEndDate = campaignEntity.ExpectedEndDateTime,
                 Count = campaignDetailList.Count(),
                 ImportUserId = UserInfo.Id,
                 ImportUserName = UserInfo.Name,
@@ -134,11 +134,11 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             List<PreAdjustDO> preAdjustList = new List<PreAdjustDO>();
 
-            foreach (CampaignDetailDO campaignDetail in campaignDetailList)
+            foreach (CampaignDetailEntity campaignDetail in campaignDetailList)
             {
                 preAdjustList.Add(new PreAdjustDO()
                 {
-                    CampaignId = campaign.CampaignId,
+                    CampaignId = campaignEntity.CampaignId,
                     Id = campaignDetail.CustomerId,
                     ProjectName = campaignDetail.Col1,
                     ProjectAmount = Convert.ToDecimal(campaignDetail.Col2),
@@ -159,16 +159,16 @@ namespace ThinkPower.CCLPA.Domain.Service
             CustomerShortDO customerShortData = null;
             PreAdjustDO tempPreAdjust = null;
 
-            foreach (CampaignDetailDO item in campaignDetailList)
+            foreach (CampaignDetailEntity campaignDetail in campaignDetailList)
             {
-                customerShortData = customerDAO.GetShortData(item.CustomerId);
+                customerShortData = customerDAO.GetShortData(campaignDetail.CustomerId);
 
                 if (customerShortData == null)
                 {
                     throw new InvalidOperationException("CustomerShortData not found");
                 }
 
-                tempPreAdjust = preAdjustList.FirstOrDefault(x => x.Id == item.CustomerId);
+                tempPreAdjust = preAdjustList.FirstOrDefault(x => x.Id == campaignDetail.CustomerId);
 
                 if (tempPreAdjust == null)
                 {
@@ -204,6 +204,38 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
+        /// <summary>
+        /// 取得行銷活動匯入紀錄
+        /// </summary>
+        /// <param name="campaignId">行銷活動代號</param>
+        /// <returns></returns>
+        private CampaignImportLogEntity GetImportLog(string campaignId)
+        {
+            CampaignImportLogEntity campaignImportLogEntity = null;
+
+            if (String.IsNullOrEmpty(campaignId))
+            {
+                throw new ArgumentNullException("campaignId");
+            }
+
+            CampaignImportLogDO campaignImportLogDO = new CampaignImportLogDAO().Get(campaignId);
+
+            if (campaignImportLogDO != null)
+            {
+                campaignImportLogEntity = new CampaignImportLogEntity()
+                {
+                    CampaignId = campaignImportLogDO.CampaignId,
+                    ExpectedStartDate = campaignImportLogDO.ExpectedStartDate,
+                    ExpectedEndDate = campaignImportLogDO.ExpectedEndDate,
+                    Count = campaignImportLogDO.Count,
+                    ImportUserId = campaignImportLogDO.ImportUserId,
+                    ImportUserName = campaignImportLogDO.ImportUserName,
+                    ImportDate = campaignImportLogDO.ImportDate,
+                };
+            }
+
+            return campaignImportLogEntity;
+        }
 
         /// <summary>
         /// 紀錄行銷活動匯入紀錄與臨調預審處理檔
