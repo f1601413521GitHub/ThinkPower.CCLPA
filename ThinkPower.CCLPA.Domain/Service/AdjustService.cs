@@ -52,21 +52,22 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            var correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
+            AccountCorrespondDO correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
 
             if (correspondInfo == null)
             {
                 throw new InvalidOperationException("AccountCorrespond not found");
             }
 
-            var userLevelInfo = new AdjustUserLevelDAO().Get(correspondInfo.IcrsId);
+            AdjustUserLevelDO userLevelInfo = new AdjustUserLevelDAO().Get(correspondInfo.IcrsId);
 
             if (userLevelInfo == null)
             {
                 throw new InvalidOperationException("AdjustUserLevel not found");
             }
 
-            var permissionInfo = new AdjustLevelPermissionDAO().Get(userLevelInfo.LevelCode);
+            AdjustLevelPermissionDO permissionInfo = new AdjustLevelPermissionDAO().
+                Get(userLevelInfo.LevelCode);
 
             if (permissionInfo == null)
             {

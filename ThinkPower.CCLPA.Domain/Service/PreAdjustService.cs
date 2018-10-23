@@ -256,33 +256,42 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             PreAdjustInfoEntity result = null;
 
-            //if (data == null)
-            //{
-            //    throw new ArgumentNullException("data");
-            //}
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
 
 
 
-            //if (isWaitZone)
-            //{
-            //    if ((data.WaitZone == null) || (data.WaitZone.Count() == 0))
-            //    {
-            //        var e = new InvalidOperationException("");
-            //        e.Data["ErrorMsg"] = "請先於《等待區中》勾選資料後，再進行後續作業。";
-            //        throw e;
-            //    }
-            //    else
-            //    {
-            //        foreach (PreAdjustDO item in data.WaitZone)
-            //        { 
-            //        }
-            //        waitZoneData = new PreAdjustDAO().GetAllWaitData();
-            //    }
-            //}
-            //else
-            //{
-            //    // TODO EffectZone
-            //}
+            if (isWaitZone)
+            {
+                if ((data.WaitZone == null) || (data.WaitZone.Count() == 0))
+                {
+                    var e = new InvalidOperationException("");
+                    e.Data["ErrorMsg"] = "請先於《等待區中》勾選資料後，再進行後續作業。";
+                    throw e;
+                }
+                else
+                {
+                    PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
+
+                    List<PreAdjustDO> preAdjustList = new List<PreAdjustDO>();
+                    PreAdjustDO preAdjust = null;
+
+                    foreach (PreAdjustEntity waitItem in data.WaitZone)
+                    {
+                        preAdjust = preAdjustDAO.GetWaitData(waitItem.CampaignId, waitItem.Id);
+
+                        preAdjustList.Add(preAdjust);
+                    }
+
+
+                }
+            }
+            else
+            {
+                // TODO EffectZone
+            }
 
 
             return result;

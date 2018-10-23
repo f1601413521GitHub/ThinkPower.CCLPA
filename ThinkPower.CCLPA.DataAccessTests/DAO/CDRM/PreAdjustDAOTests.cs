@@ -68,5 +68,21 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod()]
+        public void GetWaitDataTest1()
+        {
+            // Arrange
+            var campaignId = "AA20991022X99Y99Z99A";
+            var id = "A177842053";
+            var expected = true;
+
+            // Actual
+            var result = new PreAdjustDAO().GetWaitData(campaignId,id);
+            var actual = (result != null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
