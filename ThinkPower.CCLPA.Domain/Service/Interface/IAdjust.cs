@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThinkPower.CCLPA.Domain.Entity;
 
 namespace ThinkPower.CCLPA.Domain.Service.Interface
 {
@@ -15,5 +16,11 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// 臨調處理
         /// </summary>
         void AdjustProcessing();
+
+        /// <summary>
+        /// 取得使用者臨調權限資訊
+        /// </summary>
+        /// <returns></returns>
+        AdjustPermissionEntity GetUserPermission();
     }
 }

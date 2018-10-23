@@ -336,26 +336,6 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
         }
 
-        /// <summary>
-        /// 取得使用者臨調權限設定檔資訊
-        /// </summary>
-        /// <returns></returns>
-        private AdjustLevelPermissionDO GetUserPermission()
-        {
-            // TODO GetUserPermission
-
-            if (UserInfo == null)
-            {
-                throw new InvalidOperationException("UserInfo");
-            }
-
-            var correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
-            var userLevelInfo = new AdjustUserLevelDAO().Get(correspondInfo.IcrsId);
-            var permissionInfo = new AdjustLevelPermissionDAO().Get(userLevelInfo.LevelCode);
-
-            return permissionInfo;
-        }
-
         #endregion
     }
 }

@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\AdjustPermissionEntity.cs" />
     <Compile Include="Entity\CampaignDetailEntity.cs" />
     <Compile Include="Entity\CampaignEntity.cs" />
     <Compile Include="Entity\CampaignImportLogEntity.cs" />
