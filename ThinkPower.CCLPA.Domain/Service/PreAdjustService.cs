@@ -201,9 +201,25 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         public void PreAdjustProcessing(PreAdjustProcessEntity dataModel)
         {
+            if (dataModel == null)
+            {
+                throw new ArgumentNullException("dataModel");
+            }
+            else if (UserInfo == null)
+            {
+                throw new InvalidOperationException("UserInfo not found");
+            }
 
 
-            throw new NotImplementedException();
+
+            var correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
+            //var userLevelInfo = new AdjustUserLevelDAO().Get(correspondInfo.IcrsId);
+            //var permissionInfo = new AdjustLevelPermissionDAO().Get(userLevelInfo.LevelCode);
+
+
+
+
+
         }
 
 

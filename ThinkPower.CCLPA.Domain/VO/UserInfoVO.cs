@@ -6,7 +6,7 @@
     public class UserInfoVO
     {
         /// <summary>
-        /// 登入帳號
+        /// 使用者代號
         /// </summary>
         public string  Id { get; set; }
 
