@@ -70,7 +70,7 @@ namespace ThinkPower.CCLPA.DataAccess.DO.CMPN
         /// <summary>
         /// 預估執行通路
         /// </summary>
-        public Nullable<decimal> ExecutionPathway { get; set; }
+        public Nullable<decimal> ExecutionChannel { get; set; }
 
         /// <summary>
         /// 活動頻率

@@ -69,6 +69,8 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
+
+
             CampaignDO campaign = CampaignService.GetCampaign(campaignId);
 
             if (campaign == null)
@@ -90,32 +92,41 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw e;
             }
 
-            CampaignImportLogDO importLogInfo = CampaignService.GetImportLog(campaign.CampaignId);
 
-            if (importLogInfo != null)
+
+
+            CampaignImportLogDO campaignImportLog = CampaignService.GetImportLog(campaign.CampaignId);
+
+            if (campaignImportLog != null)
             {
                 var e = new InvalidOperationException("Campaign imported, not can't again import");
-                e.Data["ErrorMsg"] = $"此行銷活動已於{importLogInfo.ImportDate}匯入過，無法再進行匯入。";
+                e.Data["ErrorMsg"] = $"此行銷活動已於{campaignImportLog.ImportDate}匯入過，無法再進行匯入。";
                 throw e;
             }
+
+
 
 
             if (!executeImport)
             {
                 campaignDetailCount = CampaignService.GetCampaignDetailCount(
-                    campaign.CampaignId, campaign.ExecutionPathway);
+                    campaign.CampaignId, campaign.ExecutionChannel);
 
                 return campaignDetailCount;
             }
 
 
+
+
             IEnumerable<CampaignDetailDO> campaignDetailList = CampaignService.GetDetailList(
-                campaign.CampaignId, campaign.ExecutionPathway);
+                campaign.CampaignId, campaign.ExecutionChannel);
 
             if ((campaignDetailList == null) || (campaignDetailList.Count() == 0))
             {
                 throw new InvalidOperationException("CampaignDetailList not found");
             }
+
+
 
 
             DateTime currentTime = DateTime.Now;
@@ -132,24 +143,25 @@ namespace ThinkPower.CCLPA.Domain.Service
             };
 
             List<PreAdjustDO> preAdjustList = new List<PreAdjustDO>();
-            PreAdjustDO preAdjust = null;
 
-            foreach (CampaignDetailDO item in campaignDetailList)
+            foreach (CampaignDetailDO campaignDetail in campaignDetailList)
             {
-                preAdjust = new PreAdjustDO()
+                preAdjustList.Add(new PreAdjustDO()
                 {
                     CampaignId = campaign.CampaignId,
-                    Id = item.CustomerId,
-                    ProjectName = item.Col1,
-                    ProjectAmount = Convert.ToDecimal(item.Col2),
-                    CloseDate = item.Col3,
+                    Id = campaignDetail.CustomerId,
+                    ProjectName = campaignDetail.Col1,
+                    ProjectAmount = Convert.ToDecimal(campaignDetail.Col2),
+                    CloseDate = DateTime.TryParseExact(campaignDetail.Col3, "yyyyMMdd", null,
+                        DateTimeStyles.None, out DateTime temp) ?
+                        temp.ToString("yyyy/MM/dd") :
+                        throw new InvalidOperationException("Convert campaignDetail Col3 Fail"),
                     ImportDate = currentTime.ToString("yyyy/MM/dd"),
-                    Kind = item.Col4,
+                    Kind = campaignDetail.Col4,
                     Status = "待生效",
-                };
-
-                preAdjustList.Add(preAdjust);
+                });
             }
+
 
 
 
@@ -180,7 +192,10 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
+
             SaveCampaignData(importLog, preAdjustList);
+
+
 
             return campaignDetailCount;
         }
@@ -201,6 +216,8 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             throw new NotImplementedException();
         }
+
+
 
 
 
