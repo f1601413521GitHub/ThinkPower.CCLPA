@@ -52,7 +52,7 @@ WHERE ACCT_ID =@CustomerId;";
                 {
                     result = ConvertCustomerShortDO(dt.Rows[0]);
                 }
-                else
+                else if(dt.Rows.Count > 1)
                 {
                     throw new InvalidOperationException("CustomerData not the only");
                 }

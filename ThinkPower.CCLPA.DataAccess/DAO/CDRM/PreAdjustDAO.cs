@@ -43,7 +43,6 @@ VALUES
                 foreach (PreAdjustDO preAdjust in preAdjustList)
                 {
                     SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.Clear();
                     command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId ?? Convert.DBNull });
                     command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.Id ?? Convert.DBNull });
                     command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.NVarChar) { Value = preAdjust.ProjectName ?? Convert.DBNull });
@@ -61,6 +60,14 @@ VALUES
                 }
             }
         }
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// 取得所有等待區的預審資訊
