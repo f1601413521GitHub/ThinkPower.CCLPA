@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{26F9EDAF-F6CE-4DC2-A388-EA909A35E847}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ThinkPower.CCLPA.DataAccessEF</RootNamespace>
+    <AssemblyName>ThinkPower.CCLPA.DataAccessEF</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CDRMModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CDRMModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CDRMModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CDRMModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CDRMModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="CMPN.cs">
+      <DependentUpon>CMPNModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CMPNModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CMPNModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CMPNModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CMPNModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CMPNModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CMPNModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="CMPN_AVY_CNL_EXBOOK.cs">
+      <DependentUpon>CMPNModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CMPN_RLT_NM_LST.cs">
+      <DependentUpon>CMPNModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COD_ADJUSTLEVEL.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COD_ADJUSTUSER.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COD_CCASUSER.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COD_RG_PARA.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COD_RG_REASON.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COD_RG_REJECT.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ICRSModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ICRSModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ICRSModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ICRSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ICRSModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ICRSModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="LOG_PROGRESS.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LOG_RG_ILRC.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OD_VIP.cs">
+      <DependentUpon>ICRSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PORTAL_AUTHORITY.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PORTAL_FUNCTION.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PORTAL_GROUP.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PORTAL_ICRS_USER.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PORTAL_USER.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PORTAL_USER_GROUP.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RG_ADJUST.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_ID.cs">
+      <DependentUpon>ICRSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PADJUST.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PADJUST_TMP.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PARA_D_CHECK.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PARA_D_FINAL.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PARA_D_INIT.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PARA_M_ACTIVE.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PARA_M_CHECK.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PARA_M_FINAL.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RG_PARA_M_INIT.cs">
+      <DependentUpon>CDRMModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="ICRSModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ICRSModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="CMPNModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CMPNModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="CDRMModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CDRMModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="CDRMModel.edmx.diagram">
+      <DependentUpon>CDRMModel.edmx</DependentUpon>
+    </None>
+    <None Include="CMPNModel.edmx.diagram">
+      <DependentUpon>CMPNModel.edmx</DependentUpon>
+    </None>
+    <None Include="ICRSModel.edmx.diagram">
+      <DependentUpon>ICRSModel.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CDRMModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CDRMModel.edmx</DependentUpon>
+      <LastGenOutput>CDRMModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="CDRMModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CDRMModel.edmx</DependentUpon>
+      <LastGenOutput>CDRMModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="CMPNModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CMPNModel.edmx</DependentUpon>
+      <LastGenOutput>CMPNModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="CMPNModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CMPNModel.edmx</DependentUpon>
+      <LastGenOutput>CMPNModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="ICRSModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ICRSModel.Context.cs</LastGenOutput>
+      <DependentUpon>ICRSModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="ICRSModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ICRSModel.edmx</DependentUpon>
+      <LastGenOutput>ICRSModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

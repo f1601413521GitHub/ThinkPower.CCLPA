@@ -1,0 +1,311 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CMPNModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CMPN">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CMPN_NM" Type="nvarchar" MaxLength="100" />
+          <Property Name="CMPN_DSC" Type="nvarchar" MaxLength="500" />
+          <Property Name="CMPN_TP_ID" Type="decimal" Precision="2" Scale="0" />
+          <Property Name="INL_OU_ID" Type="decimal" Precision="2" Scale="0" />
+          <Property Name="INL_EMPE_NO" Type="nvarchar" MaxLength="8" />
+          <Property Name="CMPN_PROM_PRD_ID" Type="nvarchar" MaxLength="8" />
+          <Property Name="CMPN_FILTER_TYPID" Type="decimal" Precision="2" Scale="0" />
+          <Property Name="CMPN_EXPC_STRT_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="CMPN_EXPC_END_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="CMPN_EXPC_CLOSE_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="CMPN_DETAIL_DSC" Type="nvarchar" MaxLength="500" />
+          <Property Name="CMPN_EXPC_CNL_ID" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="CMPN_FRQ_TP_ID" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="CMPN_BASE_DSC" Type="nvarchar" MaxLength="500" />
+          <Property Name="CMPN_APPROVE_STS" Type="decimal" Precision="2" Scale="0" />
+          <Property Name="CMPN_ASSIGN_MIS" Type="nvarchar" MaxLength="8" />
+          <Property Name="CREATED_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="LST_MTN_DT" Type="date" />
+          <Property Name="CRSS_FLG" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="CMPN_AVY_CNL_EXBOOK">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+            <PropertyRef Name="CMPN_SEQ" />
+            <PropertyRef Name="CUSTOMER_ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CMPN_SEQ" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CMPN_AVY_ID" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="CMPN_CNL_ID" Type="decimal" Precision="2" Scale="0" />
+          <Property Name="CMPN_CELL_ID" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="CUSTOMER_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="CMPN_ACT_STRT_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="CMPN_ACT_END_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="COL_1" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_2" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_3" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_4" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_5" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_6" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_7" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_8" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_9" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_10" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_11" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_12" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_13" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_14" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_15" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_16" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_17" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_18" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_19" Type="nvarchar" MaxLength="100" />
+          <Property Name="COL_20" Type="nvarchar" MaxLength="500" />
+          <Property Name="UPDT_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="UPL_FILE_NM" Type="nvarchar" MaxLength="50" />
+          <Property Name="MTN_DT" Type="nvarchar" MaxLength="8" />
+        </EntityType>
+        <EntityType Name="CMPN_RLT_NM_LST">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+            <PropertyRef Name="CMPN_SEQ" />
+            <PropertyRef Name="CMPN_AVY_ID" />
+            <PropertyRef Name="CMPN_CNL_ID" />
+            <PropertyRef Name="CMPN_OFFER_ID" />
+            <PropertyRef Name="CUSTOMER_ID" />
+            <PropertyRef Name="UPDT_DT" />
+          </Key>
+          <Property Name="CMPN_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CMPN_SEQ" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CMPN_AVY_ID" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CMPN_CELL_ID" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CMPN_CNL_ID" Type="decimal" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="CMPN_OFFER_ID" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CUSTOMER_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="UPDT_DT" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="UPDT_USER" Type="nvarchar" MaxLength="10" />
+          <Property Name="VLD_FLG" Type="nvarchar" MaxLength="1" />
+          <Property Name="VLD_USER" Type="nvarchar" MaxLength="10" />
+          <Property Name="VLD_MEMO" Type="nvarchar" MaxLength="50" />
+          <Property Name="MTN_DT" Type="datetime" />
+          <Property Name="NAMING_LST_SEQ" Type="decimal" Precision="2" Scale="0" />
+        </EntityType>
+        <EntityContainer Name="CMPNModelStoreContainer">
+          <EntitySet Name="CMPN" EntityType="Self.CMPN" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CMPN_AVY_CNL_EXBOOK" EntityType="Self.CMPN_AVY_CNL_EXBOOK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CMPN_RLT_NM_LST" EntityType="Self.CMPN_RLT_NM_LST" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CMPNModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CMPN">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CMPN_NM" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_DSC" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_TP_ID" Type="Decimal" Precision="2" Scale="0" />
+          <Property Name="INL_OU_ID" Type="Decimal" Precision="2" Scale="0" />
+          <Property Name="INL_EMPE_NO" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_PROM_PRD_ID" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_FILTER_TYPID" Type="Decimal" Precision="2" Scale="0" />
+          <Property Name="CMPN_EXPC_STRT_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_EXPC_END_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_EXPC_CLOSE_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_DETAIL_DSC" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_EXPC_CNL_ID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="CMPN_FRQ_TP_ID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="CMPN_BASE_DSC" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_APPROVE_STS" Type="Decimal" Precision="2" Scale="0" />
+          <Property Name="CMPN_ASSIGN_MIS" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CREATED_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="LST_MTN_DT" Type="DateTime" Precision="0" />
+          <Property Name="CRSS_FLG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CMPN_AVY_CNL_EXBOOK">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+            <PropertyRef Name="CMPN_SEQ" />
+            <PropertyRef Name="CUSTOMER_ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CMPN_SEQ" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CMPN_AVY_ID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="CMPN_CNL_ID" Type="Decimal" Precision="2" Scale="0" />
+          <Property Name="CMPN_CELL_ID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="CUSTOMER_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CMPN_ACT_STRT_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_ACT_END_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="COL_1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_3" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_4" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_5" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_6" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_7" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_8" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_9" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_10" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_11" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_12" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_13" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_14" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_15" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_16" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_17" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_18" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_19" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="COL_20" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="UPDT_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="UPL_FILE_NM" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MTN_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CMPN_RLT_NM_LST">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+            <PropertyRef Name="CMPN_SEQ" />
+            <PropertyRef Name="CMPN_AVY_ID" />
+            <PropertyRef Name="CMPN_CNL_ID" />
+            <PropertyRef Name="CMPN_OFFER_ID" />
+            <PropertyRef Name="CUSTOMER_ID" />
+            <PropertyRef Name="UPDT_DT" />
+          </Key>
+          <Property Name="CMPN_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CMPN_SEQ" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CMPN_AVY_ID" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CMPN_CELL_ID" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CMPN_CNL_ID" Type="Decimal" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="CMPN_OFFER_ID" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="CUSTOMER_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UPDT_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UPDT_USER" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="VLD_FLG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="VLD_USER" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="VLD_MEMO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MTN_DT" Type="DateTime" Precision="3" />
+          <Property Name="NAMING_LST_SEQ" Type="Decimal" Precision="2" Scale="0" />
+        </EntityType>
+        <EntityContainer Name="CMPNEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CMPN" EntityType="Self.CMPN" />
+          <EntitySet Name="CMPN_AVY_CNL_EXBOOK" EntityType="Self.CMPN_AVY_CNL_EXBOOK" />
+          <EntitySet Name="CMPN_RLT_NM_LST" EntityType="Self.CMPN_RLT_NM_LST" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CMPNModelStoreContainer" CdmEntityContainer="CMPNEntities">
+          <EntitySetMapping Name="CMPN">
+            <EntityTypeMapping TypeName="CMPNModel.CMPN">
+              <MappingFragment StoreEntitySet="CMPN">
+                <ScalarProperty Name="CMPN_ID" ColumnName="CMPN_ID" />
+                <ScalarProperty Name="CMPN_NM" ColumnName="CMPN_NM" />
+                <ScalarProperty Name="CMPN_DSC" ColumnName="CMPN_DSC" />
+                <ScalarProperty Name="CMPN_TP_ID" ColumnName="CMPN_TP_ID" />
+                <ScalarProperty Name="INL_OU_ID" ColumnName="INL_OU_ID" />
+                <ScalarProperty Name="INL_EMPE_NO" ColumnName="INL_EMPE_NO" />
+                <ScalarProperty Name="CMPN_PROM_PRD_ID" ColumnName="CMPN_PROM_PRD_ID" />
+                <ScalarProperty Name="CMPN_FILTER_TYPID" ColumnName="CMPN_FILTER_TYPID" />
+                <ScalarProperty Name="CMPN_EXPC_STRT_DT" ColumnName="CMPN_EXPC_STRT_DT" />
+                <ScalarProperty Name="CMPN_EXPC_END_DT" ColumnName="CMPN_EXPC_END_DT" />
+                <ScalarProperty Name="CMPN_EXPC_CLOSE_DT" ColumnName="CMPN_EXPC_CLOSE_DT" />
+                <ScalarProperty Name="CMPN_DETAIL_DSC" ColumnName="CMPN_DETAIL_DSC" />
+                <ScalarProperty Name="CMPN_EXPC_CNL_ID" ColumnName="CMPN_EXPC_CNL_ID" />
+                <ScalarProperty Name="CMPN_FRQ_TP_ID" ColumnName="CMPN_FRQ_TP_ID" />
+                <ScalarProperty Name="CMPN_BASE_DSC" ColumnName="CMPN_BASE_DSC" />
+                <ScalarProperty Name="CMPN_APPROVE_STS" ColumnName="CMPN_APPROVE_STS" />
+                <ScalarProperty Name="CMPN_ASSIGN_MIS" ColumnName="CMPN_ASSIGN_MIS" />
+                <ScalarProperty Name="CREATED_DT" ColumnName="CREATED_DT" />
+                <ScalarProperty Name="LST_MTN_DT" ColumnName="LST_MTN_DT" />
+                <ScalarProperty Name="CRSS_FLG" ColumnName="CRSS_FLG" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CMPN_AVY_CNL_EXBOOK">
+            <EntityTypeMapping TypeName="CMPNModel.CMPN_AVY_CNL_EXBOOK">
+              <MappingFragment StoreEntitySet="CMPN_AVY_CNL_EXBOOK">
+                <ScalarProperty Name="CMPN_ID" ColumnName="CMPN_ID" />
+                <ScalarProperty Name="CMPN_SEQ" ColumnName="CMPN_SEQ" />
+                <ScalarProperty Name="CMPN_AVY_ID" ColumnName="CMPN_AVY_ID" />
+                <ScalarProperty Name="CMPN_CNL_ID" ColumnName="CMPN_CNL_ID" />
+                <ScalarProperty Name="CMPN_CELL_ID" ColumnName="CMPN_CELL_ID" />
+                <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
+                <ScalarProperty Name="CMPN_ACT_STRT_DT" ColumnName="CMPN_ACT_STRT_DT" />
+                <ScalarProperty Name="CMPN_ACT_END_DT" ColumnName="CMPN_ACT_END_DT" />
+                <ScalarProperty Name="COL_1" ColumnName="COL_1" />
+                <ScalarProperty Name="COL_2" ColumnName="COL_2" />
+                <ScalarProperty Name="COL_3" ColumnName="COL_3" />
+                <ScalarProperty Name="COL_4" ColumnName="COL_4" />
+                <ScalarProperty Name="COL_5" ColumnName="COL_5" />
+                <ScalarProperty Name="COL_6" ColumnName="COL_6" />
+                <ScalarProperty Name="COL_7" ColumnName="COL_7" />
+                <ScalarProperty Name="COL_8" ColumnName="COL_8" />
+                <ScalarProperty Name="COL_9" ColumnName="COL_9" />
+                <ScalarProperty Name="COL_10" ColumnName="COL_10" />
+                <ScalarProperty Name="COL_11" ColumnName="COL_11" />
+                <ScalarProperty Name="COL_12" ColumnName="COL_12" />
+                <ScalarProperty Name="COL_13" ColumnName="COL_13" />
+                <ScalarProperty Name="COL_14" ColumnName="COL_14" />
+                <ScalarProperty Name="COL_15" ColumnName="COL_15" />
+                <ScalarProperty Name="COL_16" ColumnName="COL_16" />
+                <ScalarProperty Name="COL_17" ColumnName="COL_17" />
+                <ScalarProperty Name="COL_18" ColumnName="COL_18" />
+                <ScalarProperty Name="COL_19" ColumnName="COL_19" />
+                <ScalarProperty Name="COL_20" ColumnName="COL_20" />
+                <ScalarProperty Name="UPDT_DT" ColumnName="UPDT_DT" />
+                <ScalarProperty Name="UPL_FILE_NM" ColumnName="UPL_FILE_NM" />
+                <ScalarProperty Name="MTN_DT" ColumnName="MTN_DT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CMPN_RLT_NM_LST">
+            <EntityTypeMapping TypeName="CMPNModel.CMPN_RLT_NM_LST">
+              <MappingFragment StoreEntitySet="CMPN_RLT_NM_LST">
+                <ScalarProperty Name="CMPN_ID" ColumnName="CMPN_ID" />
+                <ScalarProperty Name="CMPN_SEQ" ColumnName="CMPN_SEQ" />
+                <ScalarProperty Name="CMPN_AVY_ID" ColumnName="CMPN_AVY_ID" />
+                <ScalarProperty Name="CMPN_CELL_ID" ColumnName="CMPN_CELL_ID" />
+                <ScalarProperty Name="CMPN_CNL_ID" ColumnName="CMPN_CNL_ID" />
+                <ScalarProperty Name="CMPN_OFFER_ID" ColumnName="CMPN_OFFER_ID" />
+                <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
+                <ScalarProperty Name="UPDT_DT" ColumnName="UPDT_DT" />
+                <ScalarProperty Name="UPDT_USER" ColumnName="UPDT_USER" />
+                <ScalarProperty Name="VLD_FLG" ColumnName="VLD_FLG" />
+                <ScalarProperty Name="VLD_USER" ColumnName="VLD_USER" />
+                <ScalarProperty Name="VLD_MEMO" ColumnName="VLD_MEMO" />
+                <ScalarProperty Name="MTN_DT" ColumnName="MTN_DT" />
+                <ScalarProperty Name="NAMING_LST_SEQ" ColumnName="NAMING_LST_SEQ" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,1158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CDRMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="COD_ADJUSTLEVEL">
+          <Key>
+            <PropertyRef Name="LEVELCODE" />
+          </Key>
+          <Property Name="LEVELCODE" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="CL" Type="nvarchar" MaxLength="8" />
+          <Property Name="ADJUST_QUERY" Type="nvarchar" MaxLength="1" />
+          <Property Name="ADJUST_EXEC" Type="nvarchar" MaxLength="1" />
+          <Property Name="VERIFY_NORMAL" Type="nvarchar" MaxLength="1" />
+          <Property Name="VERIFY_ADV" Type="nvarchar" MaxLength="1" />
+          <Property Name="SEQNO" Type="decimal" Precision="19" Scale="0" />
+        </EntityType>
+        <EntityType Name="COD_ADJUSTUSER">
+          <Key>
+            <PropertyRef Name="USERID" />
+          </Key>
+          <Property Name="USERID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="LEVELCODE" Type="nvarchar" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="COD_CCASUSER">
+          <Key>
+            <PropertyRef Name="CODE" />
+          </Key>
+          <Property Name="CODE" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ACCOUNT" Type="nvarchar" MaxLength="4" />
+          <Property Name="PROCDATE" Type="nvarchar" MaxLength="8" />
+          <Property Name="PROCID" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="COD_RG_PARA">
+          <Key>
+            <PropertyRef Name="CODE" />
+          </Key>
+          <Property Name="CODE" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="MEMO" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="COD_RG_REASON">
+          <Key>
+            <PropertyRef Name="CODE" />
+          </Key>
+          <Property Name="CODE" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="60" />
+          <Property Name="USE_YN" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="COD_RG_REJECT">
+          <Key>
+            <PropertyRef Name="CODE" />
+          </Key>
+          <Property Name="CODE" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="100" />
+          <Property Name="USE_YN" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="LOG_PROGRESS">
+          <Key>
+            <PropertyRef Name="APPNO" />
+            <PropertyRef Name="PROCDATE" />
+            <PropertyRef Name="PROCTIME" />
+          </Key>
+          <Property Name="APPNO" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="APPOPTION" Type="nvarchar" MaxLength="1" />
+          <Property Name="PROGRESS" Type="nvarchar" MaxLength="2" />
+          <Property Name="PROCID" Type="nvarchar" MaxLength="10" />
+          <Property Name="PROCNAME" Type="nvarchar" MaxLength="30" />
+          <Property Name="PROCDATE" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="PROCTIME" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="SERIALNO" Type="decimal" Precision="17" Scale="0" />
+          <Property Name="MEMO" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="LOG_RG_ILRC">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CMPN_EXPC_STRT_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="CMPN_EXPC_END_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="CNT" Type="decimal" Precision="17" Scale="0" />
+          <Property Name="IMPORT_USERID" Type="nvarchar" MaxLength="10" />
+          <Property Name="IMPORT_USERNAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="IMPORT_DT" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="PORTAL_AUTHORITY">
+          <Key>
+            <PropertyRef Name="grp_id" />
+            <PropertyRef Name="fnc_id" />
+            <PropertyRef Name="rights" />
+            <PropertyRef Name="sys_id" />
+            <PropertyRef Name="status" />
+          </Key>
+          <Property Name="grp_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="fnc_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="rights" Type="decimal" Precision="17" Scale="0" Nullable="false" />
+          <Property Name="sys_id" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="memo" Type="nvarchar" MaxLength="50" />
+          <Property Name="status" Type="nvarchar" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PORTAL_FUNCTION">
+          <Key>
+            <PropertyRef Name="fnc_id" />
+          </Key>
+          <Property Name="fnc_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="fnc_name" Type="nvarchar" MaxLength="50" />
+          <Property Name="parent_fnc_id" Type="nvarchar" MaxLength="20" />
+          <Property Name="web_path" Type="nvarchar" MaxLength="500" />
+          <Property Name="sqnc" Type="nvarchar" MaxLength="10" />
+          <Property Name="new_window" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="PORTAL_GROUP">
+          <Key>
+            <PropertyRef Name="grp_id" />
+            <PropertyRef Name="status" />
+          </Key>
+          <Property Name="grp_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="grp_name" Type="nvarchar" MaxLength="50" />
+          <Property Name="memo" Type="nvarchar" MaxLength="50" />
+          <Property Name="status" Type="nvarchar" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PORTAL_ICRS_USER">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ICRS_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PORTAL_USER">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="status" />
+          </Key>
+          <Property Name="user_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="user_name" Type="nvarchar" MaxLength="50" />
+          <Property Name="memo" Type="nvarchar" MaxLength="50" />
+          <Property Name="status" Type="nvarchar" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PORTAL_USER_GROUP">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="grp_id" />
+          </Key>
+          <Property Name="user_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="grp_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RG_ADJUST">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="APPLY_DATE" />
+            <PropertyRef Name="APPLY_TIME" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="APPLY_DATE" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="APPLY_TIME" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="ACCT_ID" Type="nvarchar" MaxLength="11" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="TOT_LIMIT" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="APPLY_AMT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="USESITE" Type="nvarchar" MaxLength="1" />
+          <Property Name="PLACE" Type="nvarchar" MaxLength="40" />
+          <Property Name="ADJUST_DATE_S" Type="nvarchar" MaxLength="10" />
+          <Property Name="ADJUST_DATE_E" Type="nvarchar" MaxLength="10" />
+          <Property Name="REASON1" Type="nvarchar" MaxLength="2" />
+          <Property Name="REASON2" Type="nvarchar" MaxLength="2" />
+          <Property Name="REASON3" Type="nvarchar" MaxLength="2" />
+          <Property Name="REASON" Type="nvarchar" MaxLength="10" />
+          <Property Name="REMARK" Type="nvarchar" MaxLength="30" />
+          <Property Name="FAC_AUTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="APPROVE_AMT_MAX" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="USABILITY_AMT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="OVERPAY_AMT_PRO" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="APPROVE_AMT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="OVERPAY_AMT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="ESTIMATE_RESULT" Type="nvarchar" MaxLength="20" />
+          <Property Name="REJECTREASON" Type="nvarchar" MaxLength="120" />
+          <Property Name="APPROVE_RESULT" Type="nvarchar" MaxLength="20" />
+          <Property Name="CHIEF_FLAG" Type="nvarchar" MaxLength="1" />
+          <Property Name="CHIEF_REMARK" Type="nvarchar" MaxLength="40" />
+          <Property Name="PENDING_FLAG" Type="nvarchar" MaxLength="1" />
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="10" />
+          <Property Name="USER_NAME" Type="nvarchar" MaxLength="10" />
+          <Property Name="CHIEF_ID" Type="nvarchar" MaxLength="10" />
+          <Property Name="CHIEF_NAME" Type="nvarchar" MaxLength="10" />
+          <Property Name="JCIC_DATE" Type="nvarchar" MaxLength="10" />
+          <Property Name="TYPE" Type="nvarchar" MaxLength="1" />
+          <Property Name="CCAS_CODE" Type="nvarchar" MaxLength="2" />
+          <Property Name="CCAS_STATUS" Type="nvarchar" MaxLength="30" />
+          <Property Name="CCAS_DT" Type="nvarchar" MaxLength="19" />
+          <Property Name="PROC_DATE" Type="nvarchar" MaxLength="11" />
+          <Property Name="PROC_TIME" Type="nvarchar" MaxLength="10" />
+          <Property Name="ICARE_YN" Type="nvarchar" MaxLength="1" />
+          <Property Name="PRJ_YN" Type="nvarchar" MaxLength="1" />
+          <Property Name="PRJ_RESULT" Type="nvarchar" MaxLength="20" />
+          <Property Name="PRJ_REJECTREASON" Type="nvarchar" MaxLength="120" />
+          <Property Name="CREDIT_AMT" Type="decimal" Precision="8" Scale="0" />
+        </EntityType>
+        <EntityType Name="RG_PADJUST">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="PJNAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="PRE_AMT" Type="decimal" Precision="9" Scale="0" />
+          <Property Name="CLOSE_DT" Type="nvarchar" MaxLength="10" />
+          <Property Name="IMPORT_DT" Type="nvarchar" MaxLength="10" />
+          <Property Name="CHI_NAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="KIND" Type="nvarchar" MaxLength="30" />
+          <Property Name="SMS_CHECK" Type="nvarchar" MaxLength="1" />
+          <Property Name="STATUS" Type="nvarchar" MaxLength="20" />
+          <Property Name="USER_PROC_DTTM" Type="nvarchar" MaxLength="19" />
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="10" />
+          <Property Name="DEL_PROC_DTTM" Type="nvarchar" MaxLength="19" />
+          <Property Name="DEL_ID" Type="nvarchar" MaxLength="10" />
+          <Property Name="REMARK" Type="nvarchar" MaxLength="30" />
+          <Property Name="STMT_CYCLE_DESC" Type="nvarchar" MaxLength="2" />
+          <Property Name="PAY_DEADLINE" Type="nvarchar" MaxLength="2" />
+          <Property Name="SAGREE_ID" Type="nvarchar" MaxLength="10" />
+          <Property Name="MOBIL_TEL" Type="nvarchar" MaxLength="10" />
+          <Property Name="REJECTREASON" Type="nvarchar" MaxLength="60" />
+          <Property Name="CCAS_CODE" Type="nvarchar" MaxLength="2" />
+          <Property Name="CCAS_STATUS" Type="nvarchar" MaxLength="30" />
+          <Property Name="CCAS_DT" Type="nvarchar" MaxLength="19" />
+        </EntityType>
+        <EntityType Name="RG_PADJUST_TMP">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="PJNAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="PRE_AMT" Type="decimal" Precision="9" Scale="0" />
+          <Property Name="CLOSE_DT" Type="nvarchar" MaxLength="10" />
+          <Property Name="IMPORT_DT" Type="nvarchar" MaxLength="10" />
+          <Property Name="CHI_NAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="KIND" Type="nvarchar" MaxLength="30" />
+          <Property Name="SMS_CHECK" Type="nvarchar" MaxLength="1" />
+          <Property Name="STATUS" Type="nvarchar" MaxLength="20" />
+          <Property Name="USER_PROC_DTTM" Type="nvarchar" MaxLength="19" />
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="10" />
+          <Property Name="DEL_PROC_DTTM" Type="nvarchar" MaxLength="19" />
+          <Property Name="DEL_ID" Type="nvarchar" MaxLength="10" />
+          <Property Name="REMARK" Type="nvarchar" MaxLength="30" />
+          <Property Name="STMT_CYCLE_DESC" Type="nvarchar" MaxLength="2" />
+          <Property Name="PAY_DEADLINE" Type="nvarchar" MaxLength="2" />
+          <Property Name="SAGREE_ID" Type="nvarchar" MaxLength="10" />
+          <Property Name="MOBIL_TEL" Type="nvarchar" MaxLength="10" />
+          <Property Name="REJECTREASON" Type="nvarchar" MaxLength="60" />
+          <Property Name="CCAS_CODE" Type="nvarchar" MaxLength="2" />
+          <Property Name="CCAS_STATUS" Type="nvarchar" MaxLength="30" />
+          <Property Name="CCAS_DT" Type="nvarchar" MaxLength="19" />
+        </EntityType>
+        <EntityType Name="RG_PARA_D_CHECK">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+            <PropertyRef Name="RG_REJECT" />
+          </Key>
+          <Property Name="RG_REASON" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="RG_REJECT" Type="nvarchar" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RG_PARA_D_FINAL">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+            <PropertyRef Name="EFFECT_DT" />
+            <PropertyRef Name="RG_REJECT" />
+          </Key>
+          <Property Name="RG_REASON" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="EFFECT_DT" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="RG_REJECT" Type="nvarchar" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RG_PARA_D_INIT">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+            <PropertyRef Name="RG_REJECT" />
+          </Key>
+          <Property Name="RG_REASON" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="RG_REJECT" Type="nvarchar" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RG_PARA_M_ACTIVE">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+          </Key>
+          <Property Name="RG_REASON" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="EFFECT_DT" Type="nvarchar" MaxLength="10" />
+          <Property Name="ADJUST_DATE_S" Type="nvarchar" MaxLength="10" />
+          <Property Name="ADJUST_DATE_E" Type="nvarchar" MaxLength="10" />
+          <Property Name="APPROVE_AMT_MAX" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="REMARK" Type="nvarchar" MaxLength="100" />
+          <Property Name="RG_REJECT" Type="nvarchar" MaxLength="260" />
+          <Property Name="APPROVE_SCALE_MAX" Type="decimal" Precision="8" Scale="0" />
+        </EntityType>
+        <EntityType Name="RG_PARA_M_CHECK">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+          </Key>
+          <Property Name="RG_REASON" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="EFFECT_DT" Type="nvarchar" MaxLength="10" />
+          <Property Name="ADJUST_DATE_S" Type="nvarchar" MaxLength="10" />
+          <Property Name="ADJUST_DATE_E" Type="nvarchar" MaxLength="10" />
+          <Property Name="APPROVE_AMT_MAX" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="REMARK" Type="nvarchar" MaxLength="100" />
+          <Property Name="RG_REJECT" Type="nvarchar" MaxLength="260" />
+          <Property Name="APPROVE_SCALE_MAX" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="SETUP_USERID" Type="nvarchar" MaxLength="10" />
+          <Property Name="SETUP_USERNAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="SETUP_DT" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="RG_PARA_M_FINAL">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+            <PropertyRef Name="EFFECT_DT" />
+          </Key>
+          <Property Name="RG_REASON" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="EFFECT_DT" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ADJUST_DATE_S" Type="nvarchar" MaxLength="10" />
+          <Property Name="ADJUST_DATE_E" Type="nvarchar" MaxLength="10" />
+          <Property Name="APPROVE_AMT_MAX" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="REMARK" Type="nvarchar" MaxLength="100" />
+          <Property Name="RG_REJECT" Type="nvarchar" MaxLength="260" />
+          <Property Name="APPROVE_SCALE_MAX" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="SETUP_USERID" Type="nvarchar" MaxLength="10" />
+          <Property Name="SETUP_USERNAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="SETUP_DT" Type="nvarchar" MaxLength="10" />
+          <Property Name="CHECK_USERID" Type="nvarchar" MaxLength="10" />
+          <Property Name="CHECK_USERNAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="CHECK_DT" Type="nvarchar" MaxLength="10" />
+          <Property Name="SUSPEND_FLAG" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="RG_PARA_M_INIT">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+          </Key>
+          <Property Name="RG_REASON" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="ADJUST_DATE_S" Type="nvarchar" MaxLength="10" />
+          <Property Name="ADJUST_DATE_E" Type="nvarchar" MaxLength="10" />
+          <Property Name="APPROVE_AMT_MAX" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="REMARK" Type="nvarchar" MaxLength="100" />
+          <Property Name="RG_REJECT" Type="nvarchar" MaxLength="260" />
+          <Property Name="APPROVE_SCALE_MAX" Type="decimal" Precision="8" Scale="0" />
+        </EntityType>
+        <Function Name="SP_ELGB_PAD01" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="vID" Type="varchar" Mode="In" />
+          <Parameter Name="UserID" Type="varchar" Mode="In" />
+          <Parameter Name="UserName" Type="varchar" Mode="In" />
+          <Parameter Name="JCIC_DATE" Type="varchar" Mode="InOut" />
+          <Parameter Name="Resp_code" Type="varchar" Mode="InOut" />
+        </Function>
+        <Function Name="SP_ELGB_PAD02" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="vID" Type="varchar" Mode="In" />
+          <Parameter Name="JCIC_DATE" Type="varchar" Mode="In" />
+          <Parameter Name="REASON" Type="varchar" Mode="In" />
+          <Parameter Name="ESTIMATE_RESULT" Type="nvarchar" Mode="InOut" />
+          <Parameter Name="REJECTREASON" Type="varchar" Mode="InOut" />
+          <Parameter Name="PRJ_RESULT" Type="nvarchar" Mode="InOut" />
+          <Parameter Name="PRJ_REJECTREASON" Type="varchar" Mode="InOut" />
+          <Parameter Name="Resp_code" Type="varchar" Mode="InOut" />
+        </Function>
+        <Function Name="SP_ELGB_PAD03" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="vID" Type="varchar" Mode="In" />
+          <Parameter Name="REJECTREASON" Type="varchar" Mode="InOut" />
+          <Parameter Name="Resp_code" Type="varchar" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="CDRMModelStoreContainer">
+          <EntitySet Name="COD_ADJUSTLEVEL" EntityType="Self.COD_ADJUSTLEVEL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COD_ADJUSTUSER" EntityType="Self.COD_ADJUSTUSER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COD_CCASUSER" EntityType="Self.COD_CCASUSER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COD_RG_PARA" EntityType="Self.COD_RG_PARA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COD_RG_REASON" EntityType="Self.COD_RG_REASON" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COD_RG_REJECT" EntityType="Self.COD_RG_REJECT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LOG_PROGRESS" EntityType="Self.LOG_PROGRESS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LOG_RG_ILRC" EntityType="Self.LOG_RG_ILRC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PORTAL_AUTHORITY" EntityType="Self.PORTAL_AUTHORITY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PORTAL_FUNCTION" EntityType="Self.PORTAL_FUNCTION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PORTAL_GROUP" EntityType="Self.PORTAL_GROUP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PORTAL_ICRS_USER" EntityType="Self.PORTAL_ICRS_USER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PORTAL_USER" EntityType="Self.PORTAL_USER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PORTAL_USER_GROUP" EntityType="Self.PORTAL_USER_GROUP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_ADJUST" EntityType="Self.RG_ADJUST" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PADJUST" EntityType="Self.RG_PADJUST" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PADJUST_TMP" EntityType="Self.RG_PADJUST_TMP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PARA_D_CHECK" EntityType="Self.RG_PARA_D_CHECK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PARA_D_FINAL" EntityType="Self.RG_PARA_D_FINAL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PARA_D_INIT" EntityType="Self.RG_PARA_D_INIT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PARA_M_ACTIVE" EntityType="Self.RG_PARA_M_ACTIVE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PARA_M_CHECK" EntityType="Self.RG_PARA_M_CHECK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PARA_M_FINAL" EntityType="Self.RG_PARA_M_FINAL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_PARA_M_INIT" EntityType="Self.RG_PARA_M_INIT" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CDRMModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="COD_ADJUSTLEVEL">
+          <Key>
+            <PropertyRef Name="LEVELCODE" />
+          </Key>
+          <Property Name="LEVELCODE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CL" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_QUERY" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_EXEC" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="VERIFY_NORMAL" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="VERIFY_ADV" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="SEQNO" Type="Decimal" Precision="19" Scale="0" />
+        </EntityType>
+        <EntityType Name="COD_ADJUSTUSER">
+          <Key>
+            <PropertyRef Name="USERID" />
+          </Key>
+          <Property Name="USERID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LEVELCODE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="COD_CCASUSER">
+          <Key>
+            <PropertyRef Name="CODE" />
+          </Key>
+          <Property Name="CODE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ACCOUNT" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="PROCDATE" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="PROCID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="COD_RG_PARA">
+          <Key>
+            <PropertyRef Name="CODE" />
+          </Key>
+          <Property Name="CODE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MEMO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="COD_RG_REASON">
+          <Key>
+            <PropertyRef Name="CODE" />
+          </Key>
+          <Property Name="CODE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NAME" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="USE_YN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="COD_RG_REJECT">
+          <Key>
+            <PropertyRef Name="CODE" />
+          </Key>
+          <Property Name="CODE" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="USE_YN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LOG_PROGRESS">
+          <Key>
+            <PropertyRef Name="APPNO" />
+            <PropertyRef Name="PROCDATE" />
+            <PropertyRef Name="PROCTIME" />
+          </Key>
+          <Property Name="APPNO" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="APPOPTION" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="PROGRESS" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="PROCID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PROCNAME" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PROCDATE" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PROCTIME" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SERIALNO" Type="Decimal" Precision="17" Scale="0" />
+          <Property Name="MEMO" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LOG_RG_ILRC">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CMPN_EXPC_STRT_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CMPN_EXPC_END_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CNT" Type="Decimal" Precision="17" Scale="0" />
+          <Property Name="IMPORT_USERID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="IMPORT_USERNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IMPORT_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PORTAL_AUTHORITY">
+          <Key>
+            <PropertyRef Name="grp_id" />
+            <PropertyRef Name="fnc_id" />
+            <PropertyRef Name="rights" />
+            <PropertyRef Name="sys_id" />
+            <PropertyRef Name="status" />
+          </Key>
+          <Property Name="grp_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="fnc_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="rights" Type="Decimal" Precision="17" Scale="0" Nullable="false" />
+          <Property Name="sys_id" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="memo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="1" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PORTAL_FUNCTION">
+          <Key>
+            <PropertyRef Name="fnc_id" />
+          </Key>
+          <Property Name="fnc_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="fnc_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="parent_fnc_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="web_path" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="sqnc" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="new_window" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PORTAL_GROUP">
+          <Key>
+            <PropertyRef Name="grp_id" />
+            <PropertyRef Name="status" />
+          </Key>
+          <Property Name="grp_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="grp_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="memo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="1" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PORTAL_ICRS_USER">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ICRS_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PORTAL_USER">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="status" />
+          </Key>
+          <Property Name="user_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="user_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="memo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="1" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PORTAL_USER_GROUP">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="grp_id" />
+          </Key>
+          <Property Name="user_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="grp_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RG_ADJUST">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="APPLY_DATE" />
+            <PropertyRef Name="APPLY_TIME" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="APPLY_DATE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="APPLY_TIME" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ACCT_ID" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="NAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TOT_LIMIT" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="APPLY_AMT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="USESITE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="PLACE" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_DATE_S" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_DATE_E" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="REASON1" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="REASON2" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="REASON3" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="REASON" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="REMARK" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="FAC_AUTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_AMT_MAX" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="USABILITY_AMT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="OVERPAY_AMT_PRO" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="APPROVE_AMT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="OVERPAY_AMT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="ESTIMATE_RESULT" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="REJECTREASON" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_RESULT" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CHIEF_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="CHIEF_REMARK" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="PENDING_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="USER_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="USER_NAME" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CHIEF_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CHIEF_NAME" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="JCIC_DATE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TYPE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_CODE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_STATUS" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_DT" Type="String" MaxLength="19" FixedLength="false" Unicode="true" />
+          <Property Name="PROC_DATE" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="PROC_TIME" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ICARE_YN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="PRJ_YN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="PRJ_RESULT" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PRJ_REJECTREASON" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="CREDIT_AMT" Type="Decimal" Precision="8" Scale="0" />
+        </EntityType>
+        <EntityType Name="RG_PADJUST">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ID" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PJNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PRE_AMT" Type="Decimal" Precision="9" Scale="0" />
+          <Property Name="CLOSE_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="IMPORT_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CHI_NAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="KIND" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SMS_CHECK" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="STATUS" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="USER_PROC_DTTM" Type="String" MaxLength="19" FixedLength="false" Unicode="true" />
+          <Property Name="USER_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DEL_PROC_DTTM" Type="String" MaxLength="19" FixedLength="false" Unicode="true" />
+          <Property Name="DEL_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="REMARK" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="STMT_CYCLE_DESC" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="PAY_DEADLINE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="SAGREE_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MOBIL_TEL" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="REJECTREASON" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_CODE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_STATUS" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_DT" Type="String" MaxLength="19" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RG_PADJUST_TMP">
+          <Key>
+            <PropertyRef Name="CMPN_ID" />
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="CMPN_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ID" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PJNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PRE_AMT" Type="Decimal" Precision="9" Scale="0" />
+          <Property Name="CLOSE_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="IMPORT_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CHI_NAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="KIND" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SMS_CHECK" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="STATUS" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="USER_PROC_DTTM" Type="String" MaxLength="19" FixedLength="false" Unicode="true" />
+          <Property Name="USER_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DEL_PROC_DTTM" Type="String" MaxLength="19" FixedLength="false" Unicode="true" />
+          <Property Name="DEL_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="REMARK" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="STMT_CYCLE_DESC" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="PAY_DEADLINE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="SAGREE_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MOBIL_TEL" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="REJECTREASON" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_CODE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_STATUS" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CCAS_DT" Type="String" MaxLength="19" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RG_PARA_D_CHECK">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+            <PropertyRef Name="RG_REJECT" />
+          </Key>
+          <Property Name="RG_REASON" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RG_REJECT" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RG_PARA_D_FINAL">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+            <PropertyRef Name="EFFECT_DT" />
+            <PropertyRef Name="RG_REJECT" />
+          </Key>
+          <Property Name="RG_REASON" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EFFECT_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RG_REJECT" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RG_PARA_D_INIT">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+            <PropertyRef Name="RG_REJECT" />
+          </Key>
+          <Property Name="RG_REASON" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RG_REJECT" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RG_PARA_M_ACTIVE">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+          </Key>
+          <Property Name="RG_REASON" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EFFECT_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_DATE_S" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_DATE_E" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_AMT_MAX" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="REMARK" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RG_REJECT" Type="String" MaxLength="260" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_SCALE_MAX" Type="Decimal" Precision="8" Scale="0" />
+        </EntityType>
+        <EntityType Name="RG_PARA_M_CHECK">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+          </Key>
+          <Property Name="RG_REASON" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EFFECT_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_DATE_S" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_DATE_E" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_AMT_MAX" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="REMARK" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RG_REJECT" Type="String" MaxLength="260" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_SCALE_MAX" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="SETUP_USERID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SETUP_USERNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SETUP_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RG_PARA_M_FINAL">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+            <PropertyRef Name="EFFECT_DT" />
+          </Key>
+          <Property Name="RG_REASON" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EFFECT_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ADJUST_DATE_S" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_DATE_E" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_AMT_MAX" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="REMARK" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RG_REJECT" Type="String" MaxLength="260" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_SCALE_MAX" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="SETUP_USERID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SETUP_USERNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SETUP_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CHECK_USERID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CHECK_USERNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CHECK_DT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SUSPEND_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RG_PARA_M_INIT">
+          <Key>
+            <PropertyRef Name="RG_REASON" />
+          </Key>
+          <Property Name="RG_REASON" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ADJUST_DATE_S" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ADJUST_DATE_E" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_AMT_MAX" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="REMARK" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RG_REJECT" Type="String" MaxLength="260" FixedLength="false" Unicode="true" />
+          <Property Name="APPROVE_SCALE_MAX" Type="Decimal" Precision="8" Scale="0" />
+        </EntityType>
+        <EntityContainer Name="CDRMEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="COD_ADJUSTLEVEL" EntityType="Self.COD_ADJUSTLEVEL" />
+          <EntitySet Name="COD_ADJUSTUSER" EntityType="Self.COD_ADJUSTUSER" />
+          <EntitySet Name="COD_CCASUSER" EntityType="Self.COD_CCASUSER" />
+          <EntitySet Name="COD_RG_PARA" EntityType="Self.COD_RG_PARA" />
+          <EntitySet Name="COD_RG_REASON" EntityType="Self.COD_RG_REASON" />
+          <EntitySet Name="COD_RG_REJECT" EntityType="Self.COD_RG_REJECT" />
+          <EntitySet Name="LOG_PROGRESS" EntityType="Self.LOG_PROGRESS" />
+          <EntitySet Name="LOG_RG_ILRC" EntityType="Self.LOG_RG_ILRC" />
+          <EntitySet Name="PORTAL_AUTHORITY" EntityType="Self.PORTAL_AUTHORITY" />
+          <EntitySet Name="PORTAL_FUNCTION" EntityType="Self.PORTAL_FUNCTION" />
+          <EntitySet Name="PORTAL_GROUP" EntityType="Self.PORTAL_GROUP" />
+          <EntitySet Name="PORTAL_ICRS_USER" EntityType="Self.PORTAL_ICRS_USER" />
+          <EntitySet Name="PORTAL_USER" EntityType="Self.PORTAL_USER" />
+          <EntitySet Name="PORTAL_USER_GROUP" EntityType="Self.PORTAL_USER_GROUP" />
+          <EntitySet Name="RG_ADJUST" EntityType="Self.RG_ADJUST" />
+          <EntitySet Name="RG_PADJUST" EntityType="Self.RG_PADJUST" />
+          <EntitySet Name="RG_PADJUST_TMP" EntityType="Self.RG_PADJUST_TMP" />
+          <EntitySet Name="RG_PARA_D_CHECK" EntityType="Self.RG_PARA_D_CHECK" />
+          <EntitySet Name="RG_PARA_D_FINAL" EntityType="Self.RG_PARA_D_FINAL" />
+          <EntitySet Name="RG_PARA_D_INIT" EntityType="Self.RG_PARA_D_INIT" />
+          <EntitySet Name="RG_PARA_M_ACTIVE" EntityType="Self.RG_PARA_M_ACTIVE" />
+          <EntitySet Name="RG_PARA_M_CHECK" EntityType="Self.RG_PARA_M_CHECK" />
+          <EntitySet Name="RG_PARA_M_FINAL" EntityType="Self.RG_PARA_M_FINAL" />
+          <EntitySet Name="RG_PARA_M_INIT" EntityType="Self.RG_PARA_M_INIT" />
+          <FunctionImport Name="SP_ELGB_PAD01">
+            <Parameter Name="vID" Mode="In" Type="String" />
+            <Parameter Name="UserID" Mode="In" Type="String" />
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="JCIC_DATE" Mode="InOut" Type="String" />
+            <Parameter Name="Resp_code" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_ELGB_PAD02">
+            <Parameter Name="vID" Mode="In" Type="String" />
+            <Parameter Name="JCIC_DATE" Mode="In" Type="String" />
+            <Parameter Name="REASON" Mode="In" Type="String" />
+            <Parameter Name="ESTIMATE_RESULT" Mode="InOut" Type="String" />
+            <Parameter Name="REJECTREASON" Mode="InOut" Type="String" />
+            <Parameter Name="PRJ_RESULT" Mode="InOut" Type="String" />
+            <Parameter Name="PRJ_REJECTREASON" Mode="InOut" Type="String" />
+            <Parameter Name="Resp_code" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_ELGB_PAD03">
+            <Parameter Name="vID" Mode="In" Type="String" />
+            <Parameter Name="REJECTREASON" Mode="InOut" Type="String" />
+            <Parameter Name="Resp_code" Mode="InOut" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CDRMModelStoreContainer" CdmEntityContainer="CDRMEntities">
+          <EntitySetMapping Name="COD_ADJUSTLEVEL">
+            <EntityTypeMapping TypeName="CDRMModel.COD_ADJUSTLEVEL">
+              <MappingFragment StoreEntitySet="COD_ADJUSTLEVEL">
+                <ScalarProperty Name="LEVELCODE" ColumnName="LEVELCODE" />
+                <ScalarProperty Name="CL" ColumnName="CL" />
+                <ScalarProperty Name="ADJUST_QUERY" ColumnName="ADJUST_QUERY" />
+                <ScalarProperty Name="ADJUST_EXEC" ColumnName="ADJUST_EXEC" />
+                <ScalarProperty Name="VERIFY_NORMAL" ColumnName="VERIFY_NORMAL" />
+                <ScalarProperty Name="VERIFY_ADV" ColumnName="VERIFY_ADV" />
+                <ScalarProperty Name="SEQNO" ColumnName="SEQNO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COD_ADJUSTUSER">
+            <EntityTypeMapping TypeName="CDRMModel.COD_ADJUSTUSER">
+              <MappingFragment StoreEntitySet="COD_ADJUSTUSER">
+                <ScalarProperty Name="USERID" ColumnName="USERID" />
+                <ScalarProperty Name="LEVELCODE" ColumnName="LEVELCODE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COD_CCASUSER">
+            <EntityTypeMapping TypeName="CDRMModel.COD_CCASUSER">
+              <MappingFragment StoreEntitySet="COD_CCASUSER">
+                <ScalarProperty Name="CODE" ColumnName="CODE" />
+                <ScalarProperty Name="ACCOUNT" ColumnName="ACCOUNT" />
+                <ScalarProperty Name="PROCDATE" ColumnName="PROCDATE" />
+                <ScalarProperty Name="PROCID" ColumnName="PROCID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COD_RG_PARA">
+            <EntityTypeMapping TypeName="CDRMModel.COD_RG_PARA">
+              <MappingFragment StoreEntitySet="COD_RG_PARA">
+                <ScalarProperty Name="CODE" ColumnName="CODE" />
+                <ScalarProperty Name="MEMO" ColumnName="MEMO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COD_RG_REASON">
+            <EntityTypeMapping TypeName="CDRMModel.COD_RG_REASON">
+              <MappingFragment StoreEntitySet="COD_RG_REASON">
+                <ScalarProperty Name="CODE" ColumnName="CODE" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="USE_YN" ColumnName="USE_YN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COD_RG_REJECT">
+            <EntityTypeMapping TypeName="CDRMModel.COD_RG_REJECT">
+              <MappingFragment StoreEntitySet="COD_RG_REJECT">
+                <ScalarProperty Name="CODE" ColumnName="CODE" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="USE_YN" ColumnName="USE_YN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LOG_PROGRESS">
+            <EntityTypeMapping TypeName="CDRMModel.LOG_PROGRESS">
+              <MappingFragment StoreEntitySet="LOG_PROGRESS">
+                <ScalarProperty Name="APPNO" ColumnName="APPNO" />
+                <ScalarProperty Name="APPOPTION" ColumnName="APPOPTION" />
+                <ScalarProperty Name="PROGRESS" ColumnName="PROGRESS" />
+                <ScalarProperty Name="PROCID" ColumnName="PROCID" />
+                <ScalarProperty Name="PROCNAME" ColumnName="PROCNAME" />
+                <ScalarProperty Name="PROCDATE" ColumnName="PROCDATE" />
+                <ScalarProperty Name="PROCTIME" ColumnName="PROCTIME" />
+                <ScalarProperty Name="SERIALNO" ColumnName="SERIALNO" />
+                <ScalarProperty Name="MEMO" ColumnName="MEMO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LOG_RG_ILRC">
+            <EntityTypeMapping TypeName="CDRMModel.LOG_RG_ILRC">
+              <MappingFragment StoreEntitySet="LOG_RG_ILRC">
+                <ScalarProperty Name="CMPN_ID" ColumnName="CMPN_ID" />
+                <ScalarProperty Name="CMPN_EXPC_STRT_DT" ColumnName="CMPN_EXPC_STRT_DT" />
+                <ScalarProperty Name="CMPN_EXPC_END_DT" ColumnName="CMPN_EXPC_END_DT" />
+                <ScalarProperty Name="CNT" ColumnName="CNT" />
+                <ScalarProperty Name="IMPORT_USERID" ColumnName="IMPORT_USERID" />
+                <ScalarProperty Name="IMPORT_USERNAME" ColumnName="IMPORT_USERNAME" />
+                <ScalarProperty Name="IMPORT_DT" ColumnName="IMPORT_DT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PORTAL_AUTHORITY">
+            <EntityTypeMapping TypeName="CDRMModel.PORTAL_AUTHORITY">
+              <MappingFragment StoreEntitySet="PORTAL_AUTHORITY">
+                <ScalarProperty Name="grp_id" ColumnName="grp_id" />
+                <ScalarProperty Name="fnc_id" ColumnName="fnc_id" />
+                <ScalarProperty Name="rights" ColumnName="rights" />
+                <ScalarProperty Name="sys_id" ColumnName="sys_id" />
+                <ScalarProperty Name="memo" ColumnName="memo" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PORTAL_FUNCTION">
+            <EntityTypeMapping TypeName="CDRMModel.PORTAL_FUNCTION">
+              <MappingFragment StoreEntitySet="PORTAL_FUNCTION">
+                <ScalarProperty Name="fnc_id" ColumnName="fnc_id" />
+                <ScalarProperty Name="fnc_name" ColumnName="fnc_name" />
+                <ScalarProperty Name="parent_fnc_id" ColumnName="parent_fnc_id" />
+                <ScalarProperty Name="web_path" ColumnName="web_path" />
+                <ScalarProperty Name="sqnc" ColumnName="sqnc" />
+                <ScalarProperty Name="new_window" ColumnName="new_window" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PORTAL_GROUP">
+            <EntityTypeMapping TypeName="CDRMModel.PORTAL_GROUP">
+              <MappingFragment StoreEntitySet="PORTAL_GROUP">
+                <ScalarProperty Name="grp_id" ColumnName="grp_id" />
+                <ScalarProperty Name="grp_name" ColumnName="grp_name" />
+                <ScalarProperty Name="memo" ColumnName="memo" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PORTAL_ICRS_USER">
+            <EntityTypeMapping TypeName="CDRMModel.PORTAL_ICRS_USER">
+              <MappingFragment StoreEntitySet="PORTAL_ICRS_USER">
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="ICRS_ID" ColumnName="ICRS_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PORTAL_USER">
+            <EntityTypeMapping TypeName="CDRMModel.PORTAL_USER">
+              <MappingFragment StoreEntitySet="PORTAL_USER">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="user_name" ColumnName="user_name" />
+                <ScalarProperty Name="memo" ColumnName="memo" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PORTAL_USER_GROUP">
+            <EntityTypeMapping TypeName="CDRMModel.PORTAL_USER_GROUP">
+              <MappingFragment StoreEntitySet="PORTAL_USER_GROUP">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="grp_id" ColumnName="grp_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_ADJUST">
+            <EntityTypeMapping TypeName="CDRMModel.RG_ADJUST">
+              <MappingFragment StoreEntitySet="RG_ADJUST">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="APPLY_DATE" ColumnName="APPLY_DATE" />
+                <ScalarProperty Name="APPLY_TIME" ColumnName="APPLY_TIME" />
+                <ScalarProperty Name="ACCT_ID" ColumnName="ACCT_ID" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="TOT_LIMIT" ColumnName="TOT_LIMIT" />
+                <ScalarProperty Name="APPLY_AMT" ColumnName="APPLY_AMT" />
+                <ScalarProperty Name="USESITE" ColumnName="USESITE" />
+                <ScalarProperty Name="PLACE" ColumnName="PLACE" />
+                <ScalarProperty Name="ADJUST_DATE_S" ColumnName="ADJUST_DATE_S" />
+                <ScalarProperty Name="ADJUST_DATE_E" ColumnName="ADJUST_DATE_E" />
+                <ScalarProperty Name="REASON1" ColumnName="REASON1" />
+                <ScalarProperty Name="REASON2" ColumnName="REASON2" />
+                <ScalarProperty Name="REASON3" ColumnName="REASON3" />
+                <ScalarProperty Name="REASON" ColumnName="REASON" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="FAC_AUTH" ColumnName="FAC_AUTH" />
+                <ScalarProperty Name="APPROVE_AMT_MAX" ColumnName="APPROVE_AMT_MAX" />
+                <ScalarProperty Name="USABILITY_AMT" ColumnName="USABILITY_AMT" />
+                <ScalarProperty Name="OVERPAY_AMT_PRO" ColumnName="OVERPAY_AMT_PRO" />
+                <ScalarProperty Name="APPROVE_AMT" ColumnName="APPROVE_AMT" />
+                <ScalarProperty Name="OVERPAY_AMT" ColumnName="OVERPAY_AMT" />
+                <ScalarProperty Name="ESTIMATE_RESULT" ColumnName="ESTIMATE_RESULT" />
+                <ScalarProperty Name="REJECTREASON" ColumnName="REJECTREASON" />
+                <ScalarProperty Name="APPROVE_RESULT" ColumnName="APPROVE_RESULT" />
+                <ScalarProperty Name="CHIEF_FLAG" ColumnName="CHIEF_FLAG" />
+                <ScalarProperty Name="CHIEF_REMARK" ColumnName="CHIEF_REMARK" />
+                <ScalarProperty Name="PENDING_FLAG" ColumnName="PENDING_FLAG" />
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+                <ScalarProperty Name="CHIEF_ID" ColumnName="CHIEF_ID" />
+                <ScalarProperty Name="CHIEF_NAME" ColumnName="CHIEF_NAME" />
+                <ScalarProperty Name="JCIC_DATE" ColumnName="JCIC_DATE" />
+                <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+                <ScalarProperty Name="CCAS_CODE" ColumnName="CCAS_CODE" />
+                <ScalarProperty Name="CCAS_STATUS" ColumnName="CCAS_STATUS" />
+                <ScalarProperty Name="CCAS_DT" ColumnName="CCAS_DT" />
+                <ScalarProperty Name="PROC_DATE" ColumnName="PROC_DATE" />
+                <ScalarProperty Name="PROC_TIME" ColumnName="PROC_TIME" />
+                <ScalarProperty Name="ICARE_YN" ColumnName="ICARE_YN" />
+                <ScalarProperty Name="PRJ_YN" ColumnName="PRJ_YN" />
+                <ScalarProperty Name="PRJ_RESULT" ColumnName="PRJ_RESULT" />
+                <ScalarProperty Name="PRJ_REJECTREASON" ColumnName="PRJ_REJECTREASON" />
+                <ScalarProperty Name="CREDIT_AMT" ColumnName="CREDIT_AMT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PADJUST">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PADJUST">
+              <MappingFragment StoreEntitySet="RG_PADJUST">
+                <ScalarProperty Name="CMPN_ID" ColumnName="CMPN_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PJNAME" ColumnName="PJNAME" />
+                <ScalarProperty Name="PRE_AMT" ColumnName="PRE_AMT" />
+                <ScalarProperty Name="CLOSE_DT" ColumnName="CLOSE_DT" />
+                <ScalarProperty Name="IMPORT_DT" ColumnName="IMPORT_DT" />
+                <ScalarProperty Name="CHI_NAME" ColumnName="CHI_NAME" />
+                <ScalarProperty Name="KIND" ColumnName="KIND" />
+                <ScalarProperty Name="SMS_CHECK" ColumnName="SMS_CHECK" />
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+                <ScalarProperty Name="USER_PROC_DTTM" ColumnName="USER_PROC_DTTM" />
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="DEL_PROC_DTTM" ColumnName="DEL_PROC_DTTM" />
+                <ScalarProperty Name="DEL_ID" ColumnName="DEL_ID" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="STMT_CYCLE_DESC" ColumnName="STMT_CYCLE_DESC" />
+                <ScalarProperty Name="PAY_DEADLINE" ColumnName="PAY_DEADLINE" />
+                <ScalarProperty Name="SAGREE_ID" ColumnName="SAGREE_ID" />
+                <ScalarProperty Name="MOBIL_TEL" ColumnName="MOBIL_TEL" />
+                <ScalarProperty Name="REJECTREASON" ColumnName="REJECTREASON" />
+                <ScalarProperty Name="CCAS_CODE" ColumnName="CCAS_CODE" />
+                <ScalarProperty Name="CCAS_STATUS" ColumnName="CCAS_STATUS" />
+                <ScalarProperty Name="CCAS_DT" ColumnName="CCAS_DT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PADJUST_TMP">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PADJUST_TMP">
+              <MappingFragment StoreEntitySet="RG_PADJUST_TMP">
+                <ScalarProperty Name="CMPN_ID" ColumnName="CMPN_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PJNAME" ColumnName="PJNAME" />
+                <ScalarProperty Name="PRE_AMT" ColumnName="PRE_AMT" />
+                <ScalarProperty Name="CLOSE_DT" ColumnName="CLOSE_DT" />
+                <ScalarProperty Name="IMPORT_DT" ColumnName="IMPORT_DT" />
+                <ScalarProperty Name="CHI_NAME" ColumnName="CHI_NAME" />
+                <ScalarProperty Name="KIND" ColumnName="KIND" />
+                <ScalarProperty Name="SMS_CHECK" ColumnName="SMS_CHECK" />
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+                <ScalarProperty Name="USER_PROC_DTTM" ColumnName="USER_PROC_DTTM" />
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="DEL_PROC_DTTM" ColumnName="DEL_PROC_DTTM" />
+                <ScalarProperty Name="DEL_ID" ColumnName="DEL_ID" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="STMT_CYCLE_DESC" ColumnName="STMT_CYCLE_DESC" />
+                <ScalarProperty Name="PAY_DEADLINE" ColumnName="PAY_DEADLINE" />
+                <ScalarProperty Name="SAGREE_ID" ColumnName="SAGREE_ID" />
+                <ScalarProperty Name="MOBIL_TEL" ColumnName="MOBIL_TEL" />
+                <ScalarProperty Name="REJECTREASON" ColumnName="REJECTREASON" />
+                <ScalarProperty Name="CCAS_CODE" ColumnName="CCAS_CODE" />
+                <ScalarProperty Name="CCAS_STATUS" ColumnName="CCAS_STATUS" />
+                <ScalarProperty Name="CCAS_DT" ColumnName="CCAS_DT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PARA_D_CHECK">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PARA_D_CHECK">
+              <MappingFragment StoreEntitySet="RG_PARA_D_CHECK">
+                <ScalarProperty Name="RG_REASON" ColumnName="RG_REASON" />
+                <ScalarProperty Name="RG_REJECT" ColumnName="RG_REJECT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PARA_D_FINAL">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PARA_D_FINAL">
+              <MappingFragment StoreEntitySet="RG_PARA_D_FINAL">
+                <ScalarProperty Name="RG_REASON" ColumnName="RG_REASON" />
+                <ScalarProperty Name="EFFECT_DT" ColumnName="EFFECT_DT" />
+                <ScalarProperty Name="RG_REJECT" ColumnName="RG_REJECT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PARA_D_INIT">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PARA_D_INIT">
+              <MappingFragment StoreEntitySet="RG_PARA_D_INIT">
+                <ScalarProperty Name="RG_REASON" ColumnName="RG_REASON" />
+                <ScalarProperty Name="RG_REJECT" ColumnName="RG_REJECT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PARA_M_ACTIVE">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PARA_M_ACTIVE">
+              <MappingFragment StoreEntitySet="RG_PARA_M_ACTIVE">
+                <ScalarProperty Name="RG_REASON" ColumnName="RG_REASON" />
+                <ScalarProperty Name="EFFECT_DT" ColumnName="EFFECT_DT" />
+                <ScalarProperty Name="ADJUST_DATE_S" ColumnName="ADJUST_DATE_S" />
+                <ScalarProperty Name="ADJUST_DATE_E" ColumnName="ADJUST_DATE_E" />
+                <ScalarProperty Name="APPROVE_AMT_MAX" ColumnName="APPROVE_AMT_MAX" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="RG_REJECT" ColumnName="RG_REJECT" />
+                <ScalarProperty Name="APPROVE_SCALE_MAX" ColumnName="APPROVE_SCALE_MAX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PARA_M_CHECK">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PARA_M_CHECK">
+              <MappingFragment StoreEntitySet="RG_PARA_M_CHECK">
+                <ScalarProperty Name="RG_REASON" ColumnName="RG_REASON" />
+                <ScalarProperty Name="EFFECT_DT" ColumnName="EFFECT_DT" />
+                <ScalarProperty Name="ADJUST_DATE_S" ColumnName="ADJUST_DATE_S" />
+                <ScalarProperty Name="ADJUST_DATE_E" ColumnName="ADJUST_DATE_E" />
+                <ScalarProperty Name="APPROVE_AMT_MAX" ColumnName="APPROVE_AMT_MAX" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="RG_REJECT" ColumnName="RG_REJECT" />
+                <ScalarProperty Name="APPROVE_SCALE_MAX" ColumnName="APPROVE_SCALE_MAX" />
+                <ScalarProperty Name="SETUP_USERID" ColumnName="SETUP_USERID" />
+                <ScalarProperty Name="SETUP_USERNAME" ColumnName="SETUP_USERNAME" />
+                <ScalarProperty Name="SETUP_DT" ColumnName="SETUP_DT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PARA_M_FINAL">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PARA_M_FINAL">
+              <MappingFragment StoreEntitySet="RG_PARA_M_FINAL">
+                <ScalarProperty Name="RG_REASON" ColumnName="RG_REASON" />
+                <ScalarProperty Name="EFFECT_DT" ColumnName="EFFECT_DT" />
+                <ScalarProperty Name="ADJUST_DATE_S" ColumnName="ADJUST_DATE_S" />
+                <ScalarProperty Name="ADJUST_DATE_E" ColumnName="ADJUST_DATE_E" />
+                <ScalarProperty Name="APPROVE_AMT_MAX" ColumnName="APPROVE_AMT_MAX" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="RG_REJECT" ColumnName="RG_REJECT" />
+                <ScalarProperty Name="APPROVE_SCALE_MAX" ColumnName="APPROVE_SCALE_MAX" />
+                <ScalarProperty Name="SETUP_USERID" ColumnName="SETUP_USERID" />
+                <ScalarProperty Name="SETUP_USERNAME" ColumnName="SETUP_USERNAME" />
+                <ScalarProperty Name="SETUP_DT" ColumnName="SETUP_DT" />
+                <ScalarProperty Name="CHECK_USERID" ColumnName="CHECK_USERID" />
+                <ScalarProperty Name="CHECK_USERNAME" ColumnName="CHECK_USERNAME" />
+                <ScalarProperty Name="CHECK_DT" ColumnName="CHECK_DT" />
+                <ScalarProperty Name="SUSPEND_FLAG" ColumnName="SUSPEND_FLAG" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_PARA_M_INIT">
+            <EntityTypeMapping TypeName="CDRMModel.RG_PARA_M_INIT">
+              <MappingFragment StoreEntitySet="RG_PARA_M_INIT">
+                <ScalarProperty Name="RG_REASON" ColumnName="RG_REASON" />
+                <ScalarProperty Name="ADJUST_DATE_S" ColumnName="ADJUST_DATE_S" />
+                <ScalarProperty Name="ADJUST_DATE_E" ColumnName="ADJUST_DATE_E" />
+                <ScalarProperty Name="APPROVE_AMT_MAX" ColumnName="APPROVE_AMT_MAX" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="RG_REJECT" ColumnName="RG_REJECT" />
+                <ScalarProperty Name="APPROVE_SCALE_MAX" ColumnName="APPROVE_SCALE_MAX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_ELGB_PAD01" FunctionName="CDRMModel.Store.SP_ELGB_PAD01" />
+          <FunctionImportMapping FunctionImportName="SP_ELGB_PAD02" FunctionName="CDRMModel.Store.SP_ELGB_PAD02" />
+          <FunctionImportMapping FunctionImportName="SP_ELGB_PAD03" FunctionName="CDRMModel.Store.SP_ELGB_PAD03" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

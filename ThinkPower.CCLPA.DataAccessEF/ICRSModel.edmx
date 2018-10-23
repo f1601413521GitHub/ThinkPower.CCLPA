@@ -1,0 +1,539 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ICRSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="OD_VIP">
+          <Key>
+            <PropertyRef Name="CST_ID" />
+            <PropertyRef Name="YYYYMM" />
+          </Key>
+          <Property Name="CST_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="YYYYMM" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="UPD_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="ELG_VIP_TP_ID" Type="decimal" Precision="1" Scale="0" />
+          <Property Name="ELG_VIP_TP_EFF_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="VIP_TP_ID" Type="decimal" Precision="1" Scale="0" />
+          <Property Name="VIP_TP_EFF_DT" Type="nvarchar" MaxLength="8" />
+          <Property Name="VIP_BAL_AMT" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="DEP_AVG_BAL_AMT" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="NT_INVSM_BAL_INCLD_PREPAID" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="NT_CMLV_PREM_AMT" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="AUM" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="LST_1YR_CRD_SPND_TOT_AMT" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="MRTG_BAL" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="FRX_EXG_MRG_TRD" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="CB_NMNL_PRNCPL" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="FEIS_SUB_BRKRG" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="CRD_VIP_TOB_FLG" Type="decimal" Precision="1" Scale="0" />
+          <Property Name="HW_FLG" Type="decimal" Precision="1" Scale="0" />
+          <Property Name="CRP_FLG" Type="decimal" Precision="1" Scale="0" />
+        </EntityType>
+        <EntityType Name="RG_ID">
+          <Key>
+            <PropertyRef Name="ACCT_ID" />
+          </Key>
+          <Property Name="ACCT_ID" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="CHI_NAME" Type="nvarchar" MaxLength="20" />
+          <Property Name="BIRTH_DATE" Type="datetime" />
+          <Property Name="RISK_LEVEL" Type="nvarchar" MaxLength="1" />
+          <Property Name="CA_REVOLVE_LEVEL" Type="nvarchar" MaxLength="3" />
+          <Property Name="TOT_LIMIT" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="ACNO_STATUS" Type="nvarchar" MaxLength="1" />
+          <Property Name="CA_FIRST_CARD_ISSU_DATE" Type="datetime" />
+          <Property Name="LV_CARD_COUNT" Type="decimal" Precision="38" Scale="0" />
+          <Property Name="STATUS" Type="nvarchar" MaxLength="1" />
+          <Property Name="VOCATION" Type="nvarchar" MaxLength="80" />
+          <Property Name="BILL_ADDR" Type="nvarchar" MaxLength="76" />
+          <Property Name="TEL_OFFICE" Type="nvarchar" MaxLength="16" />
+          <Property Name="TEL_HOME" Type="nvarchar" MaxLength="11" />
+          <Property Name="MOBIL_TEL" Type="nvarchar" MaxLength="10" />
+          <Property Name="LATEST_1_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_2_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_3_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_4_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_5_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_6_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_7_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_8_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_9_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_10_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_11_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="LATEST_12_MNTH" Type="nvarchar" MaxLength="1" />
+          <Property Name="CONSUME_1" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_2" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_3" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_4" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_5" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_6" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_7" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_8" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_9" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_10" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_11" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_12" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="PRECASH_1" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_2" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_3" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_4" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_5" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_6" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_7" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_8" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_9" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_10" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_11" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_12" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="UN_PAYMENT_RATE_1" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_2" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_3" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_4" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_5" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_6" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_7" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_8" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_9" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_10" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_11" Type="nvarchar" MaxLength="1" />
+          <Property Name="UN_PAYMENT_RATE_12" Type="nvarchar" MaxLength="1" />
+          <Property Name="STMT_CYCLE_DESC" Type="nvarchar" MaxLength="2" />
+          <Property Name="PAY_DEADLINE" Type="nvarchar" MaxLength="2" />
+          <Property Name="ACCT_TOT_BILL" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="ACCT_MIN_PAY" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="CA_LAST_PAY_AMT" Type="decimal" Precision="15" Scale="0" />
+          <Property Name="CA_LAST_PAY_DATE" Type="datetime" />
+          <Property Name="ACNO_FEIBDM_AMT" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="C_CA_TOT_UNPAID_AMT" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="C_CA_TOT_AMT_CONSUME" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="ADJ_REASON" Type="nvarchar" MaxLength="20" />
+          <Property Name="ADJ_AREA" Type="nvarchar" MaxLength="20" />
+          <Property Name="ADJ_EFF_START_DATE" Type="nvarchar" MaxLength="8" />
+          <Property Name="ADJ_EFF_END_DATE" Type="nvarchar" MaxLength="8" />
+          <Property Name="ADK_EFF_AMT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="CA_VINTAGE_MONTHS" Type="decimal" Precision="38" Scale="0" />
+          <Property Name="CA_SPEC_STATUS_FLAG" Type="nvarchar" MaxLength="1" />
+          <Property Name="GUTR_FLAG" Type="nvarchar" MaxLength="1" />
+          <Property Name="DELAY_CNT" Type="decimal" Precision="38" Scale="0" />
+          <Property Name="CCAS_UNPAID_AMT" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="CCAS_USABILITY_AMT" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="CCAS_UNPAID_RATE" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="DATA_DATE" Type="nvarchar" MaxLength="10" />
+          <Property Name="REVOLVER_YN" Type="nvarchar" MaxLength="1" />
+          <Property Name="CA_SYSM_ADJ_REV_FLAG" Type="nvarchar" MaxLength="1" />
+          <Property Name="ACNO_DEDUCT_STATUS" Type="nvarchar" MaxLength="1" />
+          <Property Name="ACNO_DEDUCT_BANK" Type="nvarchar" MaxLength="3" />
+          <Property Name="ETAL_STATUS" Type="nvarchar" MaxLength="1" />
+          <Property Name="IDNO_TEL_RESIDENT" Type="nvarchar" MaxLength="11" />
+          <Property Name="IDNO_STMT_SEND_TYPE" Type="nvarchar" MaxLength="1" />
+          <Property Name="IDNO_IB_FLAG" Type="nvarchar" MaxLength="1" />
+          <Property Name="IDNO_EMAIL_ADDR" Type="nvarchar" MaxLength="50" />
+          <Property Name="IDNO_IND_CAT" Type="nvarchar" MaxLength="1" />
+          <Property Name="IDNO_POSITION" Type="nvarchar" MaxLength="1" />
+          <Property Name="IDNO_RESIDENT_ADDR" Type="nvarchar" MaxLength="76" />
+          <Property Name="IDNO_MAIL_ADDR" Type="nvarchar" MaxLength="76" />
+          <Property Name="IDNO_COMPANY_ADDR" Type="nvarchar" MaxLength="76" />
+          <Property Name="IDNO_ANNUAL_INCOME" Type="decimal" Precision="7" Scale="0" />
+          <Property Name="IDNO_IN_AMT" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="IDNO_IN2_AMT" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="IDNO_IN3_AMT" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="IDNO_RESIDENT_ZIP" Type="nvarchar" MaxLength="5" />
+          <Property Name="IDNO_MAIL_ZIP" Type="nvarchar" MaxLength="5" />
+          <Property Name="IDNO_COMPANY_ZIP" Type="nvarchar" MaxLength="5" />
+        </EntityType>
+        <Function Name="SP_ICRS_CONSUME_QUERY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LS_CARD_ACCT_ID" Type="varchar" Mode="In" />
+          <Parameter Name="LS_CARD_ACCT_ID_SEQ" Type="varchar" Mode="In" />
+          <Parameter Name="LL_TOT_AMT_CONSUME" Type="decimal" Mode="InOut" />
+          <Parameter Name="LL_REMAIN" Type="decimal" Mode="InOut" />
+          <Parameter Name="LS_RISK_LEVEL" Type="varchar" Mode="InOut" />
+          <Parameter Name="LS_SPEC_FLAG" Type="varchar" Mode="InOut" />
+          <Parameter Name="LS_RESP_CODE" Type="varchar" Mode="InOut" />
+        </Function>
+        <Function Name="SP_ICRS_TO_CCAS_ADJ_NONTAX" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Acard_acct_id" Type="varchar" Mode="In" />
+          <Parameter Name="Acard_acct_id_seq" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_area" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_amt" Type="decimal" Mode="In" />
+          <Parameter Name="Aadj_reason" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_reason1" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_reason2" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_remark" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_eff_start_date" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_eff_end_date" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_user" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_user2" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_country" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_proj_code" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_amt_2" Type="decimal" Mode="In" />
+          <Parameter Name="Aresp_code" Type="varchar" Mode="InOut" />
+        </Function>
+        <Function Name="SP_ICRS_TO_CCAS_ADJ_TAX" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Aadj_action" Type="varchar" Mode="In" />
+          <Parameter Name="Acard_acct_id" Type="varchar" Mode="In" />
+          <Parameter Name="Acard_acct_id_seq" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_proj_code" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_amt" Type="decimal" Mode="In" />
+          <Parameter Name="Aadj_effend_date" Type="varchar" Mode="In" />
+          <Parameter Name="Aadj_user" Type="varchar" Mode="In" />
+          <Parameter Name="Aresp_code" Type="varchar" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="ICRSModelStoreContainer">
+          <EntitySet Name="OD_VIP" EntityType="Self.OD_VIP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RG_ID" EntityType="Self.RG_ID" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ICRSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="OD_VIP">
+          <Key>
+            <PropertyRef Name="CST_ID" />
+            <PropertyRef Name="YYYYMM" />
+          </Key>
+          <Property Name="CST_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="YYYYMM" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UPD_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ELG_VIP_TP_ID" Type="Decimal" Precision="1" Scale="0" />
+          <Property Name="ELG_VIP_TP_EFF_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="VIP_TP_ID" Type="Decimal" Precision="1" Scale="0" />
+          <Property Name="VIP_TP_EFF_DT" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="VIP_BAL_AMT" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="DEP_AVG_BAL_AMT" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="NT_INVSM_BAL_INCLD_PREPAID" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="NT_CMLV_PREM_AMT" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="AUM" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="LST_1YR_CRD_SPND_TOT_AMT" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="MRTG_BAL" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="FRX_EXG_MRG_TRD" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="CB_NMNL_PRNCPL" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="FEIS_SUB_BRKRG" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="CRD_VIP_TOB_FLG" Type="Decimal" Precision="1" Scale="0" />
+          <Property Name="HW_FLG" Type="Decimal" Precision="1" Scale="0" />
+          <Property Name="CRP_FLG" Type="Decimal" Precision="1" Scale="0" />
+        </EntityType>
+        <EntityType Name="RG_ID">
+          <Key>
+            <PropertyRef Name="ACCT_ID" />
+          </Key>
+          <Property Name="ACCT_ID" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CHI_NAME" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="BIRTH_DATE" Type="DateTime" Precision="3" />
+          <Property Name="RISK_LEVEL" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="CA_REVOLVE_LEVEL" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="TOT_LIMIT" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="ACNO_STATUS" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="CA_FIRST_CARD_ISSU_DATE" Type="DateTime" Precision="3" />
+          <Property Name="LV_CARD_COUNT" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="STATUS" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="VOCATION" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+          <Property Name="BILL_ADDR" Type="String" MaxLength="76" FixedLength="false" Unicode="true" />
+          <Property Name="TEL_OFFICE" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="TEL_HOME" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="MOBIL_TEL" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_1_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_2_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_3_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_4_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_5_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_6_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_7_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_8_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_9_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_10_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_11_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LATEST_12_MNTH" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="CONSUME_1" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_2" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_3" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_4" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_5" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_6" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_7" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_8" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_9" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_10" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_11" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CONSUME_12" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="PRECASH_1" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_2" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_3" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_4" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_5" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_6" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_7" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_8" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_9" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_10" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_11" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="PRECASH_12" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="UN_PAYMENT_RATE_1" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_2" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_3" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_4" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_5" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_6" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_7" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_8" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_9" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_10" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_11" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UN_PAYMENT_RATE_12" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="STMT_CYCLE_DESC" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="PAY_DEADLINE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="ACCT_TOT_BILL" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="ACCT_MIN_PAY" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="CA_LAST_PAY_AMT" Type="Decimal" Precision="15" Scale="0" />
+          <Property Name="CA_LAST_PAY_DATE" Type="DateTime" Precision="3" />
+          <Property Name="ACNO_FEIBDM_AMT" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="C_CA_TOT_UNPAID_AMT" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="C_CA_TOT_AMT_CONSUME" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="ADJ_REASON" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ADJ_AREA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ADJ_EFF_START_DATE" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ADJ_EFF_END_DATE" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="ADK_EFF_AMT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="CA_VINTAGE_MONTHS" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="CA_SPEC_STATUS_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="GUTR_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="DELAY_CNT" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="CCAS_UNPAID_AMT" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="CCAS_USABILITY_AMT" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="CCAS_UNPAID_RATE" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="DATA_DATE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="REVOLVER_YN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="CA_SYSM_ADJ_REV_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="ACNO_DEDUCT_STATUS" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="ACNO_DEDUCT_BANK" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="ETAL_STATUS" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_TEL_RESIDENT" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_STMT_SEND_TYPE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_IB_FLAG" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_EMAIL_ADDR" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_IND_CAT" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_POSITION" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_RESIDENT_ADDR" Type="String" MaxLength="76" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_MAIL_ADDR" Type="String" MaxLength="76" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_COMPANY_ADDR" Type="String" MaxLength="76" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_ANNUAL_INCOME" Type="Decimal" Precision="7" Scale="0" />
+          <Property Name="IDNO_IN_AMT" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="IDNO_IN2_AMT" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="IDNO_IN3_AMT" Type="Decimal" Precision="5" Scale="0" />
+          <Property Name="IDNO_RESIDENT_ZIP" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_MAIL_ZIP" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="IDNO_COMPANY_ZIP" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="ICRSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="OD_VIP" EntityType="Self.OD_VIP" />
+          <EntitySet Name="RG_ID" EntityType="Self.RG_ID" />
+          <FunctionImport Name="SP_ICRS_CONSUME_QUERY">
+            <Parameter Name="LS_CARD_ACCT_ID" Mode="In" Type="String" />
+            <Parameter Name="LS_CARD_ACCT_ID_SEQ" Mode="In" Type="String" />
+            <Parameter Name="LL_TOT_AMT_CONSUME" Mode="InOut" Type="Decimal" />
+            <Parameter Name="LL_REMAIN" Mode="InOut" Type="Decimal" />
+            <Parameter Name="LS_RISK_LEVEL" Mode="InOut" Type="String" />
+            <Parameter Name="LS_SPEC_FLAG" Mode="InOut" Type="String" />
+            <Parameter Name="LS_RESP_CODE" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_ICRS_TO_CCAS_ADJ_NONTAX">
+            <Parameter Name="Acard_acct_id" Mode="In" Type="String" />
+            <Parameter Name="Acard_acct_id_seq" Mode="In" Type="String" />
+            <Parameter Name="Aadj_area" Mode="In" Type="String" />
+            <Parameter Name="Aadj_amt" Mode="In" Type="Decimal" />
+            <Parameter Name="Aadj_reason" Mode="In" Type="String" />
+            <Parameter Name="Aadj_reason1" Mode="In" Type="String" />
+            <Parameter Name="Aadj_reason2" Mode="In" Type="String" />
+            <Parameter Name="Aadj_remark" Mode="In" Type="String" />
+            <Parameter Name="Aadj_eff_start_date" Mode="In" Type="String" />
+            <Parameter Name="Aadj_eff_end_date" Mode="In" Type="String" />
+            <Parameter Name="Aadj_user" Mode="In" Type="String" />
+            <Parameter Name="Aadj_user2" Mode="In" Type="String" />
+            <Parameter Name="Aadj_country" Mode="In" Type="String" />
+            <Parameter Name="Aadj_proj_code" Mode="In" Type="String" />
+            <Parameter Name="Aadj_amt_2" Mode="In" Type="Decimal" />
+            <Parameter Name="Aresp_code" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_ICRS_TO_CCAS_ADJ_TAX">
+            <Parameter Name="Aadj_action" Mode="In" Type="String" />
+            <Parameter Name="Acard_acct_id" Mode="In" Type="String" />
+            <Parameter Name="Acard_acct_id_seq" Mode="In" Type="String" />
+            <Parameter Name="Aadj_proj_code" Mode="In" Type="String" />
+            <Parameter Name="Aadj_amt" Mode="In" Type="Decimal" />
+            <Parameter Name="Aadj_effend_date" Mode="In" Type="String" />
+            <Parameter Name="Aadj_user" Mode="In" Type="String" />
+            <Parameter Name="Aresp_code" Mode="InOut" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ICRSModelStoreContainer" CdmEntityContainer="ICRSEntities">
+          <EntitySetMapping Name="OD_VIP">
+            <EntityTypeMapping TypeName="ICRSModel.OD_VIP">
+              <MappingFragment StoreEntitySet="OD_VIP">
+                <ScalarProperty Name="CST_ID" ColumnName="CST_ID" />
+                <ScalarProperty Name="YYYYMM" ColumnName="YYYYMM" />
+                <ScalarProperty Name="UPD_DT" ColumnName="UPD_DT" />
+                <ScalarProperty Name="ELG_VIP_TP_ID" ColumnName="ELG_VIP_TP_ID" />
+                <ScalarProperty Name="ELG_VIP_TP_EFF_DT" ColumnName="ELG_VIP_TP_EFF_DT" />
+                <ScalarProperty Name="VIP_TP_ID" ColumnName="VIP_TP_ID" />
+                <ScalarProperty Name="VIP_TP_EFF_DT" ColumnName="VIP_TP_EFF_DT" />
+                <ScalarProperty Name="VIP_BAL_AMT" ColumnName="VIP_BAL_AMT" />
+                <ScalarProperty Name="DEP_AVG_BAL_AMT" ColumnName="DEP_AVG_BAL_AMT" />
+                <ScalarProperty Name="NT_INVSM_BAL_INCLD_PREPAID" ColumnName="NT_INVSM_BAL_INCLD_PREPAID" />
+                <ScalarProperty Name="NT_CMLV_PREM_AMT" ColumnName="NT_CMLV_PREM_AMT" />
+                <ScalarProperty Name="AUM" ColumnName="AUM" />
+                <ScalarProperty Name="LST_1YR_CRD_SPND_TOT_AMT" ColumnName="LST_1YR_CRD_SPND_TOT_AMT" />
+                <ScalarProperty Name="MRTG_BAL" ColumnName="MRTG_BAL" />
+                <ScalarProperty Name="FRX_EXG_MRG_TRD" ColumnName="FRX_EXG_MRG_TRD" />
+                <ScalarProperty Name="CB_NMNL_PRNCPL" ColumnName="CB_NMNL_PRNCPL" />
+                <ScalarProperty Name="FEIS_SUB_BRKRG" ColumnName="FEIS_SUB_BRKRG" />
+                <ScalarProperty Name="CRD_VIP_TOB_FLG" ColumnName="CRD_VIP_TOB_FLG" />
+                <ScalarProperty Name="HW_FLG" ColumnName="HW_FLG" />
+                <ScalarProperty Name="CRP_FLG" ColumnName="CRP_FLG" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RG_ID">
+            <EntityTypeMapping TypeName="ICRSModel.RG_ID">
+              <MappingFragment StoreEntitySet="RG_ID">
+                <ScalarProperty Name="ACCT_ID" ColumnName="ACCT_ID" />
+                <ScalarProperty Name="CHI_NAME" ColumnName="CHI_NAME" />
+                <ScalarProperty Name="BIRTH_DATE" ColumnName="BIRTH_DATE" />
+                <ScalarProperty Name="RISK_LEVEL" ColumnName="RISK_LEVEL" />
+                <ScalarProperty Name="CA_REVOLVE_LEVEL" ColumnName="CA_REVOLVE_LEVEL" />
+                <ScalarProperty Name="TOT_LIMIT" ColumnName="TOT_LIMIT" />
+                <ScalarProperty Name="ACNO_STATUS" ColumnName="ACNO_STATUS" />
+                <ScalarProperty Name="CA_FIRST_CARD_ISSU_DATE" ColumnName="CA_FIRST_CARD_ISSU_DATE" />
+                <ScalarProperty Name="LV_CARD_COUNT" ColumnName="LV_CARD_COUNT" />
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+                <ScalarProperty Name="VOCATION" ColumnName="VOCATION" />
+                <ScalarProperty Name="BILL_ADDR" ColumnName="BILL_ADDR" />
+                <ScalarProperty Name="TEL_OFFICE" ColumnName="TEL_OFFICE" />
+                <ScalarProperty Name="TEL_HOME" ColumnName="TEL_HOME" />
+                <ScalarProperty Name="MOBIL_TEL" ColumnName="MOBIL_TEL" />
+                <ScalarProperty Name="LATEST_1_MNTH" ColumnName="LATEST_1_MNTH" />
+                <ScalarProperty Name="LATEST_2_MNTH" ColumnName="LATEST_2_MNTH" />
+                <ScalarProperty Name="LATEST_3_MNTH" ColumnName="LATEST_3_MNTH" />
+                <ScalarProperty Name="LATEST_4_MNTH" ColumnName="LATEST_4_MNTH" />
+                <ScalarProperty Name="LATEST_5_MNTH" ColumnName="LATEST_5_MNTH" />
+                <ScalarProperty Name="LATEST_6_MNTH" ColumnName="LATEST_6_MNTH" />
+                <ScalarProperty Name="LATEST_7_MNTH" ColumnName="LATEST_7_MNTH" />
+                <ScalarProperty Name="LATEST_8_MNTH" ColumnName="LATEST_8_MNTH" />
+                <ScalarProperty Name="LATEST_9_MNTH" ColumnName="LATEST_9_MNTH" />
+                <ScalarProperty Name="LATEST_10_MNTH" ColumnName="LATEST_10_MNTH" />
+                <ScalarProperty Name="LATEST_11_MNTH" ColumnName="LATEST_11_MNTH" />
+                <ScalarProperty Name="LATEST_12_MNTH" ColumnName="LATEST_12_MNTH" />
+                <ScalarProperty Name="CONSUME_1" ColumnName="CONSUME_1" />
+                <ScalarProperty Name="CONSUME_2" ColumnName="CONSUME_2" />
+                <ScalarProperty Name="CONSUME_3" ColumnName="CONSUME_3" />
+                <ScalarProperty Name="CONSUME_4" ColumnName="CONSUME_4" />
+                <ScalarProperty Name="CONSUME_5" ColumnName="CONSUME_5" />
+                <ScalarProperty Name="CONSUME_6" ColumnName="CONSUME_6" />
+                <ScalarProperty Name="CONSUME_7" ColumnName="CONSUME_7" />
+                <ScalarProperty Name="CONSUME_8" ColumnName="CONSUME_8" />
+                <ScalarProperty Name="CONSUME_9" ColumnName="CONSUME_9" />
+                <ScalarProperty Name="CONSUME_10" ColumnName="CONSUME_10" />
+                <ScalarProperty Name="CONSUME_11" ColumnName="CONSUME_11" />
+                <ScalarProperty Name="CONSUME_12" ColumnName="CONSUME_12" />
+                <ScalarProperty Name="PRECASH_1" ColumnName="PRECASH_1" />
+                <ScalarProperty Name="PRECASH_2" ColumnName="PRECASH_2" />
+                <ScalarProperty Name="PRECASH_3" ColumnName="PRECASH_3" />
+                <ScalarProperty Name="PRECASH_4" ColumnName="PRECASH_4" />
+                <ScalarProperty Name="PRECASH_5" ColumnName="PRECASH_5" />
+                <ScalarProperty Name="PRECASH_6" ColumnName="PRECASH_6" />
+                <ScalarProperty Name="PRECASH_7" ColumnName="PRECASH_7" />
+                <ScalarProperty Name="PRECASH_8" ColumnName="PRECASH_8" />
+                <ScalarProperty Name="PRECASH_9" ColumnName="PRECASH_9" />
+                <ScalarProperty Name="PRECASH_10" ColumnName="PRECASH_10" />
+                <ScalarProperty Name="PRECASH_11" ColumnName="PRECASH_11" />
+                <ScalarProperty Name="PRECASH_12" ColumnName="PRECASH_12" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_1" ColumnName="UN_PAYMENT_RATE_1" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_2" ColumnName="UN_PAYMENT_RATE_2" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_3" ColumnName="UN_PAYMENT_RATE_3" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_4" ColumnName="UN_PAYMENT_RATE_4" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_5" ColumnName="UN_PAYMENT_RATE_5" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_6" ColumnName="UN_PAYMENT_RATE_6" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_7" ColumnName="UN_PAYMENT_RATE_7" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_8" ColumnName="UN_PAYMENT_RATE_8" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_9" ColumnName="UN_PAYMENT_RATE_9" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_10" ColumnName="UN_PAYMENT_RATE_10" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_11" ColumnName="UN_PAYMENT_RATE_11" />
+                <ScalarProperty Name="UN_PAYMENT_RATE_12" ColumnName="UN_PAYMENT_RATE_12" />
+                <ScalarProperty Name="STMT_CYCLE_DESC" ColumnName="STMT_CYCLE_DESC" />
+                <ScalarProperty Name="PAY_DEADLINE" ColumnName="PAY_DEADLINE" />
+                <ScalarProperty Name="ACCT_TOT_BILL" ColumnName="ACCT_TOT_BILL" />
+                <ScalarProperty Name="ACCT_MIN_PAY" ColumnName="ACCT_MIN_PAY" />
+                <ScalarProperty Name="CA_LAST_PAY_AMT" ColumnName="CA_LAST_PAY_AMT" />
+                <ScalarProperty Name="CA_LAST_PAY_DATE" ColumnName="CA_LAST_PAY_DATE" />
+                <ScalarProperty Name="ACNO_FEIBDM_AMT" ColumnName="ACNO_FEIBDM_AMT" />
+                <ScalarProperty Name="C_CA_TOT_UNPAID_AMT" ColumnName="C_CA_TOT_UNPAID_AMT" />
+                <ScalarProperty Name="C_CA_TOT_AMT_CONSUME" ColumnName="C_CA_TOT_AMT_CONSUME" />
+                <ScalarProperty Name="ADJ_REASON" ColumnName="ADJ_REASON" />
+                <ScalarProperty Name="ADJ_AREA" ColumnName="ADJ_AREA" />
+                <ScalarProperty Name="ADJ_EFF_START_DATE" ColumnName="ADJ_EFF_START_DATE" />
+                <ScalarProperty Name="ADJ_EFF_END_DATE" ColumnName="ADJ_EFF_END_DATE" />
+                <ScalarProperty Name="ADK_EFF_AMT" ColumnName="ADK_EFF_AMT" />
+                <ScalarProperty Name="CA_VINTAGE_MONTHS" ColumnName="CA_VINTAGE_MONTHS" />
+                <ScalarProperty Name="CA_SPEC_STATUS_FLAG" ColumnName="CA_SPEC_STATUS_FLAG" />
+                <ScalarProperty Name="GUTR_FLAG" ColumnName="GUTR_FLAG" />
+                <ScalarProperty Name="DELAY_CNT" ColumnName="DELAY_CNT" />
+                <ScalarProperty Name="CCAS_UNPAID_AMT" ColumnName="CCAS_UNPAID_AMT" />
+                <ScalarProperty Name="CCAS_USABILITY_AMT" ColumnName="CCAS_USABILITY_AMT" />
+                <ScalarProperty Name="CCAS_UNPAID_RATE" ColumnName="CCAS_UNPAID_RATE" />
+                <ScalarProperty Name="DATA_DATE" ColumnName="DATA_DATE" />
+                <ScalarProperty Name="REVOLVER_YN" ColumnName="REVOLVER_YN" />
+                <ScalarProperty Name="CA_SYSM_ADJ_REV_FLAG" ColumnName="CA_SYSM_ADJ_REV_FLAG" />
+                <ScalarProperty Name="ACNO_DEDUCT_STATUS" ColumnName="ACNO_DEDUCT_STATUS" />
+                <ScalarProperty Name="ACNO_DEDUCT_BANK" ColumnName="ACNO_DEDUCT_BANK" />
+                <ScalarProperty Name="ETAL_STATUS" ColumnName="ETAL_STATUS" />
+                <ScalarProperty Name="IDNO_TEL_RESIDENT" ColumnName="IDNO_TEL_RESIDENT" />
+                <ScalarProperty Name="IDNO_STMT_SEND_TYPE" ColumnName="IDNO_STMT_SEND_TYPE" />
+                <ScalarProperty Name="IDNO_IB_FLAG" ColumnName="IDNO_IB_FLAG" />
+                <ScalarProperty Name="IDNO_EMAIL_ADDR" ColumnName="IDNO_EMAIL_ADDR" />
+                <ScalarProperty Name="IDNO_IND_CAT" ColumnName="IDNO_IND_CAT" />
+                <ScalarProperty Name="IDNO_POSITION" ColumnName="IDNO_POSITION" />
+                <ScalarProperty Name="IDNO_RESIDENT_ADDR" ColumnName="IDNO_RESIDENT_ADDR" />
+                <ScalarProperty Name="IDNO_MAIL_ADDR" ColumnName="IDNO_MAIL_ADDR" />
+                <ScalarProperty Name="IDNO_COMPANY_ADDR" ColumnName="IDNO_COMPANY_ADDR" />
+                <ScalarProperty Name="IDNO_ANNUAL_INCOME" ColumnName="IDNO_ANNUAL_INCOME" />
+                <ScalarProperty Name="IDNO_IN_AMT" ColumnName="IDNO_IN_AMT" />
+                <ScalarProperty Name="IDNO_IN2_AMT" ColumnName="IDNO_IN2_AMT" />
+                <ScalarProperty Name="IDNO_IN3_AMT" ColumnName="IDNO_IN3_AMT" />
+                <ScalarProperty Name="IDNO_RESIDENT_ZIP" ColumnName="IDNO_RESIDENT_ZIP" />
+                <ScalarProperty Name="IDNO_MAIL_ZIP" ColumnName="IDNO_MAIL_ZIP" />
+                <ScalarProperty Name="IDNO_COMPANY_ZIP" ColumnName="IDNO_COMPANY_ZIP" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_ICRS_CONSUME_QUERY" FunctionName="ICRSModel.Store.SP_ICRS_CONSUME_QUERY" />
+          <FunctionImportMapping FunctionImportName="SP_ICRS_TO_CCAS_ADJ_NONTAX" FunctionName="ICRSModel.Store.SP_ICRS_TO_CCAS_ADJ_NONTAX" />
+          <FunctionImportMapping FunctionImportName="SP_ICRS_TO_CCAS_ADJ_TAX" FunctionName="ICRSModel.Store.SP_ICRS_TO_CCAS_ADJ_TAX" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
