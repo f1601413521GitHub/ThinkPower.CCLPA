@@ -121,6 +121,11 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             DateTime currentTime = DateTime.Now;
 
+            if (UserInfo == null)
+            {
+                throw new InvalidOperationException("UserInfo not found");
+            }
+
             CampaignImportLogDO importLog = new CampaignImportLogDO()
             {
                 CampaignId = campaignEntity.CampaignId,
@@ -194,8 +199,10 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <summary>
         /// 處理臨調預審名單
         /// </summary>
-        public void PreAdjustProcessing()
+        public void PreAdjustProcessing(PreAdjustProcessEntity dataModel)
         {
+
+
             throw new NotImplementedException();
         }
 

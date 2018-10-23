@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThinkPower.CCLPA.Domain.Entity;
 
 namespace ThinkPower.CCLPA.Domain.Service.Interface
 {
@@ -18,10 +19,5 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// <param name="executeImport">是否執行匯入</param>
         /// <returns>行銷活動名單數量</returns>
         int? ImportPreAdjust(string campaignId, bool executeImport = false);
-
-        /// <summary>
-        /// 處理臨調預審名單
-        /// </summary>
-        void PreAdjustProcessing();
     }
 }
