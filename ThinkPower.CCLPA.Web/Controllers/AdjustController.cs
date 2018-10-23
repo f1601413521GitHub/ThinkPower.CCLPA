@@ -92,7 +92,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     Name = Session["UserName"] as string,
                 };
 
-                campaignDetailCount = PreAdjService.ImportPreAdjust(actionModel.CampaignId,
+                campaignDetailCount = PreAdjService.Import(actionModel.CampaignId,
                     actionModel.ExecuteImport);
 
                 campaignId = actionModel.CampaignId;

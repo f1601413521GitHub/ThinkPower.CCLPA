@@ -44,13 +44,18 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         public UserInfoVO UserInfo { get; set; }
 
+
+
+
+
+
         /// <summary>
         /// 匯入臨調預審名單
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
         /// <param name="executeImport">是否執行匯入</param>
         /// <returns>行銷活動名單數量</returns>
-        public int? ImportPreAdjust(string campaignId, bool executeImport = false)
+        public int? Import(string campaignId, bool executeImport = false)
         {
             int? campaignDetailCount = null;
 
@@ -196,36 +201,55 @@ namespace ThinkPower.CCLPA.Domain.Service
         }
 
 
+
         /// <summary>
-        /// 處理臨調預審名單
+        /// 查詢臨調預審名單
         /// </summary>
-        public void PreAdjustProcessing(PreAdjustProcessEntity dataModel)
+        /// <param name="id">身分證字號</param>
+        /// <returns></returns>
+        public object Search(string id)
         {
-            if (dataModel == null)
+            object result = null;
+
+            if (String.IsNullOrEmpty(id))
             {
-                throw new ArgumentNullException("dataModel");
-            }
-            else if (UserInfo == null)
-            {
-                throw new InvalidOperationException("UserInfo not found");
+                var w = new PreAdjustDAO().GetAllWaitData();
+                var e = new PreAdjustDAO().GetAllEffectData();
             }
 
+            return result;
+        }
 
+        /// <summary>
+        /// 刪除臨調預審名單
+        /// </summary>
+        /// <param name="data">來源資料</param>
+        /// <param name="effectZone">是否為生效區</param>
+        /// <returns></returns>
+        public object Delete(object data, bool effectZone = false)
+        {
+            throw new NotImplementedException();
+        }
 
-            var correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
-            var userLevelInfo = new AdjustUserLevelDAO().Get(correspondInfo.IcrsId);
-            var permissionInfo = new AdjustLevelPermissionDAO().Get(userLevelInfo.LevelCode);
-
-
-
-
-
+        /// <summary>
+        /// 同意執行臨調預審名單
+        /// </summary>
+        /// <param name="data">來源資料</param>
+        /// <param name="forceConsent">是否強制同意</param>
+        /// <returns></returns>
+        public object Agree(object data, bool forceConsent = false)
+        {
+            throw new NotImplementedException();
         }
 
 
 
 
 
+
+
+
+        #region PrivateMethod
 
         /// <summary>
         /// 取得行銷活動匯入紀錄
@@ -285,5 +309,27 @@ namespace ThinkPower.CCLPA.Domain.Service
                 scope.Complete();
             }
         }
+
+        /// <summary>
+        /// 取得使用者臨調權限設定檔資訊
+        /// </summary>
+        /// <returns></returns>
+        private AdjustLevelPermissionDO GetUserPermission()
+        {
+            // TODO GetUserPermission
+
+            if (UserInfo == null)
+            {
+                throw new InvalidOperationException("UserInfo");
+            }
+
+            var correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
+            var userLevelInfo = new AdjustUserLevelDAO().Get(correspondInfo.IcrsId);
+            var permissionInfo = new AdjustLevelPermissionDAO().Get(userLevelInfo.LevelCode);
+
+            return permissionInfo;
+        }
+
+        #endregion
     }
 }

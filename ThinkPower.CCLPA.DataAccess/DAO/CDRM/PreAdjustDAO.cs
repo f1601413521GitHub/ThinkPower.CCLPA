@@ -93,7 +93,7 @@ WHERE CLOSE_DT >= @CloseDate
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
                 {
-                    Value = DateTime.Now.ToString("yyyyMMdd"),
+                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
                 });
 
                 connection.Open();
@@ -105,14 +105,13 @@ WHERE CLOSE_DT >= @CloseDate
                 if (dt.Rows.Count > 0)
                 {
                     result = new List<PreAdjustDO>();
-                    PreAdjustDO tempPreAdjustDO = null;
+                    PreAdjustDO preAdjustDO = null;
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        tempPreAdjustDO = null;
-                        tempPreAdjustDO = ConvertPreAdjustDO(dr);
+                        preAdjustDO = ConvertPreAdjustDO(dr);
 
-                        result.Add(tempPreAdjustDO);
+                        result.Add(preAdjustDO);
                     }
                 }
 
@@ -148,7 +147,7 @@ WHERE CLOSE_DT >= @CloseDate
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
                 {
-                    Value = DateTime.Now.ToString("yyyyMMdd"),
+                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
                 });
 
                 connection.Open();
@@ -160,14 +159,13 @@ WHERE CLOSE_DT >= @CloseDate
                 if (dt.Rows.Count > 0)
                 {
                     result = new List<PreAdjustDO>();
-                    PreAdjustDO tempPreAdjustDO = null;
+                    PreAdjustDO preAdjustDO = null;
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        tempPreAdjustDO = null;
-                        tempPreAdjustDO = ConvertPreAdjustDO(dr);
+                        preAdjustDO = ConvertPreAdjustDO(dr);
 
-                        result.Add(tempPreAdjustDO);
+                        result.Add(preAdjustDO);
                     }
                 }
 
@@ -222,13 +220,12 @@ WHERE CLOSE_DT >= @CloseDate
         /// <returns>等待區預審處理資料</returns>
         public IEnumerable<PreAdjustDO> GetWaitData(string id)
         {
+            List<PreAdjustDO> result = null;
+
             if (String.IsNullOrEmpty(id))
             {
                 throw new ArgumentNullException("id");
             }
-
-
-            List<PreAdjustDO> result = null;
 
             string query = @"
 SELECT 
@@ -247,7 +244,7 @@ WHERE CLOSE_DT >= @CloseDate
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
                 {
-                    Value = DateTime.Now.ToString("yyyyMMdd"),
+                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
                 });
                 command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
                 {
@@ -263,14 +260,13 @@ WHERE CLOSE_DT >= @CloseDate
                 if (dt.Rows.Count > 0)
                 {
                     result = new List<PreAdjustDO>();
-                    PreAdjustDO tempPreAdjustDO = null;
+                    PreAdjustDO preAdjustDO = null;
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        tempPreAdjustDO = null;
-                        tempPreAdjustDO = ConvertPreAdjustDO(dr);
+                        preAdjustDO = ConvertPreAdjustDO(dr);
 
-                        result.Add(tempPreAdjustDO);
+                        result.Add(preAdjustDO);
                     }
                 }
 
@@ -289,12 +285,12 @@ WHERE CLOSE_DT >= @CloseDate
         /// <returns>生效區預審處理資料</returns>
         public IEnumerable<PreAdjustDO> GetEffectData(string id)
         {
+            List<PreAdjustDO> result = null;
+
             if (String.IsNullOrEmpty(id))
             {
                 throw new ArgumentNullException("id");
             }
-
-            List<PreAdjustDO> result = null;
 
             string query = @"
 SELECT 
@@ -313,7 +309,7 @@ WHERE CLOSE_DT >= @CloseDate
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
                 {
-                    Value = DateTime.Now.ToString("yyyyMMdd"),
+                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
                 });
                 command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
                 {
@@ -329,14 +325,13 @@ WHERE CLOSE_DT >= @CloseDate
                 if (dt.Rows.Count > 0)
                 {
                     result = new List<PreAdjustDO>();
-                    PreAdjustDO tempPreAdjustDO = null;
+                    PreAdjustDO preAdjustDO = null;
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        tempPreAdjustDO = null;
-                        tempPreAdjustDO = ConvertPreAdjustDO(dr);
+                        preAdjustDO = ConvertPreAdjustDO(dr);
 
-                        result.Add(tempPreAdjustDO);
+                        result.Add(preAdjustDO);
                     }
                 }
 

@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkPower.CCLPA.DataAccess
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkPower.CCLPA.DataAccessTests", "ThinkPower.CCLPA.DataAccessTests\ThinkPower.CCLPA.DataAccessTests.csproj", "{7307A12E-F95F-44A6-A3C2-B0C864F2F9B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkPower.CCLPA.DomainTests", "ThinkPower.CCLPA.DomainTests\ThinkPower.CCLPA.DomainTests.csproj", "{854283DE-8096-4FE4-982C-591B9EB739B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{7307A12E-F95F-44A6-A3C2-B0C864F2F9B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7307A12E-F95F-44A6-A3C2-B0C864F2F9B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7307A12E-F95F-44A6-A3C2-B0C864F2F9B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{854283DE-8096-4FE4-982C-591B9EB739B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{854283DE-8096-4FE4-982C-591B9EB739B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{854283DE-8096-4FE4-982C-591B9EB739B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{854283DE-8096-4FE4-982C-591B9EB739B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{26F9EDAF-F6CE-4DC2-A388-EA909A35E847} = {9D381F3C-96F3-4893-8844-9173161762FB}
 		{7307A12E-F95F-44A6-A3C2-B0C864F2F9B4} = {2B4F7104-2394-4F98-8C9B-4829C88E47FC}
+		{854283DE-8096-4FE4-982C-591B9EB739B1} = {2B4F7104-2394-4F98-8C9B-4829C88E47FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85FB3AFE-1E9D-44BC-95FD-A247035129BE}
