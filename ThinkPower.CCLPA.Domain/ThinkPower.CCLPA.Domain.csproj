@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTO\UserInfoDTO.cs" />
+    <Compile Include="VO\UserInfoVO.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\CampaignService.cs" />
@@ -53,6 +53,7 @@
     <Compile Include="Service\PreAdjustService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DTO\" />
     <Folder Include="Resource\" />
   </ItemGroup>
   <ItemGroup>

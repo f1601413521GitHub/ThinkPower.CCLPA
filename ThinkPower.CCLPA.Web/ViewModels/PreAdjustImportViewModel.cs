@@ -1,6 +1,4 @@
-﻿using ThinkPower.CCLPA.Domain.DTO;
-
-namespace ThinkPower.CCLPA.Web.ViewModels
+﻿namespace ThinkPower.CCLPA.Web.ViewModels
 {
     /// <summary>
     /// 匯入臨調預審名單檢視模型類別

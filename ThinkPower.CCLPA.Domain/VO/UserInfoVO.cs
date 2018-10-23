@@ -1,12 +1,12 @@
-﻿namespace ThinkPower.CCLPA.Domain.DTO
+﻿namespace ThinkPower.CCLPA.Domain.VO
 {
     /// <summary>
     /// 使用者資訊類別
     /// </summary>
-    public class UserInfoDTO
+    public class UserInfoVO
     {
         /// <summary>
-        /// 使用者代號
+        /// 登入帳號
         /// </summary>
         public string  Id { get; set; }
 

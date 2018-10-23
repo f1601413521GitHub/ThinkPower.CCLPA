@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ThinkPower.CCLPA.Domain.DTO;
 using ThinkPower.CCLPA.Domain.Service;
+using ThinkPower.CCLPA.Domain.VO;
 using ThinkPower.CCLPA.Web.ActionModels;
 using ThinkPower.CCLPA.Web.ViewModels;
 
@@ -17,32 +17,30 @@ namespace ThinkPower.CCLPA.Web.Controllers
     public class AdjustController : Controller
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
-        private AdjustService _adjustService;
+
+        private PreAdjustService _preAdjustService;
+
+        /// <summary>
+        /// 臨調預審服務
+        /// </summary>
+        public PreAdjustService PreAdjService
+        {
+            get
+            {
+                if (_preAdjustService == null)
+                {
+                    _preAdjustService = new PreAdjustService();
+                }
+
+                return _preAdjustService;
+            }
+        }
 
         /// <summary>
         /// 系統錯誤提示訊息
         /// </summary>
         private readonly string _systemErrorMsg = "系統發生錯誤，請於上班時段來電客服中心0800-123-456，造成不便敬請見諒。";
 
-        /// <summary>
-        /// 專案臨調服務
-        /// </summary>
-        public AdjustService AdjService
-        {
-            get
-            {
-                if (_adjustService == null)
-                {
-                    _adjustService = new AdjustService(new UserInfoDTO()
-                    {
-                        Id = Session["UserId"] as string,
-                        Name = Session["UserName"] as string,
-                    });
-                }
-
-                return _adjustService;
-            }
-        }
 
 
 
@@ -88,7 +86,13 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     throw new ArgumentNullException("actionModel");
                 }
 
-                campaignDetailCount = AdjService.ImportPreAdjust(actionModel.CampaignId,
+                PreAdjService.UserInfo = new UserInfoVO()
+                {
+                    Id = Session["UserId"] as string,
+                    Name = Session["UserName"] as string,
+                };
+
+                campaignDetailCount = PreAdjService.ImportPreAdjust(actionModel.CampaignId,
                     actionModel.ExecuteImport);
 
                 campaignId = actionModel.CampaignId;
