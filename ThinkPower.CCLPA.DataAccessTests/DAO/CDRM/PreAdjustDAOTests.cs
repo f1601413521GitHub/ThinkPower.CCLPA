@@ -111,7 +111,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 new PreAdjustDO(){
                     CampaignId              = "AA20991022X99Y99Z99A",
                     Id                      = "A177842053",
-                    ProjectName             = "等待區測試資料456",
+                    ProjectName             = "等待區測試資料Update",
                     ProjectAmount           = 30000,
                     CloseDate               = "2099/10/22",
                     ImportDate              = "2018/10/23",
@@ -127,7 +127,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                     ClosingDay              = "10",
                     PayDeadline             = "25",
                     AgreeUserId             = null,
-                    MobileTel               = "933113885",
+                    MobileTel               = "0933113885",
                     RejectReasonCode        = null,
                     CcasReplyCode           = null,
                     CcasReplyStatus         = null,
@@ -136,7 +136,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 new PreAdjustDO(){
                     CampaignId              = "AA20991022X99Y99Z99A",
                     Id                      = "B142357855",
-                    ProjectName             = "等待區測試資料123",
+                    ProjectName             = "等待區測試資料Update",
                     ProjectAmount           = 40000,
                     CloseDate               = "2099/10/22",
                     ImportDate              = "2018/10/23",
@@ -150,9 +150,9 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                     DeleteUserId            = null,
                     Remark                  = null,
                     ClosingDay              = "20",
-                    PayDeadline             = "5",
+                    PayDeadline             = "05",
                     AgreeUserId             = null,
-                    MobileTel               = "916987456",
+                    MobileTel               = "0916987456",
                     RejectReasonCode        = null,
                     CcasReplyCode           = null,
                     CcasReplyStatus         = null,
@@ -166,6 +166,46 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             {
                 new PreAdjustDAO().Update(item);
             }
+            var actual = true;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void InsertTest()
+        {
+            // Arrange
+            PreAdjustDO preAdjust = new PreAdjustDO()
+            {
+                CampaignId = "AA20991024X99Y99Z99A",
+                Id = "A177842053",
+                ProjectName = "等待區測試資料Insert",
+                ProjectAmount = 30000,
+                CloseDate = "2099/10/22",
+                ImportDate = "2018/10/23",
+                ChineseName = "王小明",
+                Kind = "AA",
+                SmsCheckResult = null,
+                Status = "待生效",
+                ProcessingDateTime = null,
+                ProcessingUserId = null,
+                DeleteDateTime = null,
+                DeleteUserId = null,
+                Remark = null,
+                ClosingDay = "10",
+                PayDeadline = "25",
+                AgreeUserId = null,
+                MobileTel = "0933113885",
+                RejectReasonCode = null,
+                CcasReplyCode = null,
+                CcasReplyStatus = null,
+                CcasReplyDateTime = null,
+            };
+            var expected = true;
+
+            // Actual
+            new PreAdjustDAO().Insert(preAdjust);
             var actual = true;
 
             // Assert

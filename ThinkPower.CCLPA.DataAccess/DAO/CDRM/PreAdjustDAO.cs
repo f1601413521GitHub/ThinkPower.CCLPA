@@ -17,10 +17,10 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
         /// <summary>
         /// 新增預審名單
         /// </summary>
-        /// <param name="preAdjustList">預審名單清單</param>
-        public void Insert(List<PreAdjustDO> preAdjustList)
+        /// <param name="preAdjust">預審名單清單</param>
+        public void Insert(PreAdjustDO preAdjust)
         {
-            if ((preAdjustList == null) || (preAdjustList.Count == 0))
+            if (preAdjust == null)
             {
                 throw new ArgumentNullException("preAdjust");
             }
@@ -28,36 +28,44 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             string query = @"
 INSERT INTO [RG_PADJUST]
-    ([CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],
-    [KIND],[STATUS],[STMT_CYCLE_DESC],[PAY_DEADLINE],[MOBIL_TEL])
+    ([CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],
+    [STATUS],[USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],
+    [PAY_DEADLINE],[SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT])
 VALUES
-    (@CampaignId,@Id,@ProjectName,@ProjectAmount,@CloseDate,@ImportDate,@ChineseName,
-    @Kind,@Status,@ClosingDay,@PayDeadline,@MobileTel);";
+    (@CampaignId,@Id,@ProjectName,@ProjectAmount,@CloseDate,@ImportDate,@ChineseName,@Kind,@SmsCheckResult,
+    @Status,@ProcessingDateTime,@ProcessingUserId,@DeleteDateTime,@DeleteUserId,@Remark,@ClosingDay,
+    @PayDeadline,@AgreeUserId,@MobileTel,@RejectReasonCode,@CcasReplyCode,@CcasReplyStatus,@CcasReplyDateTime);";
 
 
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId, });
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.Id, });
+                command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.NVarChar) { Value = preAdjust.ProjectName ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ProjectAmount", SqlDbType.Decimal) { Value = preAdjust.ProjectAmount ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar) { Value = preAdjust.CloseDate ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ImportDate", SqlDbType.NVarChar) { Value = preAdjust.ImportDate ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ChineseName", SqlDbType.NVarChar) { Value = preAdjust.ChineseName ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@Kind", SqlDbType.NVarChar) { Value = preAdjust.Kind ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@SmsCheckResult", SqlDbType.NVarChar) { Value = preAdjust.SmsCheckResult ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@Status", SqlDbType.NVarChar) { Value = preAdjust.Status ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ProcessingDateTime", SqlDbType.NVarChar) { Value = preAdjust.ProcessingDateTime ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ProcessingUserId", SqlDbType.NVarChar) { Value = preAdjust.ProcessingUserId ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@DeleteDateTime", SqlDbType.NVarChar) { Value = preAdjust.DeleteDateTime ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@DeleteUserId", SqlDbType.NVarChar) { Value = preAdjust.DeleteUserId ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@Remark", SqlDbType.NVarChar) { Value = preAdjust.Remark ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ClosingDay", SqlDbType.NVarChar) { Value = preAdjust.ClosingDay ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@PayDeadline", SqlDbType.NVarChar) { Value = preAdjust.PayDeadline ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@AgreeUserId", SqlDbType.NVarChar) { Value = preAdjust.AgreeUserId ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@MobileTel", SqlDbType.NVarChar) { Value = preAdjust.MobileTel ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@RejectReasonCode", SqlDbType.NVarChar) { Value = preAdjust.RejectReasonCode ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@CcasReplyCode", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyCode ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@CcasReplyStatus", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyStatus ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@CcasReplyDateTime", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyDateTime ?? Convert.DBNull, });
 
                 connection.Open();
-
-                foreach (PreAdjustDO preAdjust in preAdjustList)
-                {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.Id ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.NVarChar) { Value = preAdjust.ProjectName ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ProjectAmount", SqlDbType.Decimal) { Value = preAdjust.ProjectAmount ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar) { Value = preAdjust.CloseDate ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ImportDate", SqlDbType.NVarChar) { Value = preAdjust.ImportDate ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ChineseName", SqlDbType.NVarChar) { Value = preAdjust.ChineseName ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@Kind", SqlDbType.NVarChar) { Value = preAdjust.Kind ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@Status", SqlDbType.NVarChar) { Value = preAdjust.Status ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@ClosingDay", SqlDbType.NVarChar) { Value = preAdjust.ClosingDay ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@PayDeadline", SqlDbType.NVarChar) { Value = preAdjust.PayDeadline ?? Convert.DBNull });
-                    command.Parameters.Add(new SqlParameter("@MobileTel", SqlDbType.NVarChar) { Value = preAdjust.MobileTel ?? Convert.DBNull });
-
-                    command.ExecuteNonQuery();
-                }
+                command.ExecuteNonQuery();
             }
         }
 
@@ -103,7 +111,6 @@ UPDATE  [RG_PADJUST]
 
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
-                connection.Open();
 
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId, });
@@ -130,6 +137,7 @@ UPDATE  [RG_PADJUST]
                 command.Parameters.Add(new SqlParameter("@CcasReplyStatus", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyStatus ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@CcasReplyDateTime", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyDateTime ?? Convert.DBNull, });
 
+                connection.Open();
                 command.ExecuteNonQuery();
             }
         }

@@ -416,7 +416,12 @@ namespace ThinkPower.CCLPA.Domain.Service
             using (TransactionScope scope = new TransactionScope())
             {
                 new CampaignImportLogDAO().Insert(importLog);
-                new PreAdjustDAO().Insert(preAdjustList);
+
+                PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
+                foreach (PreAdjustDO preAdjust in preAdjustList)
+                {
+                    preAdjustDAO.Insert(preAdjust);
+                }
 
                 scope.Complete();
             }
