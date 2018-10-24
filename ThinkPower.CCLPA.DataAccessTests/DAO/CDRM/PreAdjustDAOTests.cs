@@ -13,6 +13,67 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
     public class PreAdjustDAOTests
     {
         [TestMethod()]
+        public void GetAllWaitData_When_HasOrderCondition()
+        {
+            // Arrange
+            var dao = new PreAdjustDAO();
+            var condition = new PagingCondition()
+            {
+                PageIndex = 1,
+                PagingSize = 3
+            };
+            var expected = true;
+
+            // Actual
+            var result = dao.GetAllWaitData(condition);
+            var actual = (result != null);
+
+
+            Console.WriteLine(String.Join(",", result.Select(x => x.Id)));
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetAllEffectData_When_HasOrderCondition()
+        {
+            // Arrange
+            var dao = new PreAdjustDAO();
+            var condition = new PagingCondition()
+            {
+                PageIndex = 0,
+                PagingSize = 2
+            };
+            var expected = true;
+
+            // Actual
+            var result = dao.GetAllEffectData(condition);
+            var actual = (result != null);
+
+
+            Console.WriteLine(String.Join(",", result.Select(x => x.Id)));
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetAllWaitDataTest()
+        {
+            // Arrange
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.GetAllWaitData();
+            var actual = (result != null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
         public void GetAllEffectDataTest()
         {
             // Arrange
@@ -27,14 +88,46 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
         }
 
         [TestMethod()]
-        public void GetAllWaitDataTest()
+        public void GetWaitData_When_HasOrderCondition()
         {
             // Arrange
+            var id = "A177842053";
+            var condition = new PagingCondition()
+            {
+                PageIndex = 0,
+                PagingSize = 1,
+            };
+            var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = new PreAdjustDAO().GetAllWaitData();
+            var result = dao.GetWaitData(id, condition);
             var actual = (result != null);
+
+            Console.WriteLine(String.Join(",", result.Select(x => new { x.CampaignId,x.Id })));
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetEffectData_When_HasOrderCondition()
+        {
+            // Arrange
+            var id = "A177842053";
+            var condition = new PagingCondition()
+            {
+                PageIndex = 0,
+                PagingSize = 2,
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.GetEffectData(id, condition);
+            var actual = (result != null);
+
+            Console.WriteLine(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -45,10 +138,11 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
         {
             // Arrange
             var id = "A177842053";
+            var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = new PreAdjustDAO().GetWaitData(id);
+            var result = dao.GetWaitData(id);
             var actual = (result != null);
 
             // Assert
@@ -60,10 +154,11 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
         {
             // Arrange
             var id = "A177842053";
+            var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = new PreAdjustDAO().GetEffectData(id);
+            var result = dao.GetEffectData(id);
             var actual = (result != null);
 
             // Assert
@@ -76,10 +171,11 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             // Arrange
             var campaignId = "AA20991022X99Y99Z99A";
             var id = "A177842053";
+            var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = new PreAdjustDAO().GetWaitData(campaignId, id);
+            var result = dao.GetWaitData(campaignId, id);
             var actual = (result != null);
 
             // Assert
@@ -92,10 +188,11 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             // Arrange
             var campaignId = "AA20981022X99Y99Z99A";
             var id = "D187388854";
+            var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = new PreAdjustDAO().GetEffectData(campaignId, id);
+            var result = dao.GetEffectData(campaignId, id);
             var actual = (result != null);
 
             // Assert
@@ -159,12 +256,13 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                     CcasReplyDateTime       = null,
                 }
             };
+            var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
             foreach (var item in preAdjustList)
             {
-                new PreAdjustDAO().Update(item);
+                dao.Update(item);
             }
             var actual = true;
 
@@ -202,10 +300,11 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 CcasReplyStatus = null,
                 CcasReplyDateTime = null,
             };
+            var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            new PreAdjustDAO().Insert(preAdjust);
+            dao.Insert(preAdjust);
             var actual = true;
 
             // Assert
