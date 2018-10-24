@@ -17,5 +17,10 @@ namespace ThinkPower.CCLPA.Domain.Entity
         /// 生效區臨調預審名單
         /// </summary>
         public IEnumerable<PreAdjustEntity> EffectZone { get; set; }
+
+        /// <summary>
+        /// 刪除備註說明
+        /// </summary>
+        public string Remark { get; set; }
     }
 }

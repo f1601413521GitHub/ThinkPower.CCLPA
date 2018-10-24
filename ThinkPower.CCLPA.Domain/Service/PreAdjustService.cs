@@ -248,24 +248,23 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <summary>
         /// 刪除臨調預審名單
         /// </summary>
-        /// <param name="data">來源資料</param>
+        /// <param name="preAdjustInfo">來源資料</param>
         /// <param name="isWaitZone">是否為等待區</param>
         /// <param name="executeDel">是否執行刪除</param>
-        /// <returns></returns>
-        public PreAdjustInfoEntity Delete(PreAdjustInfoEntity data, bool isWaitZone, bool executeDel)
+        /// <returns>刪除預審名單筆數</returns>
+        public int? Delete(PreAdjustInfoEntity preAdjustInfo, bool isWaitZone, bool executeDel)
         {
-            PreAdjustInfoEntity result = null;
+            int? result = null;
 
-            if (data == null)
+            if (preAdjustInfo == null)
             {
                 throw new ArgumentNullException("data");
             }
 
 
-
             if (isWaitZone)
             {
-                if ((data.WaitZone == null) || (data.WaitZone.Count() == 0))
+                if ((preAdjustInfo.WaitZone == null) || (preAdjustInfo.WaitZone.Count() == 0))
                 {
                     var e = new InvalidOperationException("PreAdjust not found");
                     e.Data["ErrorMsg"] = "請先於《等待區中》勾選資料後，再進行後續作業。";
@@ -273,38 +272,51 @@ namespace ThinkPower.CCLPA.Domain.Service
                 }
 
                 PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
+                List<PreAdjustEntity> preAdjustList = new List<PreAdjustEntity>();
+                PreAdjustEntity preAdjustEntity = null;
+                PreAdjustDO preAdjustDO = null;
 
-                List<PreAdjustDO> waitZoneData = new List<PreAdjustDO>();
-                List<PreAdjustDO> effectZoneData = new List<PreAdjustDO>();
-
-                PreAdjustDO preAdjust = null;
-
-                foreach (PreAdjustEntity waitItem in data.WaitZone)
+                foreach (PreAdjustEntity waitItem in preAdjustInfo.WaitZone)
                 {
-                    preAdjust = preAdjustDAO.GetWaitData(waitItem.CampaignId, waitItem.Id);
+                    preAdjustDO = preAdjustDAO.GetWaitData(waitItem.CampaignId, waitItem.Id);
+                    preAdjustEntity = ConvertPreAdjustEntity(preAdjustDO);
 
-                    waitZoneData.Add(preAdjust);
+                    preAdjustList.Add(preAdjustEntity);
                 }
-
-                foreach (PreAdjustEntity effectItem in data.EffectZone)
-                {
-                    preAdjust = preAdjustDAO.GetEffectData(effectItem.CampaignId, effectItem.Id);
-
-                    effectZoneData.Add(preAdjust);
-                }
-
 
 
                 if (!executeDel)
                 {
+                    result = preAdjustList.Count;
+                }
+                else
+                {
+                    if (UserInfo == null)
+                    {
+                        throw new InvalidOperationException("UserInfo not found");
+                    }
+
+                    DateTime currentTime = DateTime.Now;
+
+                    foreach (PreAdjustEntity waitItem in preAdjustList)
+                    {
+                        if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
+                        {
+                            waitItem.Remark = preAdjustInfo.Remark;
+                        }
+
+                        waitItem.DeleteUserId = UserInfo.Id;
+                        waitItem.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
+                    }
+
+                    // TODO Update key??
+
 
                 }
-
-                // TOOD
             }
             else
             {
-                // TODO EffectZone
+                // TODO effectZone
             }
 
 
@@ -394,12 +406,11 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <summary>
         /// 轉換臨調預審名單資料
         /// </summary>
-        /// <param name="preAdjustDOList">臨調預審名單資料</param>
+        /// <param name="preAdjustList">臨調預審名單資料</param>
         /// <returns></returns>
-        private IEnumerable<PreAdjustEntity> ConvertPreAdjustEntity(
-            IEnumerable<PreAdjustDO> preAdjustDOList)
+        private IEnumerable<PreAdjustEntity> ConvertPreAdjustEntity(IEnumerable<PreAdjustDO> preAdjustList)
         {
-            return preAdjustDOList.Select(x => new PreAdjustEntity()
+            return preAdjustList.Select(x => new PreAdjustEntity()
             {
                 CampaignId = x.CampaignId,
                 Id = x.Id,
@@ -425,6 +436,42 @@ namespace ThinkPower.CCLPA.Domain.Service
                 CcasReplyStatus = x.CcasReplyStatus,
                 CcasReplyDateTime = x.CcasReplyDateTime,
             });
+        }
+
+
+        /// <summary>
+        /// 轉換臨調預審名單資料
+        /// </summary>
+        /// <param name="preAdjustDO">臨調預審名單資料</param>
+        /// <returns></returns>
+        private PreAdjustEntity ConvertPreAdjustEntity(PreAdjustDO preAdjustDO)
+        {
+            return new PreAdjustEntity()
+            {
+                CampaignId = preAdjustDO.CampaignId,
+                Id = preAdjustDO.Id,
+                ProjectName = preAdjustDO.ProjectName,
+                ProjectAmount = preAdjustDO.ProjectAmount,
+                CloseDate = preAdjustDO.CloseDate,
+                ImportDate = preAdjustDO.ImportDate,
+                ChineseName = preAdjustDO.ChineseName,
+                Kind = preAdjustDO.Kind,
+                SmsCheckResult = preAdjustDO.SmsCheckResult,
+                Status = preAdjustDO.Status,
+                ProcessingDateTime = preAdjustDO.ProcessingDateTime,
+                ProcessingUserId = preAdjustDO.ProcessingUserId,
+                DeleteDateTime = preAdjustDO.DeleteDateTime,
+                DeleteUserId = preAdjustDO.DeleteUserId,
+                Remark = preAdjustDO.Remark,
+                ClosingDay = preAdjustDO.ClosingDay,
+                PayDeadline = preAdjustDO.PayDeadline,
+                AgreeUserId = preAdjustDO.AgreeUserId,
+                MobileTel = preAdjustDO.MobileTel,
+                RejectReasonCode = preAdjustDO.RejectReasonCode,
+                CcasReplyCode = preAdjustDO.CcasReplyCode,
+                CcasReplyStatus = preAdjustDO.CcasReplyStatus,
+                CcasReplyDateTime = preAdjustDO.CcasReplyDateTime,
+            };
         }
 
         #endregion
