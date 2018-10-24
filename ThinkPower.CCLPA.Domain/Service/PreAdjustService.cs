@@ -267,7 +267,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             {
                 if ((preAdjustInfo.WaitZone == null) || (preAdjustInfo.WaitZone.Count() == 0))
                 {
-                    var e = new InvalidOperationException("PreAdjust not found");
+                    var e = new InvalidOperationException("PreAdjustWaitZone not found");
                     e.Data["ErrorMsg"] = "請先於《等待區中》勾選資料後，再進行後續作業。";
                     throw e;
                 }
@@ -318,7 +318,56 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
             else
             {
-                // TODO effectZone
+                if ((preAdjustInfo.EffectZone == null) || (preAdjustInfo.EffectZone.Count() == 0))
+                {
+                    var e = new InvalidOperationException("PreAdjustEffectZone not found");
+                    e.Data["ErrorMsg"] = "請先於《生效區中》勾選資料後，再進行後續作業。";
+                    throw e;
+                }
+
+                PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
+                List<PreAdjustEntity> preAdjustList = new List<PreAdjustEntity>();
+                PreAdjustEntity preAdjustEntity = null;
+                PreAdjustDO preAdjustDO = null;
+
+                foreach (PreAdjustEntity effectItem in preAdjustInfo.EffectZone)
+                {
+                    preAdjustDO = preAdjustDAO.GetEffectData(effectItem.CampaignId, effectItem.Id);
+                    preAdjustEntity = ConvertPreAdjustEntity(preAdjustDO);
+
+                    preAdjustList.Add(preAdjustEntity);
+                }
+
+                if (UserInfo == null)
+                {
+                    throw new InvalidOperationException("UserInfo not found");
+                }
+
+                DateTime currentTime = DateTime.Now;
+
+                foreach (PreAdjustEntity effectItem in preAdjustList)
+                {
+                    if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
+                    {
+                        effectItem.Remark = preAdjustInfo.Remark;
+                    }
+
+                    effectItem.DeleteUserId = UserInfo.Id;
+                    effectItem.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
+                    effectItem.Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.刪除);
+                }
+
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    foreach (PreAdjustEntity preAdjust in preAdjustList)
+                    {
+                        preAdjust.Update();
+                    }
+
+                    scope.Complete();
+                }
+
+                result = preAdjustList.Count;
             }
 
 

@@ -46,7 +46,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         }
 
         [TestMethod()]
-        public void DeleteTest()
+        public void DeleteWaitZone()
         {
             // Arrange
             PreAdjustInfoEntity preAdjustInfo = new PreAdjustInfoEntity()
@@ -55,7 +55,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
                     new PreAdjustEntity(){CampaignId = "AA20991022X99Y99Z99A",Id="A177842053" },
                     new PreAdjustEntity(){CampaignId = "AA20991022X99Y99Z99A",Id="B142357855" },
                 },
-                Remark = "測試刪除資料",
+                Remark = "測試刪除等待區資料",
             };
             var service = new PreAdjustService();
             service.UserInfo = new UserInfoVO() { Id = "14260", Name = "User14260" };
@@ -63,6 +63,30 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
 
             // Actual
             var result = service.Delete(preAdjustInfo, true);
+            var actual = 2;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void DeleteEffectZone()
+        {
+            // Arrange
+            PreAdjustInfoEntity preAdjustInfo = new PreAdjustInfoEntity()
+            {
+                EffectZone = new List<PreAdjustEntity>() {
+                    new PreAdjustEntity(){CampaignId = "AA20981022X99Y99Z99A",Id="A177842053" },
+                    new PreAdjustEntity(){CampaignId = "AA20981022X99Y99Z99A",Id="B142357855" },
+                },
+                Remark = "測試刪除生效區資料",
+            };
+            var service = new PreAdjustService();
+            service.UserInfo = new UserInfoVO() { Id = "14260", Name = "User14260" };
+            var expected = 2;
+
+            // Actual
+            var result = service.Delete(preAdjustInfo, false);
             var actual = 2;
 
             // Assert
