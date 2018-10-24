@@ -44,7 +44,10 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         public UserInfoVO UserInfo { get; set; }
 
-
+        /// <summary>
+        /// 預審名單狀態列舉
+        /// </summary>
+        private enum PreAdjustStatus { 待生效, 生效中, 失敗, 刪除 }
 
 
 
@@ -158,7 +161,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                         throw new InvalidOperationException("Convert campaignDetail Col3 Fail"),
                     ImportDate = currentTime.ToString("yyyy/MM/dd"),
                     Kind = campaignDetail.Col4,
-                    Status = "待生效",
+                    Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.待生效),
                 });
             }
 
@@ -298,6 +301,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
                     waitItem.DeleteUserId = UserInfo.Id;
                     waitItem.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
+                    waitItem.Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.刪除);
                 }
 
                 using (TransactionScope scope = new TransactionScope())
