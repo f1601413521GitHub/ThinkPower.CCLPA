@@ -47,6 +47,7 @@
     <Compile Include="DAO\CDRM\AdjustLevelPermissionDAO.cs" />
     <Compile Include="DAO\CDRM\AdjustUserLevelDAO.cs" />
     <Compile Include="DAO\CDRM\CampaignImportLogDAO.cs" />
+    <Compile Include="DAO\CDRM\CreditSystemDAO.cs" />
     <Compile Include="DAO\CDRM\PreAdjustDAO.cs" />
     <Compile Include="DAO\CMPN\CampaignDAO.cs" />
     <Compile Include="DAO\CMPN\CampaignDetailDAO.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="DO\CDRM\PreAdjustDO.cs" />
     <Compile Include="DO\ICRS\CustomerDO.cs" />
     <Compile Include="DO\ICRS\CustomerShortDO.cs" />
+    <Compile Include="DO\PreAdjustEffectDO.cs" />
     <Compile Include="Helper\DbHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
