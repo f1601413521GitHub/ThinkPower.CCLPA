@@ -357,6 +357,19 @@ namespace ThinkPower.CCLPA.Domain.Service
                     effectItem.Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.刪除);
                 }
 
+
+
+                // TODO VI.	將資料即時傳送CCAS系統(將另提供SP供呼叫)
+
+                //var service = new ConditionValidateService();
+
+                //foreach (PreAdjustEntity preAdjust in preAdjustList)
+                //{
+                //    PreAdjustEffectEntity preAdjustEffect = service.PreAdjustEffect(preAdjust.Id);
+                //}
+
+                //
+
                 using (TransactionScope scope = new TransactionScope())
                 {
                     foreach (PreAdjustEntity preAdjust in preAdjustList)
