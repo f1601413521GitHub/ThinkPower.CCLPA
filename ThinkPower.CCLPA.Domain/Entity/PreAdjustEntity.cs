@@ -1,4 +1,5 @@
 ﻿using System;
+using ThinkPower.CCLPA.Domain.Service;
 
 namespace ThinkPower.CCLPA.Domain.Entity
 {
@@ -121,5 +122,13 @@ namespace ThinkPower.CCLPA.Domain.Entity
         /// CCAS傳送回覆時間
         /// </summary>
         public string CcasReplyDateTime { get; set; }
+
+        /// <summary>
+        /// 更新資料
+        /// </summary>
+        internal void Update()
+        {
+            new PreAdjustService().Update(this);
+        }
     }
 }

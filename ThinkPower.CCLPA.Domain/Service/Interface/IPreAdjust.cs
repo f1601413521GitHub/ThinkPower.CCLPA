@@ -32,9 +32,8 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// </summary>
         /// <param name="data">來源資料</param>
         /// <param name="isWaitZone">是否為等待區</param>
-        /// <param name="executeDel">是否執行刪除</param>
         /// <returns></returns>
-        int? Delete(PreAdjustInfoEntity data, bool isWaitZone, bool executeDel);
+        int? Delete(PreAdjustInfoEntity data, bool isWaitZone);
 
         /// <summary>
         /// 同意執行臨調預審名單

@@ -201,7 +201,6 @@ namespace ThinkPower.CCLPA.Domain.Service
         }
 
 
-
         /// <summary>
         /// 查詢臨調預審名單
         /// </summary>
@@ -250,9 +249,8 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <param name="isWaitZone">是否為等待區</param>
-        /// <param name="executeDel">是否執行刪除</param>
         /// <returns>刪除預審名單筆數</returns>
-        public int? Delete(PreAdjustInfoEntity preAdjustInfo, bool isWaitZone, bool executeDel)
+        public int? Delete(PreAdjustInfoEntity preAdjustInfo, bool isWaitZone)
         {
             int? result = null;
 
@@ -284,35 +282,35 @@ namespace ThinkPower.CCLPA.Domain.Service
                     preAdjustList.Add(preAdjustEntity);
                 }
 
-
-                if (!executeDel)
+                if (UserInfo == null)
                 {
-                    result = preAdjustList.Count;
+                    throw new InvalidOperationException("UserInfo not found");
                 }
-                else
+
+                DateTime currentTime = DateTime.Now;
+
+                foreach (PreAdjustEntity waitItem in preAdjustList)
                 {
-                    if (UserInfo == null)
+                    if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
                     {
-                        throw new InvalidOperationException("UserInfo not found");
+                        waitItem.Remark = preAdjustInfo.Remark;
                     }
 
-                    DateTime currentTime = DateTime.Now;
+                    waitItem.DeleteUserId = UserInfo.Id;
+                    waitItem.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
+                }
 
-                    foreach (PreAdjustEntity waitItem in preAdjustList)
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    foreach (PreAdjustEntity preAdjust in preAdjustList)
                     {
-                        if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
-                        {
-                            waitItem.Remark = preAdjustInfo.Remark;
-                        }
-
-                        waitItem.DeleteUserId = UserInfo.Id;
-                        waitItem.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
+                        preAdjust.Update();
                     }
 
-                    // TODO Update key??
-
-
+                    scope.Complete();
                 }
+
+                result = preAdjustList.Count;
             }
             else
             {
@@ -336,6 +334,27 @@ namespace ThinkPower.CCLPA.Domain.Service
         }
 
 
+
+
+
+
+
+
+        #region InternalMethod
+
+
+        /// <summary>
+        /// 更新預審名單資料
+        /// </summary>
+        /// <param name="preAdjust">預審名單資料</param>
+        internal void Update(PreAdjustEntity preAdjust)
+        {
+            PreAdjustDO preAdjustDO = ConvertPreAdjustDO(preAdjust);
+            new PreAdjustDAO().Update(preAdjustDO);
+        }
+
+
+        #endregion
 
 
 
@@ -403,6 +422,9 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
         }
 
+
+
+
         /// <summary>
         /// 轉換臨調預審名單資料
         /// </summary>
@@ -438,7 +460,6 @@ namespace ThinkPower.CCLPA.Domain.Service
             });
         }
 
-
         /// <summary>
         /// 轉換臨調預審名單資料
         /// </summary>
@@ -473,6 +494,79 @@ namespace ThinkPower.CCLPA.Domain.Service
                 CcasReplyDateTime = preAdjustDO.CcasReplyDateTime,
             };
         }
+
+
+
+        /// <summary>
+        /// 轉換臨調預審名單資料
+        /// </summary>
+        /// <param name="preAdjust">臨調預審名單資料</param>
+        /// <returns></returns>
+        private IEnumerable<PreAdjustDO> ConvertPreAdjustDO(IEnumerable<PreAdjustEntity> preAdjust)
+        {
+            return preAdjust.Select(x => new PreAdjustDO()
+            {
+                CampaignId = x.CampaignId,
+                Id = x.Id,
+                ProjectName = x.ProjectName,
+                ProjectAmount = x.ProjectAmount,
+                CloseDate = x.CloseDate,
+                ImportDate = x.ImportDate,
+                ChineseName = x.ChineseName,
+                Kind = x.Kind,
+                SmsCheckResult = x.SmsCheckResult,
+                Status = x.Status,
+                ProcessingDateTime = x.ProcessingDateTime,
+                ProcessingUserId = x.ProcessingUserId,
+                DeleteDateTime = x.DeleteDateTime,
+                DeleteUserId = x.DeleteUserId,
+                Remark = x.Remark,
+                ClosingDay = x.ClosingDay,
+                PayDeadline = x.PayDeadline,
+                AgreeUserId = x.AgreeUserId,
+                MobileTel = x.MobileTel,
+                RejectReasonCode = x.RejectReasonCode,
+                CcasReplyCode = x.CcasReplyCode,
+                CcasReplyStatus = x.CcasReplyStatus,
+                CcasReplyDateTime = x.CcasReplyDateTime,
+            });
+        }
+
+        /// <summary>
+        /// 轉換臨調預審名單資料
+        /// </summary>
+        /// <param name="preAdjust">臨調預審名單資料</param>
+        /// <returns></returns>
+        private PreAdjustDO ConvertPreAdjustDO(PreAdjustEntity preAdjust)
+        {
+            return new PreAdjustDO()
+            {
+                CampaignId = preAdjust.CampaignId,
+                Id = preAdjust.Id,
+                ProjectName = preAdjust.ProjectName,
+                ProjectAmount = preAdjust.ProjectAmount,
+                CloseDate = preAdjust.CloseDate,
+                ImportDate = preAdjust.ImportDate,
+                ChineseName = preAdjust.ChineseName,
+                Kind = preAdjust.Kind,
+                SmsCheckResult = preAdjust.SmsCheckResult,
+                Status = preAdjust.Status,
+                ProcessingDateTime = preAdjust.ProcessingDateTime,
+                ProcessingUserId = preAdjust.ProcessingUserId,
+                DeleteDateTime = preAdjust.DeleteDateTime,
+                DeleteUserId = preAdjust.DeleteUserId,
+                Remark = preAdjust.Remark,
+                ClosingDay = preAdjust.ClosingDay,
+                PayDeadline = preAdjust.PayDeadline,
+                AgreeUserId = preAdjust.AgreeUserId,
+                MobileTel = preAdjust.MobileTel,
+                RejectReasonCode = preAdjust.RejectReasonCode,
+                CcasReplyCode = preAdjust.CcasReplyCode,
+                CcasReplyStatus = preAdjust.CcasReplyStatus,
+                CcasReplyDateTime = preAdjust.CcasReplyDateTime,
+            };
+        }
+
 
         #endregion
     }

@@ -22,7 +22,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
         {
             if ((preAdjustList == null) || (preAdjustList.Count == 0))
             {
-                throw new ArgumentNullException("preAdjustList");
+                throw new ArgumentNullException("preAdjust");
             }
 
 
@@ -62,6 +62,77 @@ VALUES
         }
 
 
+        /// <summary>
+        /// 更新預審名單
+        /// </summary>
+        /// <param name="preAdjust">預審名單資料</param>
+        public void Update(PreAdjustDO preAdjust)
+        {
+            if (preAdjust == null)
+            {
+                throw new ArgumentNullException("preAdjust");
+            }
+
+            string query = @"
+UPDATE  [RG_PADJUST]
+   SET  [CMPN_ID]         = @CampaignId,
+        [ID]              = @Id,
+        [PJNAME]          = @ProjectName,
+        [PRE_AMT]         = @ProjectAmount,
+        [CLOSE_DT]        = @CloseDate,
+        [IMPORT_DT]       = @ImportDate,
+        [CHI_NAME]        = @ChineseName,
+        [KIND]            = @Kind,
+        [SMS_CHECK]       = @SmsCheckResult,
+        [STATUS]          = @Status,
+        [USER_PROC_DTTM]  = @ProcessingDateTime,
+        [USER_ID]         = @ProcessingUserId,
+        [DEL_PROC_DTTM]   = @DeleteDateTime,
+        [DEL_ID]          = @DeleteUserId,
+        [REMARK]          = @Remark,
+        [STMT_CYCLE_DESC] = @ClosingDay,
+        [PAY_DEADLINE]    = @PayDeadline,
+        [SAGREE_ID]       = @AgreeUserId,
+        [MOBIL_TEL]       = @MobileTel,
+        [REJECTREASON]    = @RejectReasonCode,
+        [CCAS_CODE]       = @CcasReplyCode,
+        [CCAS_STATUS]     = @CcasReplyStatus,
+        [CCAS_DT]         = @CcasReplyDateTime
+ WHERE CMPN_ID = @CampaignId 
+    AND ID = @Id;";
+
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId, });
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.Id, });
+                command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.NVarChar) { Value = preAdjust.ProjectName ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ProjectAmount", SqlDbType.Decimal) { Value = preAdjust.ProjectAmount ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar) { Value = preAdjust.CloseDate ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ImportDate", SqlDbType.NVarChar) { Value = preAdjust.ImportDate ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ChineseName", SqlDbType.NVarChar) { Value = preAdjust.ChineseName ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@Kind", SqlDbType.NVarChar) { Value = preAdjust.Kind ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@SmsCheckResult", SqlDbType.NVarChar) { Value = preAdjust.SmsCheckResult ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@Status", SqlDbType.NVarChar) { Value = preAdjust.Status ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ProcessingDateTime", SqlDbType.NVarChar) { Value = preAdjust.ProcessingDateTime ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ProcessingUserId", SqlDbType.NVarChar) { Value = preAdjust.ProcessingUserId ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@DeleteDateTime", SqlDbType.NVarChar) { Value = preAdjust.DeleteDateTime ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@DeleteUserId", SqlDbType.NVarChar) { Value = preAdjust.DeleteUserId ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@Remark", SqlDbType.NVarChar) { Value = preAdjust.Remark ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@ClosingDay", SqlDbType.NVarChar) { Value = preAdjust.ClosingDay ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@PayDeadline", SqlDbType.NVarChar) { Value = preAdjust.PayDeadline ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@AgreeUserId", SqlDbType.NVarChar) { Value = preAdjust.AgreeUserId ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@MobileTel", SqlDbType.NVarChar) { Value = preAdjust.MobileTel ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@RejectReasonCode", SqlDbType.NVarChar) { Value = preAdjust.RejectReasonCode ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@CcasReplyCode", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyCode ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@CcasReplyStatus", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyStatus ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@CcasReplyDateTime", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyDateTime ?? Convert.DBNull, });
+
+                command.ExecuteNonQuery();
+            }
+        }
 
 
 
@@ -371,7 +442,7 @@ WHERE CLOSE_DT >= @CloseDate
                 {
                     result = ConvertPreAdjustDO(dt.Rows[0]);
                 }
-                else if(dt.Rows.Count == 0)
+                else if (dt.Rows.Count == 0)
                 {
                     throw new InvalidOperationException("PreAdjust not found");
                 }
@@ -387,6 +458,7 @@ WHERE CLOSE_DT >= @CloseDate
 
             return result;
         }
+
 
         /// <summary>
         /// 取得特定生效區的預審名單
