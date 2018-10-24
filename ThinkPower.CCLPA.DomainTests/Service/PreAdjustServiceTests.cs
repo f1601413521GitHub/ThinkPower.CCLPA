@@ -62,8 +62,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             var expected = 2;
 
             // Actual
-            var result = service.Delete(preAdjustInfo, true);
-            var actual = 2;
+            var actual = service.Delete(preAdjustInfo, true);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -86,8 +85,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             var expected = 2;
 
             // Actual
-            var result = service.Delete(preAdjustInfo, false);
-            var actual = 2;
+            var actual = service.Delete(preAdjustInfo, false);
 
             // Assert
             Assert.AreEqual(expected, actual);

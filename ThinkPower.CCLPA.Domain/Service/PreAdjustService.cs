@@ -359,16 +359,21 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-                // TODO VI.	將資料即時傳送CCAS系統(將另提供SP供呼叫)
+                ConditionValidateService validateService = new ConditionValidateService();
+                PreAdjustEffectEntity preAdjustEffect = null;
 
-                //var service = new ConditionValidateService();
+                int validateFailCount = 0;
+                foreach (PreAdjustEntity preAdjust in preAdjustList)
+                {
+                    preAdjustEffect = validateService.PreAdjustEffect(preAdjust.Id);
 
-                //foreach (PreAdjustEntity preAdjust in preAdjustList)
-                //{
-                //    PreAdjustEffectEntity preAdjustEffect = service.PreAdjustEffect(preAdjust.Id);
-                //}
+                    if (preAdjustEffect.ResponseCode != "00")
+                    {
+                        validateFailCount++;
+                        preAdjust.Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.失敗);
+                    }
+                }
 
-                //
 
                 using (TransactionScope scope = new TransactionScope())
                 {
@@ -380,7 +385,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                     scope.Complete();
                 }
 
-                result = preAdjustList.Count;
+                result = (preAdjustList.Count() - validateFailCount);
             }
 
 
