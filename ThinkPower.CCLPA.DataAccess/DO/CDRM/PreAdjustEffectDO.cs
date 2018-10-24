@@ -1,4 +1,4 @@
-﻿namespace ThinkPower.CCLPA.DataAccess.DO
+﻿namespace ThinkPower.CCLPA.DataAccess.DO.CDRM
 {
     /// <summary>
     /// 預審生效條件檢核結果資料物件類別

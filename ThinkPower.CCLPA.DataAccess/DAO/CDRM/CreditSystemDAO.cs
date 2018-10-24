@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using ThinkPower.CCLPA.DataAccess.DO;
+using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 
 namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 {

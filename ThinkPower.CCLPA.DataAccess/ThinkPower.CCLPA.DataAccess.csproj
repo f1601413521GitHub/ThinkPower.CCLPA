@@ -61,7 +61,7 @@
     <Compile Include="DO\CDRM\PreAdjustDO.cs" />
     <Compile Include="DO\ICRS\CustomerDO.cs" />
     <Compile Include="DO\ICRS\CustomerShortDO.cs" />
-    <Compile Include="DO\PreAdjustEffectDO.cs" />
+    <Compile Include="DO\CDRM\PreAdjustEffectDO.cs" />
     <Compile Include="Helper\DbHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

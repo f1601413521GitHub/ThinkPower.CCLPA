@@ -1,6 +1,6 @@
 ﻿using System;
 using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
-using ThinkPower.CCLPA.DataAccess.DO;
+using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 using ThinkPower.CCLPA.Domain.Entity;
 using ThinkPower.CCLPA.Domain.Service.Interface;
 
