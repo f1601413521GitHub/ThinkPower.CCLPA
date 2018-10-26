@@ -8,7 +8,6 @@ using System.Transactions;
 using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DAO.ICRS;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
-using ThinkPower.CCLPA.DataAccess.DO.CMPN;
 using ThinkPower.CCLPA.DataAccess.DO.ICRS;
 using ThinkPower.CCLPA.Domain.Entity;
 using ThinkPower.CCLPA.Domain.Service.Interface;
@@ -19,8 +18,10 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// <summary>
     /// 臨調預審服務
     /// </summary>
-    public class PreAdjustService : IPreAdjust
+    public class PreAdjustService : BaseService, IPreAdjust
     {
+        #region Private Property
+
         private CampaignService _campaignService;
 
         /// <summary>
@@ -40,27 +41,33 @@ namespace ThinkPower.CCLPA.Domain.Service
         }
 
         /// <summary>
+        /// 臨調預審名單狀態列舉
+        /// </summary>
+        private enum PreAdjustStatus { NotEffect, Effect, Fail, Delete }
+
+        #endregion
+
+        /// <summary>
         /// 使用者資訊
         /// </summary>
-        public UserInfoVO UserInfo { get; set; }
+        public UserInfo UserInfo { get; set; }
 
-        /// <summary>
-        /// 預審名單狀態列舉
-        /// </summary>
-        private enum PreAdjustStatus { 待生效, 生效中, 失敗, 刪除 }
 
 
 
 
         /// <summary>
-        /// 匯入臨調預審名單
+        /// 檢核臨調預審名單
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
-        /// <param name="executeImport">是否執行匯入</param>
-        /// <returns>行銷活動名單數量</returns>
-        public int? Import(string campaignId, bool executeImport = false)
+        /// <returns>預審名單驗證結果</returns>
+        public PreAdjustValidateResult Validate(string campaignId)
         {
-            int? campaignDetailCount = null;
+            PreAdjustValidateResult result = null;
+            string errorMsg = null;
+            int campaignDetailCount = 0;
+
+
 
             if (String.IsNullOrEmpty(campaignId))
             {
@@ -69,15 +76,11 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-
             CampaignEntity campaignEntity = CampaignService.GetCampaign(campaignId);
 
             if (campaignEntity == null)
             {
-                var e = new InvalidOperationException("Campaign not found");
-                e.Data["ErrorMsg"] = "ILRC行銷活動編碼，輸入錯誤。";
-                throw e;
-
+                errorMsg = "ILRC行銷活動編碼，輸入錯誤。";
             }
             else if (!DateTime.TryParseExact(campaignEntity.ExpectedCloseDate, "yyyyMMdd", null,
                 DateTimeStyles.None, out DateTime tempCloseDate))
@@ -86,161 +89,185 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
             else if (tempCloseDate < DateTime.Now.Date)
             {
-                var e = new InvalidOperationException("Campaign closed, not can't import data");
-                e.Data["ErrorMsg"] = "此行銷活動已結案，無法進入匯入作業。";
-                throw e;
+                errorMsg = "此行銷活動已結案，無法進入匯入作業。";
             }
 
 
 
-
-            CampaignImportLogEntity importLogEntity = GetImportLog(campaignEntity.CampaignId);
-
-            if (importLogEntity != null)
+            if (String.IsNullOrEmpty(errorMsg))
             {
-                var e = new InvalidOperationException("Campaign imported, not can't again import");
-                e.Data["ErrorMsg"] = $"此行銷活動已於{importLogEntity.ImportDate}匯入過，無法再進行匯入。";
-                throw e;
+                CampaignImportLogEntity importLogEntity = GetImportLog(campaignEntity.CampaignId);
+
+                if (importLogEntity != null)
+                {
+                    errorMsg = $"此行銷活動已於{importLogEntity.ImportDate}匯入過，無法再進行匯入。";
+                }
+                else
+                {
+                    campaignEntity.LoadDetailList();
+                    campaignDetailCount = campaignEntity.DetailList.Count();
+                }
             }
 
 
 
-
-            if (!executeImport)
+            result = new PreAdjustValidateResult()
             {
-                campaignDetailCount = campaignEntity.GetDetailCount();
+                ErrorMessage = errorMsg,
+                CampaignDetailCount = campaignDetailCount,
+            };
 
-                return campaignDetailCount;
+            return result;
+        }
+
+
+        /// <summary>
+        /// 匯入臨調預審名單
+        /// </summary>
+        /// <param name="campaignId">行銷活動代號</param>
+        /// <returns></returns>
+        public void Import(string campaignId)
+        {
+            if (String.IsNullOrEmpty(campaignId))
+            {
+                throw new ArgumentNullException("campaignId");
+            }
+            else if (UserInfo == null)
+            {
+                throw new ArgumentNullException("UserInfo");
+            }
+
+
+
+            CampaignEntity campaignEntity = CampaignService.GetCampaign(campaignId);
+
+            if (campaignEntity == null)
+            {
+                throw new InvalidOperationException("CampaignEntity not found");
             }
 
 
 
             campaignEntity.LoadDetailList();
 
-            IEnumerable<CampaignDetailEntity> campaignDetailList = campaignEntity.DetailList;
-
-            if ((campaignDetailList == null) || (campaignDetailList.Count() == 0))
+            if ((campaignEntity.DetailList == null) || !campaignEntity.DetailList.Any())
             {
                 throw new InvalidOperationException("CampaignDetailList not found");
             }
 
 
 
-
             DateTime currentTime = DateTime.Now;
-
-            if (UserInfo == null)
-            {
-                throw new InvalidOperationException("UserInfo not found");
-            }
 
             CampaignImportLogDO importLog = new CampaignImportLogDO()
             {
                 CampaignId = campaignEntity.CampaignId,
                 ExpectedStartDate = campaignEntity.ExpectedStartDateTime,
                 ExpectedEndDate = campaignEntity.ExpectedEndDateTime,
-                Count = campaignDetailList.Count(),
+                Count = campaignEntity.DetailList.Count(),
                 ImportUserId = UserInfo.Id,
                 ImportUserName = UserInfo.Name,
                 ImportDate = currentTime.ToString("yyyy/MM/dd"),
             };
 
-            List<PreAdjustDO> preAdjustList = new List<PreAdjustDO>();
+            List<PreAdjustDO> importPreAdjustList = new List<PreAdjustDO>();
 
-            foreach (CampaignDetailEntity campaignDetail in campaignDetailList)
+            foreach (CampaignDetailEntity campaignDetail in campaignEntity.DetailList)
             {
-                preAdjustList.Add(new PreAdjustDO()
+                importPreAdjustList.Add(new PreAdjustDO()
                 {
                     CampaignId = campaignEntity.CampaignId,
                     Id = campaignDetail.CustomerId,
                     ProjectName = campaignDetail.Col1,
-                    ProjectAmount = Convert.ToDecimal(campaignDetail.Col2),
-                    CloseDate = DateTime.TryParseExact(campaignDetail.Col3, "yyyyMMdd", null,
-                        DateTimeStyles.None, out DateTime temp) ?
-                        temp.ToString("yyyy/MM/dd") :
+
+                    ProjectAmount = String.IsNullOrEmpty(campaignDetail.Col2) ? null :
+                        Decimal.TryParse(campaignDetail.Col2, out decimal tempAmount) ?
+                        (decimal?)tempAmount :
+                        throw new InvalidOperationException("Convert campaignDetail Col2 Fail"),
+
+                    CloseDate = String.IsNullOrEmpty(campaignDetail.Col3) ? null :
+                        DateTime.TryParseExact(campaignDetail.Col3, "yyyy/MM/dd", null,
+                            DateTimeStyles.None, out DateTime tempCloseDate) ?
+                        tempCloseDate.ToString("yyyy/MM/dd") :
                         throw new InvalidOperationException("Convert campaignDetail Col3 Fail"),
+
                     ImportDate = currentTime.ToString("yyyy/MM/dd"),
                     Kind = campaignDetail.Col4,
-                    Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.待生效),
+                    Status = ConvertPreAdjustStatus(PreAdjustStatus.NotEffect),
                 });
             }
 
 
 
-
             CustomerDAO customerDAO = new CustomerDAO();
-            CustomerShortDO customerShortData = null;
-            PreAdjustDO tempPreAdjust = null;
+            CustomerShortDO tempCustomerDO = null;
+            PreAdjustDO tempPreAdjustDO = null;
 
-            foreach (CampaignDetailEntity campaignDetail in campaignDetailList)
+            foreach (CampaignDetailEntity campaignDetail in campaignEntity.DetailList)
             {
-                customerShortData = customerDAO.GetShortData(campaignDetail.CustomerId);
+                tempCustomerDO = customerDAO.GetShortData(campaignDetail.CustomerId);
 
-                if (customerShortData == null)
+                if (tempCustomerDO == null)
                 {
                     throw new InvalidOperationException("CustomerShortData not found");
                 }
 
-                tempPreAdjust = preAdjustList.FirstOrDefault(x => x.Id == campaignDetail.CustomerId);
+                tempPreAdjustDO = importPreAdjustList.
+                    FirstOrDefault(x => x.Id == campaignDetail.CustomerId);
 
-                if (tempPreAdjust == null)
+                if (tempPreAdjustDO == null)
                 {
-                    throw new InvalidOperationException("tempPreAdjust not found");
+                    throw new InvalidOperationException("PreAdjustDO not found");
                 }
 
-                tempPreAdjust.ChineseName = customerShortData.ChineseName;
-                tempPreAdjust.ClosingDay = customerShortData.ClosingDay;
-                tempPreAdjust.PayDeadline = customerShortData.PayDeadline;
-                tempPreAdjust.MobileTel = customerShortData.MobileTel;
+                tempPreAdjustDO.ChineseName = tempCustomerDO.ChineseName;
+                tempPreAdjustDO.ClosingDay = tempCustomerDO.ClosingDay;
+                tempPreAdjustDO.PayDeadline = tempCustomerDO.PayDeadline;
+                tempPreAdjustDO.MobileTel = tempCustomerDO.MobileTel;
             }
 
 
 
-            SaveCampaignData(importLog, preAdjustList);
+            using (TransactionScope scope = new TransactionScope())
+            {
+                new CampaignImportLogDAO().Insert(importLog);
 
+                PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
 
+                foreach (PreAdjustDO preAdjustDO in importPreAdjustList)
+                {
+                    preAdjustDAO.Insert(preAdjustDO);
+                }
 
-            return campaignDetailCount;
+                scope.Complete();
+            }
         }
 
 
         /// <summary>
         /// 查詢臨調預審名單
         /// </summary>
-        /// <param name="id">身分證字號</param>
+        /// <param name="condition">預審名單資料查詢條件</param>
         /// <returns></returns>
-        public PreAdjustInfoEntity Search(string id)
+        public IEnumerable<PreAdjustEntity> Query(Condition.PreAdjustCondition condition)
         {
-            PreAdjustInfoEntity result = null;
+            IEnumerable<PreAdjustEntity> result = null;
 
-            IEnumerable<PreAdjustDO> waitZoneData = null;
-            IEnumerable<PreAdjustDO> effectZoneData = null;
+            IEnumerable<PreAdjustDO> preAdjustDOList = null;
 
-            if (String.IsNullOrEmpty(id))
+            if (condition == null)
             {
-                waitZoneData = new PreAdjustDAO().GetAllWaitData();
-                effectZoneData = new PreAdjustDAO().GetAllEffectData();
-            }
-            else
-            {
-                waitZoneData = new PreAdjustDAO().GetWaitData(id);
-                effectZoneData = new PreAdjustDAO().GetEffectData(id);
-
-                if (((waitZoneData == null) || (waitZoneData.Count() == 0)) &&
-                    ((effectZoneData == null) || (effectZoneData.Count() == 0)))
-                {
-                    var e = new InvalidOperationException("PreAdjust not found");
-                    e.Data["ErrorMsg"] = "查無相關資料，請確認是否有輸入錯誤。";
-                    throw e;
-                }
+                throw new ArgumentNullException("condition");
             }
 
+            DataAccess.Condition.PreAdjustCondition preAdjustCondition =
+                ConvertPreAdjustCondition(condition);
 
-            result = new PreAdjustInfoEntity()
-            {
-                WaitZone = ConvertPreAdjustEntity(waitZoneData),
-                EffectZone = ConvertPreAdjustEntity(effectZoneData),
-            };
+            preAdjustDOList = new PreAdjustDAO().Get(preAdjustCondition);
+
+
+            result = (preAdjustDOList == null) ? null :
+                ConvertPreAdjustEntity(preAdjustDOList);
 
 
             return result;
@@ -248,148 +275,212 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
         /// <summary>
-        /// 刪除臨調預審名單
+        /// 刪除等待的臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
-        /// <param name="isWaitZone">是否為等待區</param>
         /// <returns>刪除預審名單筆數</returns>
-        public int? Delete(PreAdjustInfoEntity preAdjustInfo, bool isWaitZone)
+        public int DeleteNotEffect(PreAdjustInfo preAdjustInfo)
         {
-            int? result = null;
+            int deleteCount = 0;
 
             if (preAdjustInfo == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException("preAdjustInfo");
+            }
+            else if ((preAdjustInfo.PreAdjustList == null) || !preAdjustInfo.PreAdjustList.Any())
+            {
+                throw new ArgumentNullException("PreAdjustList");
+            }
+            else if (preAdjustInfo.Condition == null)
+            {
+                throw new AggregateException("PreAdjustCondition");
+            }
+            else if (UserInfo == null)
+            {
+                throw new ArgumentNullException("UserInfo");
             }
 
 
-            if (isWaitZone)
+            PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
+            IEnumerable<PreAdjustDO> preAdjustDOList = null;
+            PreAdjustDO preAdjustDO = null;
+            PreAdjustEntity preAdjustEntity = null;
+            List<PreAdjustEntity> preAdjustList = new List<PreAdjustEntity>();
+
+
+            DataAccess.Condition.PreAdjustCondition preAdjustCondition =
+                ConvertPreAdjustCondition(preAdjustInfo.Condition);
+
+
+            foreach (PreAdjustEntity entity in preAdjustInfo.PreAdjustList)
             {
-                if ((preAdjustInfo.WaitZone == null) || (preAdjustInfo.WaitZone.Count() == 0))
+                preAdjustCondition.Id = entity.Id;
+                preAdjustCondition.CampaignId = entity.CampaignId;
+
+                preAdjustDOList = preAdjustDAO.Get(preAdjustCondition);
+
+                if (preAdjustDOList == null || !preAdjustDOList.Any())
                 {
-                    var e = new InvalidOperationException("PreAdjustWaitZone not found");
-                    e.Data["ErrorMsg"] = "請先於《等待區中》勾選資料後，再進行後續作業。";
-                    throw e;
+                    throw new InvalidOperationException("preAdjustDOList not found");
+                }
+                else if (preAdjustDOList.Count() > 1)
+                {
+                    throw new InvalidOperationException("preAdjustDOList not the only");
                 }
 
-                PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
-                List<PreAdjustEntity> preAdjustList = new List<PreAdjustEntity>();
-                PreAdjustEntity preAdjustEntity = null;
-                PreAdjustDO preAdjustDO = null;
+                preAdjustDO = preAdjustDOList.First();
 
-                foreach (PreAdjustEntity waitItem in preAdjustInfo.WaitZone)
-                {
-                    preAdjustDO = preAdjustDAO.GetWaitData(waitItem.CampaignId, waitItem.Id);
-                    preAdjustEntity = ConvertPreAdjustEntity(preAdjustDO);
+                preAdjustEntity = ConvertPreAdjustEntity(preAdjustDO);
 
-                    preAdjustList.Add(preAdjustEntity);
-                }
-
-                if (UserInfo == null)
-                {
-                    throw new InvalidOperationException("UserInfo not found");
-                }
-
-                DateTime currentTime = DateTime.Now;
-
-                foreach (PreAdjustEntity waitItem in preAdjustList)
-                {
-                    if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
-                    {
-                        waitItem.Remark = preAdjustInfo.Remark;
-                    }
-
-                    waitItem.DeleteUserId = UserInfo.Id;
-                    waitItem.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
-                    waitItem.Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.刪除);
-                }
-
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    foreach (PreAdjustEntity preAdjust in preAdjustList)
-                    {
-                        preAdjust.Update();
-                    }
-
-                    scope.Complete();
-                }
-
-                result = preAdjustList.Count;
+                preAdjustList.Add(preAdjustEntity);
             }
-            else
+
+            DateTime currentTime = DateTime.Now;
+
+            foreach (PreAdjustEntity entity in preAdjustList)
             {
-                if ((preAdjustInfo.EffectZone == null) || (preAdjustInfo.EffectZone.Count() == 0))
+                if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
                 {
-                    var e = new InvalidOperationException("PreAdjustEffectZone not found");
-                    e.Data["ErrorMsg"] = "請先於《生效區中》勾選資料後，再進行後續作業。";
-                    throw e;
+                    entity.Remark = preAdjustInfo.Remark;
                 }
 
-                PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
-                List<PreAdjustEntity> preAdjustList = new List<PreAdjustEntity>();
-                PreAdjustEntity preAdjustEntity = null;
-                PreAdjustDO preAdjustDO = null;
-
-                foreach (PreAdjustEntity effectItem in preAdjustInfo.EffectZone)
-                {
-                    preAdjustDO = preAdjustDAO.GetEffectData(effectItem.CampaignId, effectItem.Id);
-                    preAdjustEntity = ConvertPreAdjustEntity(preAdjustDO);
-
-                    preAdjustList.Add(preAdjustEntity);
-                }
-
-                if (UserInfo == null)
-                {
-                    throw new InvalidOperationException("UserInfo not found");
-                }
-
-                DateTime currentTime = DateTime.Now;
-
-                foreach (PreAdjustEntity effectItem in preAdjustList)
-                {
-                    if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
-                    {
-                        effectItem.Remark = preAdjustInfo.Remark;
-                    }
-
-                    effectItem.DeleteUserId = UserInfo.Id;
-                    effectItem.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
-                    effectItem.Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.刪除);
-                }
+                entity.DeleteUserId = UserInfo.Id;
+                entity.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
+                entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Delete);
+            }
 
 
 
-                ConditionValidateService validateService = new ConditionValidateService();
-                PreAdjustEffectEntity preAdjustEffect = null;
-
-                int validateFailCount = 0;
+            try
+            {
                 foreach (PreAdjustEntity preAdjust in preAdjustList)
                 {
-                    preAdjustEffect = validateService.PreAdjustEffect(preAdjust.Id);
-
-                    if (preAdjustEffect.ResponseCode != "00")
-                    {
-                        validateFailCount++;
-                        preAdjust.Status = Enum.GetName(typeof(PreAdjustStatus), PreAdjustStatus.失敗);
-                    }
+                    preAdjust.Update();
+                    deleteCount++;
                 }
-
-
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    foreach (PreAdjustEntity preAdjust in preAdjustList)
-                    {
-                        preAdjust.Update();
-                    }
-
-                    scope.Complete();
-                }
-
-                result = (preAdjustList.Count() - validateFailCount);
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
             }
 
 
-            return result;
+            deleteCount = preAdjustList.Count;
+
+
+            return deleteCount;
+        }
+
+        /// <summary>
+        /// 刪除生效的臨調預審名單
+        /// </summary>
+        /// <param name="preAdjustInfo">來源資料</param>
+        /// <returns>刪除預審名單筆數</returns>
+        public int DeleteEffect(PreAdjustInfo preAdjustInfo)
+        {
+            int deleteCount = 0;
+
+            if (preAdjustInfo == null)
+            {
+                throw new ArgumentNullException("preAdjustInfo");
+            }
+            else if ((preAdjustInfo.PreAdjustList == null) || !preAdjustInfo.PreAdjustList.Any())
+            {
+                throw new ArgumentNullException("PreAdjustList");
+            }
+            else if (preAdjustInfo.Condition == null)
+            {
+                throw new AggregateException("PreAdjustCondition");
+            }
+            else if (UserInfo == null)
+            {
+                throw new ArgumentNullException("UserInfo");
+            }
+
+
+
+            PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
+            IEnumerable<PreAdjustDO> preAdjustDOList = null;
+            PreAdjustDO preAdjustDO = null;
+            PreAdjustEntity preAdjustEntity = null;
+            List<PreAdjustEntity> preAdjustList = new List<PreAdjustEntity>();
+
+
+            DataAccess.Condition.PreAdjustCondition preAdjustCondition =
+                ConvertPreAdjustCondition(preAdjustInfo.Condition);
+
+
+            foreach (PreAdjustEntity entity in preAdjustInfo.PreAdjustList)
+            {
+                preAdjustCondition.Id = entity.Id;
+                preAdjustCondition.CampaignId = entity.CampaignId;
+
+                preAdjustDOList = preAdjustDAO.Get(preAdjustCondition);
+
+                if (preAdjustDOList == null || !preAdjustDOList.Any())
+                {
+                    throw new InvalidOperationException("preAdjustDOList not found");
+                }
+                else if (preAdjustDOList.Count() > 1)
+                {
+                    throw new InvalidOperationException("preAdjustDOList not the only");
+                }
+
+                preAdjustDO = preAdjustDOList.First();
+
+                preAdjustEntity = ConvertPreAdjustEntity(preAdjustDO);
+
+                preAdjustList.Add(preAdjustEntity);
+            }
+
+
+
+            DateTime currentTime = DateTime.Now;
+
+            foreach (PreAdjustEntity entity in preAdjustList)
+            {
+                if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
+                {
+                    entity.Remark = preAdjustInfo.Remark;
+                }
+
+                entity.DeleteUserId = UserInfo.Id;
+                entity.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
+                entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Delete);
+            }
+
+
+
+            ConditionValidateService validateService = new ConditionValidateService();
+            PreAdjustEffectResult effectResult = null;
+            int validateFailCount = 0;
+
+
+            try
+            {
+                foreach (PreAdjustEntity entity in preAdjustList)
+                {
+                    effectResult = validateService.PreAdjustEffect(entity.Id);
+
+                    if (effectResult.ResponseCode != "00")
+                    {
+                        entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Fail);
+                        validateFailCount++;
+                    }
+
+                    entity.Update();
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+            }
+
+
+            deleteCount = (preAdjustList.Count() - validateFailCount);
+
+
+            return deleteCount;
         }
 
         /// <summary>
@@ -467,74 +558,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return campaignImportLogEntity;
         }
 
-        /// <summary>
-        /// 紀錄行銷活動匯入紀錄與臨調預審處理檔
-        /// </summary>
-        /// <param name="importLog">行銷活動匯入紀錄</param>
-        /// <param name="preAdjustList">臨調預審處理檔資料集合</param>
-        /// <returns></returns>
-        private void SaveCampaignData(CampaignImportLogDO importLog, List<PreAdjustDO> preAdjustList)
-        {
-            if (importLog == null)
-            {
-                throw new ArgumentNullException("importLog");
-            }
-            else if ((preAdjustList == null) || (preAdjustList.Count == 0))
-            {
-                throw new ArgumentNullException("preAdjustList");
-            }
 
-            using (TransactionScope scope = new TransactionScope())
-            {
-                new CampaignImportLogDAO().Insert(importLog);
-
-                PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
-                foreach (PreAdjustDO preAdjust in preAdjustList)
-                {
-                    preAdjustDAO.Insert(preAdjust);
-                }
-
-                scope.Complete();
-            }
-        }
-
-
-
-
-        /// <summary>
-        /// 轉換臨調預審名單資料
-        /// </summary>
-        /// <param name="preAdjustList">臨調預審名單資料</param>
-        /// <returns></returns>
-        private IEnumerable<PreAdjustEntity> ConvertPreAdjustEntity(IEnumerable<PreAdjustDO> preAdjustList)
-        {
-            return preAdjustList.Select(x => new PreAdjustEntity()
-            {
-                CampaignId = x.CampaignId,
-                Id = x.Id,
-                ProjectName = x.ProjectName,
-                ProjectAmount = x.ProjectAmount,
-                CloseDate = x.CloseDate,
-                ImportDate = x.ImportDate,
-                ChineseName = x.ChineseName,
-                Kind = x.Kind,
-                SmsCheckResult = x.SmsCheckResult,
-                Status = x.Status,
-                ProcessingDateTime = x.ProcessingDateTime,
-                ProcessingUserId = x.ProcessingUserId,
-                DeleteDateTime = x.DeleteDateTime,
-                DeleteUserId = x.DeleteUserId,
-                Remark = x.Remark,
-                ClosingDay = x.ClosingDay,
-                PayDeadline = x.PayDeadline,
-                AgreeUserId = x.AgreeUserId,
-                MobileTel = x.MobileTel,
-                RejectReasonCode = x.RejectReasonCode,
-                CcasReplyCode = x.CcasReplyCode,
-                CcasReplyStatus = x.CcasReplyStatus,
-                CcasReplyDateTime = x.CcasReplyDateTime,
-            });
-        }
 
         /// <summary>
         /// 轉換臨調預審名單資料
@@ -543,6 +567,11 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <returns></returns>
         private PreAdjustEntity ConvertPreAdjustEntity(PreAdjustDO preAdjustDO)
         {
+            if (preAdjustDO == null)
+            {
+                throw new ArgumentNullException("preAdjustDO");
+            }
+
             return new PreAdjustEntity()
             {
                 CampaignId = preAdjustDO.CampaignId,
@@ -571,16 +600,19 @@ namespace ThinkPower.CCLPA.Domain.Service
             };
         }
 
-
-
         /// <summary>
         /// 轉換臨調預審名單資料
         /// </summary>
-        /// <param name="preAdjust">臨調預審名單資料</param>
+        /// <param name="preAdjustDOList">臨調預審名單資料</param>
         /// <returns></returns>
-        private IEnumerable<PreAdjustDO> ConvertPreAdjustDO(IEnumerable<PreAdjustEntity> preAdjust)
+        private IEnumerable<PreAdjustEntity> ConvertPreAdjustEntity(IEnumerable<PreAdjustDO> preAdjustDOList)
         {
-            return preAdjust.Select(x => new PreAdjustDO()
+            if (preAdjustDOList == null || !preAdjustDOList.Any())
+            {
+                throw new ArgumentNullException("preAdjustList");
+            }
+
+            return preAdjustDOList.Select(x => new PreAdjustEntity()
             {
                 CampaignId = x.CampaignId,
                 Id = x.Id,
@@ -608,41 +640,142 @@ namespace ThinkPower.CCLPA.Domain.Service
             });
         }
 
+
+
         /// <summary>
         /// 轉換臨調預審名單資料
         /// </summary>
-        /// <param name="preAdjust">臨調預審名單資料</param>
+        /// <param name="preAdjustEntity">臨調預審名單資料</param>
         /// <returns></returns>
-        private PreAdjustDO ConvertPreAdjustDO(PreAdjustEntity preAdjust)
+        private PreAdjustDO ConvertPreAdjustDO(PreAdjustEntity preAdjustEntity)
         {
+            if (preAdjustEntity == null)
+            {
+                throw new ArgumentNullException("preAdjust");
+            }
+
             return new PreAdjustDO()
             {
-                CampaignId = preAdjust.CampaignId,
-                Id = preAdjust.Id,
-                ProjectName = preAdjust.ProjectName,
-                ProjectAmount = preAdjust.ProjectAmount,
-                CloseDate = preAdjust.CloseDate,
-                ImportDate = preAdjust.ImportDate,
-                ChineseName = preAdjust.ChineseName,
-                Kind = preAdjust.Kind,
-                SmsCheckResult = preAdjust.SmsCheckResult,
-                Status = preAdjust.Status,
-                ProcessingDateTime = preAdjust.ProcessingDateTime,
-                ProcessingUserId = preAdjust.ProcessingUserId,
-                DeleteDateTime = preAdjust.DeleteDateTime,
-                DeleteUserId = preAdjust.DeleteUserId,
-                Remark = preAdjust.Remark,
-                ClosingDay = preAdjust.ClosingDay,
-                PayDeadline = preAdjust.PayDeadline,
-                AgreeUserId = preAdjust.AgreeUserId,
-                MobileTel = preAdjust.MobileTel,
-                RejectReasonCode = preAdjust.RejectReasonCode,
-                CcasReplyCode = preAdjust.CcasReplyCode,
-                CcasReplyStatus = preAdjust.CcasReplyStatus,
-                CcasReplyDateTime = preAdjust.CcasReplyDateTime,
+                CampaignId = preAdjustEntity.CampaignId,
+                Id = preAdjustEntity.Id,
+                ProjectName = preAdjustEntity.ProjectName,
+                ProjectAmount = preAdjustEntity.ProjectAmount,
+                CloseDate = preAdjustEntity.CloseDate,
+                ImportDate = preAdjustEntity.ImportDate,
+                ChineseName = preAdjustEntity.ChineseName,
+                Kind = preAdjustEntity.Kind,
+                SmsCheckResult = preAdjustEntity.SmsCheckResult,
+                Status = preAdjustEntity.Status,
+                ProcessingDateTime = preAdjustEntity.ProcessingDateTime,
+                ProcessingUserId = preAdjustEntity.ProcessingUserId,
+                DeleteDateTime = preAdjustEntity.DeleteDateTime,
+                DeleteUserId = preAdjustEntity.DeleteUserId,
+                Remark = preAdjustEntity.Remark,
+                ClosingDay = preAdjustEntity.ClosingDay,
+                PayDeadline = preAdjustEntity.PayDeadline,
+                AgreeUserId = preAdjustEntity.AgreeUserId,
+                MobileTel = preAdjustEntity.MobileTel,
+                RejectReasonCode = preAdjustEntity.RejectReasonCode,
+                CcasReplyCode = preAdjustEntity.CcasReplyCode,
+                CcasReplyStatus = preAdjustEntity.CcasReplyStatus,
+                CcasReplyDateTime = preAdjustEntity.CcasReplyDateTime,
             };
         }
 
+        /// <summary>
+        /// 轉換臨調預審名單資料
+        /// </summary>
+        /// <param name="preAdjustEntities">臨調預審名單資料</param>
+        /// <returns></returns>
+        private IEnumerable<PreAdjustDO> ConvertPreAdjustDO(IEnumerable<PreAdjustEntity> preAdjustEntities)
+        {
+            if ((preAdjustEntities == null) || !preAdjustEntities.Any())
+            {
+                throw new ArgumentNullException("preAdjust");
+            }
+
+            return preAdjustEntities.Select(x => new PreAdjustDO()
+            {
+                CampaignId = x.CampaignId,
+                Id = x.Id,
+                ProjectName = x.ProjectName,
+                ProjectAmount = x.ProjectAmount,
+                CloseDate = x.CloseDate,
+                ImportDate = x.ImportDate,
+                ChineseName = x.ChineseName,
+                Kind = x.Kind,
+                SmsCheckResult = x.SmsCheckResult,
+                Status = x.Status,
+                ProcessingDateTime = x.ProcessingDateTime,
+                ProcessingUserId = x.ProcessingUserId,
+                DeleteDateTime = x.DeleteDateTime,
+                DeleteUserId = x.DeleteUserId,
+                Remark = x.Remark,
+                ClosingDay = x.ClosingDay,
+                PayDeadline = x.PayDeadline,
+                AgreeUserId = x.AgreeUserId,
+                MobileTel = x.MobileTel,
+                RejectReasonCode = x.RejectReasonCode,
+                CcasReplyCode = x.CcasReplyCode,
+                CcasReplyStatus = x.CcasReplyStatus,
+                CcasReplyDateTime = x.CcasReplyDateTime,
+            });
+        }
+
+
+
+
+        /// <summary>
+        /// 轉換預審名單狀態
+        /// </summary>
+        /// <param name="status">預審名單狀態</param>
+        /// <returns></returns>
+        private string ConvertPreAdjustStatus(PreAdjustStatus status)
+        {
+            string result = null;
+
+            switch (status)
+            {
+                case PreAdjustStatus.NotEffect:
+                    result = "待生效";
+                    break;
+                case PreAdjustStatus.Effect:
+                    result = "生效中";
+                    break;
+                case PreAdjustStatus.Fail:
+                    result = "失敗";
+                    break;
+                case PreAdjustStatus.Delete:
+                    result = "刪除";
+                    break;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 轉換臨調預審名單查詢條件
+        /// </summary>
+        /// <param name="condition">臨調預審名單查詢條件</param>
+        /// <returns></returns>
+        private DataAccess.Condition.PreAdjustCondition ConvertPreAdjustCondition(
+            Condition.PreAdjustCondition condition)
+        {
+            if (condition == null)
+            {
+                throw new ArgumentNullException("condition");
+            }
+
+            return new DataAccess.Condition.PreAdjustCondition()
+            {
+                PageIndex = condition.PageIndex,
+                PagingSize = condition.PagingSize,
+                CloseDate = condition.CloseDate,
+                CcasReplyCode = condition.CcasReplyCode,
+                Id = condition.Id,
+                CampaignId = condition.CampaignId,
+            };
+        }
 
         #endregion
     }

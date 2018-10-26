@@ -1,9 +1,9 @@
-﻿namespace ThinkPower.CCLPA.Domain.Entity
+﻿namespace ThinkPower.CCLPA.Domain.VO
 {
     /// <summary>
     /// 預審生效條件檢核結果類別
     /// </summary>
-    public class PreAdjustEffectEntity
+    public class PreAdjustEffectResult
     {
         /// <summary>
         /// 拒絕原因代碼

@@ -1,15 +1,15 @@
 ﻿using System;
 using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
-using ThinkPower.CCLPA.Domain.Entity;
 using ThinkPower.CCLPA.Domain.Service.Interface;
+using ThinkPower.CCLPA.Domain.VO;
 
 namespace ThinkPower.CCLPA.Domain.Service
 {
     /// <summary>
     /// 條件檢核類別
     /// </summary>
-    public class ConditionValidateService : IConditionValidate
+    public class ConditionValidateService : BaseService, IConditionValidate
     {
         private CreditSystemDAO _creditDAO;
 
@@ -52,20 +52,20 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="id">身分證字號</param>
         /// <returns></returns>
-        public PreAdjustEffectEntity PreAdjustEffect(string id)
+        public PreAdjustEffectResult PreAdjustEffect(string id)
         {
-            PreAdjustEffectEntity preAdjustEffectEntity = null;
+            PreAdjustEffectResult result = null;
 
             if (String.IsNullOrEmpty(id))
             {
                 throw new ArgumentNullException("id");
             }
 
-            PreAdjustEffectDO preAdjustEffect = CreditDAO.PreAdjustEffectCondition(id);
+            PreAdjustEffectResultDO preAdjustEffect = CreditDAO.PreAdjustEffectCondition(id);
 
-            preAdjustEffectEntity = ConvertPreAdjustEffectEntity(preAdjustEffect);
+            result = ConvertPreAdjustEffectEntity(preAdjustEffect);
 
-            return preAdjustEffectEntity;
+            return result;
         }
 
         /// <summary>
@@ -73,10 +73,14 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="preAdjustEffect">預審生效條件檢核結果</param>
         /// <returns></returns>
-        private PreAdjustEffectEntity ConvertPreAdjustEffectEntity(
-            PreAdjustEffectDO preAdjustEffect)
+        private PreAdjustEffectResult ConvertPreAdjustEffectEntity(PreAdjustEffectResultDO preAdjustEffect)
         {
-            return new PreAdjustEffectEntity()
+            if (preAdjustEffect == null)
+            {
+                throw new ArgumentNullException("preAdjustEffect");
+            }
+
+            return new PreAdjustEffectResult()
             {
                 RejectReason = preAdjustEffect.RejectReason,
                 ResponseCode = preAdjustEffect.ResponseCode,

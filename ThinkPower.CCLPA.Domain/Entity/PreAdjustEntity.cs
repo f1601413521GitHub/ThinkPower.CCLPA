@@ -6,7 +6,7 @@ namespace ThinkPower.CCLPA.Domain.Entity
     /// <summary>
     /// 臨調預審名單類別
     /// </summary>
-    public class PreAdjustEntity
+    public class PreAdjustEntity : BaseEntity
     {
         /// <summary>
         /// 行銷活動代號

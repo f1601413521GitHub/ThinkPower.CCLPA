@@ -7,7 +7,7 @@ namespace ThinkPower.CCLPA.Domain.Entity
     /// <summary>
     /// 行銷活動資訊類別
     /// </summary>
-    public class CampaignEntity
+    public class CampaignEntity : BaseEntity
     {
         private CampaignService _campService;
 
@@ -148,11 +148,5 @@ namespace ThinkPower.CCLPA.Domain.Entity
         {
             DetailList = CampService.GetDetailList();
         }
-
-        public int? GetDetailCount()
-        {
-            return CampService.GetDetailCount();
-        }
-
     }
 }

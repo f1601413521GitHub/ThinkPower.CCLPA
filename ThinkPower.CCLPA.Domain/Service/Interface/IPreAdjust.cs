@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThinkPower.CCLPA.Domain.Condition;
 using ThinkPower.CCLPA.Domain.Entity;
+using ThinkPower.CCLPA.Domain.VO;
 
 namespace ThinkPower.CCLPA.Domain.Service.Interface
 {
@@ -13,27 +15,39 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
     interface IPreAdjust
     {
         /// <summary>
+        /// 檢核臨調預審名單
+        /// </summary>
+        /// <param name="campaignId">行銷活動代號</param>
+        /// <returns>預審名單驗證結果</returns>
+        PreAdjustValidateResult Validate(string campaignId);
+
+        /// <summary>
         /// 匯入臨調預審名單
         /// </summary>
         /// <param name="campaignId">行銷活動代號</param>
-        /// <param name="executeImport">是否執行匯入</param>
-        /// <returns>行銷活動名單數量</returns>
-        int? Import(string campaignId, bool executeImport = false);
+        /// <returns></returns>
+        void Import(string campaignId);
 
         /// <summary>
         /// 查詢臨調預審名單
         /// </summary>
-        /// <param name="id">身分證字號</param>
+        /// <param name="searchInfo">預審名單搜尋條件</param>
         /// <returns>臨調預審名單</returns>
-        PreAdjustInfoEntity Search(string id);
+        IEnumerable<PreAdjustEntity> Query(PreAdjustCondition searchInfo);
 
         /// <summary>
-        /// 刪除臨調預審名單
+        /// 刪除等待的臨調預審名單
         /// </summary>
-        /// <param name="data">來源資料</param>
-        /// <param name="isWaitZone">是否為等待區</param>
-        /// <returns></returns>
-        int? Delete(PreAdjustInfoEntity data, bool isWaitZone);
+        /// <param name="preAdjustInfo">來源資料</param>
+        /// <returns>刪除預審名單筆數</returns>
+        int DeleteNotEffect(PreAdjustInfo preAdjustInfo);
+
+        /// <summary>
+        /// 刪除生效的臨調預審名單
+        /// </summary>
+        /// <param name="preAdjustInfo">來源資料</param>
+        /// <returns>刪除預審名單筆數</returns>
+        int DeleteEffect(PreAdjustInfo preAdjustInfo);
 
         /// <summary>
         /// 同意執行臨調預審名單

@@ -3,7 +3,7 @@
     /// <summary>
     /// 使用者資訊類別
     /// </summary>
-    public class UserInfoVO
+    public class UserInfo
     {
         /// <summary>
         /// 使用者代號

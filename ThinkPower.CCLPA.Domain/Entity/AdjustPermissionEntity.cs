@@ -5,7 +5,7 @@ namespace ThinkPower.CCLPA.Domain.Entity
     /// <summary>
     /// 臨調權限類別
     /// </summary>
-    public class AdjustPermissionEntity
+    public class AdjustPermissionEntity : BaseEntity
     {
         /// <summary> 
         /// 權限等級  

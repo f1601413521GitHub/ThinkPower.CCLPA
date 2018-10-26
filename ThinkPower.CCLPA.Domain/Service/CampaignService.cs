@@ -12,7 +12,7 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// <summary>
     /// 行銷活動服務
     /// </summary>
-    public class CampaignService : ICampaign
+    public class CampaignService : BaseService, ICampaign
     {
         private CampaignEntity _campaignEntity;
 
@@ -99,7 +99,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             List<CampaignDetailEntity> detailList = null;
 
-            if (_campaignEntity==null)
+            if (_campaignEntity == null)
             {
                 throw new ArgumentNullException("_campaignEntity");
             }

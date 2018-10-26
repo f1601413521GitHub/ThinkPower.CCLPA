@@ -17,12 +17,12 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// <summary>
     /// 臨調服務
     /// </summary>
-    public class AdjustService : IAdjust
+    public class AdjustService : BaseService, IAdjust
     {
         /// <summary>
         /// 使用者資訊
         /// </summary>
-        public UserInfoVO UserInfo { get; set; }
+        public UserInfo UserInfo { get; set; }
 
 
 

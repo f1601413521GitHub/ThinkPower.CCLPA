@@ -15,9 +15,9 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
         /// </summary>
         /// <param name="id">身分證字號</param>
         /// <returns>預審生效條件檢核結果</returns>
-        public PreAdjustEffectDO PreAdjustEffectCondition(string id)
+        public PreAdjustEffectResultDO PreAdjustEffectCondition(string id)
         {
-            PreAdjustEffectDO result = null;
+            PreAdjustEffectResultDO result = null;
 
             if (String.IsNullOrEmpty(id))
             {
@@ -28,10 +28,8 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
-                SqlCommand command = new SqlCommand(query, connection)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
+                SqlCommand command = new SqlCommand(query, connection);
+                command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(new SqlParameter("@vID", SqlDbType.NVarChar, 11)
                 {
@@ -54,10 +52,18 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
                 connection.Open();
                 command.ExecuteNonQuery();
 
-                result = new PreAdjustEffectDO()
+                string rejectReason = command.Parameters["@REJECTREASON"].Value as string;
+                string responseCode = command.Parameters["@Resp_code"].Value as string;
+
+                if (String.IsNullOrEmpty(responseCode))
                 {
-                    RejectReason = command.Parameters["@REJECTREASON"].Value as string,
-                    ResponseCode = command.Parameters["@Resp_code"].Value as string,
+                    throw new InvalidOperationException("responseCode not found");
+                }
+
+                result = new PreAdjustEffectResultDO()
+                {
+                    RejectReason = rejectReason,
+                    ResponseCode = responseCode,
                 };
             }
 

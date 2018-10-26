@@ -1,4 +1,4 @@
-﻿using ThinkPower.CCLPA.Domain.Entity;
+﻿using ThinkPower.CCLPA.Domain.VO;
 
 namespace ThinkPower.CCLPA.Domain.Service.Interface
 {
@@ -24,6 +24,6 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// </summary>
         /// <param name="id">客戶ID</param>
         /// <returns></returns>
-        PreAdjustEffectEntity PreAdjustEffect(string id);
+        PreAdjustEffectResult PreAdjustEffect(string id);
     }
 }

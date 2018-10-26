@@ -10,7 +10,7 @@ using ThinkPower.CCLPA.DataAccess.Helper;
 namespace ThinkPower.CCLPA.DataAccess.DAO
 {
     /// <summary>
-    /// 領域物件基底類別
+    /// 資料存取物件基底類別
     /// </summary>
     public abstract class BaseDAO
     {

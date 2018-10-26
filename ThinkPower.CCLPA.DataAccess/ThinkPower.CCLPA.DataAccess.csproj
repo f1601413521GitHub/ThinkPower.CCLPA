@@ -61,9 +61,9 @@
     <Compile Include="DO\CDRM\PreAdjustDO.cs" />
     <Compile Include="DO\ICRS\CustomerDO.cs" />
     <Compile Include="DO\ICRS\CustomerShortDO.cs" />
-    <Compile Include="DO\CDRM\PreAdjustEffectDO.cs" />
+    <Compile Include="DO\CDRM\PreAdjustEffectResultDO.cs" />
     <Compile Include="Helper\DbHelper.cs" />
-    <Compile Include="PagingCondition.cs" />
+    <Compile Include="Condition\PreAdjustCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -5,7 +5,7 @@ namespace ThinkPower.CCLPA.Domain.Entity
     /// <summary>
     /// 行銷活動名單類別
     /// </summary>
-    public class CampaignDetailEntity
+    public class CampaignDetailEntity : BaseEntity
     {
 
         /// <summary>

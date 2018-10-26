@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThinkPower.CCLPA.DataAccess.Condition;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 
 namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
@@ -68,7 +69,6 @@ VALUES
                 command.ExecuteNonQuery();
             }
         }
-
 
         /// <summary>
         /// 更新預審名單
@@ -142,486 +142,124 @@ UPDATE  [RG_PADJUST]
             }
         }
 
-
-
         /// <summary>
-        /// 取得所有等待區的預審名單
+        /// 取得臨調預審名單
         /// </summary>
-        /// <param name="condition">資料查詢條件</param>
-        /// <returns>等待區預審名單</returns>
-        public IEnumerable<PreAdjustDO> GetAllWaitData(PagingCondition condition = null)
+        /// <param name="condition">預審名單資料查詢條件</param>
+        /// <returns></returns>
+        public IEnumerable<PreAdjustDO> Get(PreAdjustCondition condition)
         {
             List<PreAdjustDO> result = null;
 
-            string query = null;
-            SqlParameter skip = null;
-            SqlParameter take = null;
-
-            if ((condition != null) && (condition.PageIndex != null) && (condition.PagingSize != null))
+            if (condition == null)
             {
-                skip = new SqlParameter("@Skip", SqlDbType.Int)
-                {
-                    Value = (condition.PageIndex * condition.PagingSize)
-                };
-                take = new SqlParameter("@Take", SqlDbType.Int)
-                {
-                    Value = condition.PagingSize
-                };
+                throw new ArgumentNullException("condition");
+            }
 
-                switch (condition.OrderBy)
-                {
-                    case PagingCondition.OrderByKind.None:
-                        query = @"
+
+
+            StringBuilder querySB = new StringBuilder(@"
 SELECT 
     [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
     [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
     [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE != '00' OR CCAS_CODE IS NULL)
-ORDER BY [CMPN_ID]
-OFFSET     @Skip ROWS
-FETCH NEXT @Take ROWS ONLY;";
+FROM [RG_PADJUST]");
 
-                        break;
-                    case PagingCondition.OrderByKind.OrderId:
-                        break;
-                    case PagingCondition.OrderByKind.OrderDate:
-                        break;
-                    case PagingCondition.OrderByKind.OrderDateByDescending:
-                        break;
-                    case PagingCondition.OrderByKind.CustomerIdAndOrderDate:
-                        break;
-                }
+
+
+            List<string> queryCommand = new List<string>();
+            List<string> pagingCommand = new List<string>();
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+
+
+
+            if (condition.CloseDate != null)
+            {
+                queryCommand.Add("CLOSE_DT >= @CloseDate");
+                sqlParameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
+                {
+                    Value = condition.CloseDate.Value.ToString("yyyy/MM/dd")
+                });
+            }
+
+            if (String.IsNullOrEmpty(condition.CcasReplyCode) || (condition.CcasReplyCode != "00"))
+            {
+                queryCommand.Add("(CCAS_CODE != '00' OR CCAS_CODE IS NULL)");
             }
             else
             {
-                query = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE != '00' OR CCAS_CODE IS NULL);";
-
+                queryCommand.Add("(CCAS_CODE = '00')");
             }
 
-
-            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            if (!String.IsNullOrEmpty(condition.Id))
             {
-
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
+                queryCommand.Add("ID = @Id");
+                sqlParameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
                 {
-                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
+                    Value = condition.Id
                 });
-
-                if (skip != null && take != null)
-                {
-                    command.Parameters.Add(skip);
-                    command.Parameters.Add(take);
-                }
-
-                connection.Open();
-
-                DataTable dt = new DataTable();
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
-                {
-                    result = new List<PreAdjustDO>();
-                    PreAdjustDO preAdjustDO = null;
-
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        preAdjustDO = ConvertPreAdjustDO(dr);
-
-                        result.Add(preAdjustDO);
-                    }
-                }
-
-                adapter = null;
-                dt = null;
-                command = null;
             }
 
-            return result;
-        }
-
-        /// <summary>
-        /// 取得所有生效區的預審名單
-        /// </summary>
-        /// <param name="condition">資料查詢條件</param>
-        /// <returns>生效區預審名單</returns>
-        public IEnumerable<PreAdjustDO> GetAllEffectData(PagingCondition condition = null)
-        {
-            List<PreAdjustDO> result = null;
-
-            string query = null;
-            SqlParameter skip = null;
-            SqlParameter take = null;
-
-            if ((condition != null) && (condition.PageIndex != null) && (condition.PagingSize != null))
+            if (!String.IsNullOrEmpty(condition.CampaignId))
             {
-                skip = new SqlParameter("@Skip", SqlDbType.Int)
+                queryCommand.Add("CMPN_ID = @CampaignId");
+                sqlParameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
                 {
-                    Value = (condition.PageIndex * condition.PagingSize)
-                };
-                take = new SqlParameter("@Take", SqlDbType.Int)
-                {
-                    Value = condition.PagingSize
-                };
+                    Value = condition.CampaignId
+                });
+            }
 
+            if ((condition.PageIndex != null) && (condition.PagingSize != null))
+            {
                 switch (condition.OrderBy)
                 {
-                    case PagingCondition.OrderByKind.None:
-                        query = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE = '00')
-ORDER BY [CMPN_ID]
-OFFSET     @Skip ROWS
-FETCH NEXT @Take ROWS ONLY;";
-
+                    case PreAdjustCondition.OrderByKind.None:
+                        pagingCommand.Add("ORDER BY [CMPN_ID]");
                         break;
-                    case PagingCondition.OrderByKind.OrderId:
+                    case PreAdjustCondition.OrderByKind.CustomerId:
+                        pagingCommand.Add("ORDER BY [ID]");
                         break;
-                    case PagingCondition.OrderByKind.OrderDate:
+                    case PreAdjustCondition.OrderByKind.ImportDate:
+                        pagingCommand.Add("ORDER BY [IMPORT_DT]");
                         break;
-                    case PagingCondition.OrderByKind.OrderDateByDescending:
+                    case PreAdjustCondition.OrderByKind.ImportDateByDescending:
+                        pagingCommand.Add("ORDER BY [IMPORT_DT] DESC");
                         break;
-                    case PagingCondition.OrderByKind.CustomerIdAndOrderDate:
+                    case PreAdjustCondition.OrderByKind.CustomerIdAndImportDate:
+                        pagingCommand.Add("ORDER BY [ID], [IMPORT_DT]");
                         break;
                 }
-            }
-            else
-            {
-                query = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE = '00');";
 
-            }
-
-
-            using (SqlConnection connection = DbConnection(Connection.CDRM))
-            {
-
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
-                {
-                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
-                });
-
-                if (skip != null && take != null)
-                {
-                    command.Parameters.Add(skip);
-                    command.Parameters.Add(take);
-                }
-
-                connection.Open();
-
-                DataTable dt = new DataTable();
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
-                {
-                    result = new List<PreAdjustDO>();
-                    PreAdjustDO preAdjustDO = null;
-
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        preAdjustDO = ConvertPreAdjustDO(dr);
-
-                        result.Add(preAdjustDO);
-                    }
-                }
-
-                adapter = null;
-                dt = null;
-                command = null;
-            }
-
-            return result;
-        }
-
-
-
-
-
-        /// <summary>
-        /// 取得等待區的預審名單
-        /// </summary>
-        /// <param name="id">身分證字號</param>
-        /// <param name="condition">資料查詢條件</param>
-        /// <returns>等待區預審名單</returns>
-        public IEnumerable<PreAdjustDO> GetWaitData(string id, PagingCondition condition = null)
-        {
-            List<PreAdjustDO> result = null;
-
-            if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            string query = null;
-            SqlParameter skip = null;
-            SqlParameter take = null;
-
-            if ((condition != null) && (condition.PageIndex != null) && (condition.PagingSize != null))
-            {
-                skip = new SqlParameter("@Skip", SqlDbType.Int)
+                pagingCommand.Add("OFFSET     @Skip ROWS");
+                sqlParameters.Add(new SqlParameter("@Skip", SqlDbType.Int)
                 {
                     Value = (condition.PageIndex * condition.PagingSize)
-                };
-                take = new SqlParameter("@Take", SqlDbType.Int)
+                });
+
+                pagingCommand.Add("FETCH NEXT @Take ROWS ONLY");
+                sqlParameters.Add(new SqlParameter("@Take", SqlDbType.Int)
                 {
                     Value = condition.PagingSize
-                };
-
-                switch (condition.OrderBy)
-                {
-                    case PagingCondition.OrderByKind.None:
-                        query = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE != '00' OR CCAS_CODE IS NULL)
-    AND ID = @Id
-ORDER BY [CMPN_ID]
-OFFSET     @Skip ROWS
-FETCH NEXT @Take ROWS ONLY;";
-
-                        break;
-                    case PagingCondition.OrderByKind.OrderId:
-                        break;
-                    case PagingCondition.OrderByKind.OrderDate:
-                        break;
-                    case PagingCondition.OrderByKind.OrderDateByDescending:
-                        break;
-                    case PagingCondition.OrderByKind.CustomerIdAndOrderDate:
-                        break;
-                }
-            }
-            else
-            {
-                query = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE != '00' OR CCAS_CODE IS NULL)
-    AND ID = @Id;";
-
-            }
-
-
-            using (SqlConnection connection = DbConnection(Connection.CDRM))
-            {
-
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
-                {
-                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
                 });
-                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
-                {
-                    Value = id,
-                });
-
-                if (skip != null && take != null)
-                {
-                    command.Parameters.Add(skip);
-                    command.Parameters.Add(take);
-                }
-
-                connection.Open();
-
-                DataTable dt = new DataTable();
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
-                {
-                    result = new List<PreAdjustDO>();
-                    PreAdjustDO preAdjustDO = null;
-
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        preAdjustDO = ConvertPreAdjustDO(dr);
-
-                        result.Add(preAdjustDO);
-                    }
-                }
-
-                adapter = null;
-                dt = null;
-                command = null;
             }
 
-            return result;
-        }
-
-        /// <summary>
-        /// 取得生效區的預審名單
-        /// </summary>
-        /// <param name="id">身分證字號</param>
-        /// <param name="condition">資料查詢條件</param>
-        /// <returns>生效區預審名單</returns>
-        public IEnumerable<PreAdjustDO> GetEffectData(string id, PagingCondition condition = null)
-        {
-            List<PreAdjustDO> result = null;
-
-            if (String.IsNullOrEmpty(id))
+            if (queryCommand.Count > 0)
             {
-                throw new ArgumentNullException("id");
+                querySB.Append(" WHERE ");
+                querySB.Append(String.Join(" AND ", queryCommand));
             }
 
-            string query = null;
-            SqlParameter skip = null;
-            SqlParameter take = null;
-
-            if ((condition != null) && (condition.PageIndex != null) && (condition.PagingSize != null))
+            if (pagingCommand.Count > 0)
             {
-                skip = new SqlParameter("@Skip", SqlDbType.Int)
-                {
-                    Value = (condition.PageIndex * condition.PagingSize)
-                };
-                take = new SqlParameter("@Take", SqlDbType.Int)
-                {
-                    Value = condition.PagingSize
-                };
-
-                switch (condition.OrderBy)
-                {
-                    case PagingCondition.OrderByKind.None:
-                        query = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE = '00')
-    AND ID = @Id
-ORDER BY [CMPN_ID]
-OFFSET     @Skip ROWS
-FETCH NEXT @Take ROWS ONLY;";
-
-                        break;
-                    case PagingCondition.OrderByKind.OrderId:
-                        break;
-                    case PagingCondition.OrderByKind.OrderDate:
-                        break;
-                    case PagingCondition.OrderByKind.OrderDateByDescending:
-                        break;
-                    case PagingCondition.OrderByKind.CustomerIdAndOrderDate:
-                        break;
-                }
-            }
-            else
-            {
-                query = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE = '00')
-    AND ID = @Id;";
-
+                querySB.Append(String.Join(" ", pagingCommand));
             }
 
-
-            using (SqlConnection connection = DbConnection(Connection.CDRM))
-            {
-
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
-                {
-                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
-                });
-                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
-                {
-                    Value = id,
-                });
-
-                if (skip != null && take != null)
-                {
-                    command.Parameters.Add(skip);
-                    command.Parameters.Add(take);
-                }
-
-
-                connection.Open();
-
-                DataTable dt = new DataTable();
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
-                {
-                    result = new List<PreAdjustDO>();
-                    PreAdjustDO preAdjustDO = null;
-
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        preAdjustDO = ConvertPreAdjustDO(dr);
-
-                        result.Add(preAdjustDO);
-                    }
-                }
-
-                adapter = null;
-                dt = null;
-                command = null;
-            }
-
-            return result;
-        }
+            querySB.Append(";");
 
 
 
 
-
-
-
-        /// <summary>
-        /// 取得特定等待區的預審名單
-        /// </summary>
-        /// <param name="campaignId">行銷活動代號</param>
-        /// <param name="id">客戶ID</param>
-        /// <returns>等待區預審名單</returns>
-        public PreAdjustDO GetWaitData(string campaignId, string id)
-        {
-            PreAdjustDO result = null;
-
-            if (String.IsNullOrEmpty(campaignId))
-            {
-                throw new ArgumentNullException("campaignId");
-            }
-            else if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("id");
-            }
-
+            #region MyRegion
             string query = @"
 SELECT 
     [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
@@ -630,75 +268,27 @@ SELECT
 FROM [RG_PADJUST]
 WHERE CLOSE_DT >= @CloseDate
     AND (CCAS_CODE != '00' OR CCAS_CODE IS NULL)
+ORDER BY [CMPN_ID]
+OFFSET     @Skip ROWS
+FETCH NEXT @Take ROWS ONLY
+;";
+
+            var queryID = @"
+SELECT 
+    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
+    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
+    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
+FROM [RG_PADJUST]
+WHERE CLOSE_DT >= @CloseDate
+    AND (CCAS_CODE != '00' OR CCAS_CODE IS NULL)
     AND ID = @Id
-    AND CMPN_ID = @CampaignId;";
+ORDER BY [CMPN_ID]
+OFFSET     @Skip ROWS
+FETCH NEXT @Take ROWS ONLY;";
 
 
-            using (SqlConnection connection = DbConnection(Connection.CDRM))
-            {
 
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
-                {
-                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
-                });
-                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
-                {
-                    Value = id,
-                });
-                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
-                {
-                    Value = campaignId,
-                });
-
-                connection.Open();
-
-                DataTable dt = new DataTable();
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count == 1)
-                {
-                    result = ConvertPreAdjustDO(dt.Rows[0]);
-                }
-                else if (dt.Rows.Count == 0)
-                {
-                    throw new InvalidOperationException("PreAdjust not found");
-                }
-                else
-                {
-                    throw new InvalidOperationException("PreAdjust not the only");
-                }
-
-                adapter = null;
-                dt = null;
-                command = null;
-            }
-
-            return result;
-        }
-
-
-        /// <summary>
-        /// 取得特定生效區的預審名單
-        /// </summary>
-        /// <param name="campaignId">行銷活動代號</param>
-        /// <param name="id">客戶ID</param>
-        /// <returns>生效區的預審名單</returns>
-        public PreAdjustDO GetEffectData(string campaignId, string id)
-        {
-            PreAdjustDO result = null;
-
-            if (String.IsNullOrEmpty(campaignId))
-            {
-                throw new ArgumentNullException("campaignId");
-            }
-            else if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            string query = @"
+            string queryID2 = @"
 SELECT 
     [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
     [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
@@ -710,22 +300,19 @@ WHERE CLOSE_DT >= @CloseDate
     AND CMPN_ID = @CampaignId;";
 
 
+            #endregion
+
+
+
+
+
+
+
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
 
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
-                {
-                    Value = DateTime.Now.ToString("yyyy/MM/dd"),
-                });
-                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
-                {
-                    Value = id,
-                });
-                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
-                {
-                    Value = campaignId,
-                });
+                SqlCommand command = new SqlCommand(querySB.ToString(), connection);
+                command.Parameters.AddRange(sqlParameters.ToArray());
 
                 connection.Open();
 
@@ -733,17 +320,17 @@ WHERE CLOSE_DT >= @CloseDate
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dt);
 
-                if (dt.Rows.Count == 1)
+                if (dt.Rows.Count > 0)
                 {
-                    result = ConvertPreAdjustDO(dt.Rows[0]);
-                }
-                else if (dt.Rows.Count == 0)
-                {
-                    throw new InvalidOperationException("PreAdjust not found");
-                }
-                else
-                {
-                    throw new InvalidOperationException("PreAdjust not the only");
+                    result = new List<PreAdjustDO>();
+                    PreAdjustDO preAdjustDO = null;
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        preAdjustDO = ConvertPreAdjustDO(dr);
+
+                        result.Add(preAdjustDO);
+                    }
                 }
 
                 adapter = null;
@@ -753,6 +340,11 @@ WHERE CLOSE_DT >= @CloseDate
 
             return result;
         }
+
+
+
+
+
 
 
 

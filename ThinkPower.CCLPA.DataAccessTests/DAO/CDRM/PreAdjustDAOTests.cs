@@ -6,199 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
+using ThinkPower.CCLPA.DataAccess.Condition;
 
 namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
 {
     [TestClass()]
     public class PreAdjustDAOTests
     {
-        [TestMethod()]
-        public void GetAllWaitData_When_HasOrderCondition()
-        {
-            // Arrange
-            var dao = new PreAdjustDAO();
-            var condition = new PagingCondition()
-            {
-                PageIndex = 1,
-                PagingSize = 3
-            };
-            var expected = true;
-
-            // Actual
-            var result = dao.GetAllWaitData(condition);
-            var actual = (result != null);
-
-
-            Console.WriteLine(String.Join(",", result.Select(x => x.Id)));
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetAllEffectData_When_HasOrderCondition()
-        {
-            // Arrange
-            var dao = new PreAdjustDAO();
-            var condition = new PagingCondition()
-            {
-                PageIndex = 0,
-                PagingSize = 2
-            };
-            var expected = true;
-
-            // Actual
-            var result = dao.GetAllEffectData(condition);
-            var actual = (result != null);
-
-
-            Console.WriteLine(String.Join(",", result.Select(x => x.Id)));
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetAllWaitDataTest()
-        {
-            // Arrange
-            var dao = new PreAdjustDAO();
-            var expected = true;
-
-            // Actual
-            var result = dao.GetAllWaitData();
-            var actual = (result != null);
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetAllEffectDataTest()
-        {
-            // Arrange
-            var expected = true;
-
-            // Actual
-            var result = new PreAdjustDAO().GetAllEffectData();
-            var actual = (result != null);
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetWaitData_When_HasOrderCondition()
-        {
-            // Arrange
-            var id = "A177842053";
-            var condition = new PagingCondition()
-            {
-                PageIndex = 0,
-                PagingSize = 1,
-            };
-            var dao = new PreAdjustDAO();
-            var expected = true;
-
-            // Actual
-            var result = dao.GetWaitData(id, condition);
-            var actual = (result != null);
-
-            Console.WriteLine(String.Join(",", result.Select(x => new { x.CampaignId,x.Id })));
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetEffectData_When_HasOrderCondition()
-        {
-            // Arrange
-            var id = "A177842053";
-            var condition = new PagingCondition()
-            {
-                PageIndex = 0,
-                PagingSize = 2,
-            };
-            var dao = new PreAdjustDAO();
-            var expected = true;
-
-            // Actual
-            var result = dao.GetEffectData(id, condition);
-            var actual = (result != null);
-
-            Console.WriteLine(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetWaitDataTest()
-        {
-            // Arrange
-            var id = "A177842053";
-            var dao = new PreAdjustDAO();
-            var expected = true;
-
-            // Actual
-            var result = dao.GetWaitData(id);
-            var actual = (result != null);
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetEffectDataTest()
-        {
-            // Arrange
-            var id = "A177842053";
-            var dao = new PreAdjustDAO();
-            var expected = true;
-
-            // Actual
-            var result = dao.GetEffectData(id);
-            var actual = (result != null);
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetWaitDataTest_When_Input_CampaignId_And_Id()
-        {
-            // Arrange
-            var campaignId = "AA20991022X99Y99Z99A";
-            var id = "A177842053";
-            var dao = new PreAdjustDAO();
-            var expected = true;
-
-            // Actual
-            var result = dao.GetWaitData(campaignId, id);
-            var actual = (result != null);
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod()]
-        public void GetEffectDataTest_When_Input_CampaignId_And_Id()
-        {
-            // Arrange
-            var campaignId = "AA20981022X99Y99Z99A";
-            var id = "D187388854";
-            var dao = new PreAdjustDAO();
-            var expected = true;
-
-            // Actual
-            var result = dao.GetEffectData(campaignId, id);
-            var actual = (result != null);
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
         [TestMethod()]
         public void UpdateTest()
         {
@@ -304,8 +118,247 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var expected = true;
 
             // Actual
-            dao.Insert(preAdjust);
             var actual = true;
+            try
+            {
+                dao.Insert(preAdjust);
+            }
+            catch (Exception e)
+            {
+                actual = false;
+            }
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIs00_Then_ResultEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = null,
+                PagingSize = null,
+                CloseDate = null,
+                CcasReplyCode = "00",
+                Id = null,
+                CampaignId = null,
+
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIsNull_Then_ResultNotEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = null,
+                PagingSize = null,
+                CloseDate = null,
+                CcasReplyCode = null,
+                Id = null,
+                CampaignId = null,
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIsNull_CloseDate20160525_Then_ResultNotEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = null,
+                PagingSize = null,
+                CloseDate = new DateTime(2016, 5, 25),
+                CcasReplyCode = null,
+                Id = null,
+                CampaignId = null,
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIsNull_OrderByCustomerId_PageIndexIs0_PageSizeIs99_Then_ResultNotEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = 0,
+                PagingSize = 99,
+                CloseDate = null,
+                CcasReplyCode = null,
+                Id = null,
+                CampaignId = null,
+                OrderBy = PreAdjustCondition.OrderByKind.CustomerId,
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIsNull_OrderByCustomerId_PageIndexIs0_PageSizeIs5_Then_ResultNotEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = 0,
+                PagingSize = 5,
+                CloseDate = null,
+                CcasReplyCode = null,
+                Id = null,
+                CampaignId = null,
+                OrderBy = PreAdjustCondition.OrderByKind.CustomerId,
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIsNull_OrderByCustomerId_PageIndexIs1_PageSizeIs5_Then_ResultNotEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = 1,
+                PagingSize = 5,
+                CloseDate = null,
+                CcasReplyCode = null,
+                Id = null,
+                CampaignId = null,
+                OrderBy = PreAdjustCondition.OrderByKind.CustomerId,
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIsNull_IdIsA177842053_Then_ResultNotEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = null,
+                PagingSize = null,
+                CloseDate = null,
+                CcasReplyCode = null,
+                Id = "A177842053",
+                CampaignId = null,
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIsNull_IdIsA177842053_CampaignIdIsAA20991022X99Y99Z99A_Then_ResultNotEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = null,
+                PagingSize = null,
+                CloseDate = null,
+                CcasReplyCode = null,
+                Id = "A177842053",
+                CampaignId = "AA20991022X99Y99Z99A",
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void GetTest_When_CcasCodeIsNull_CampaignIdIsAA20991022X99Y99Z99A_Then_ResultNotEffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = null,
+                PagingSize = null,
+                CloseDate = null,
+                CcasReplyCode = null,
+                Id = null,
+                CampaignId = "AA20991022X99Y99Z99A",
+            };
+            var dao = new PreAdjustDAO();
+            var expected = true;
+
+            // Actual
+            var result = dao.Get(condition);
+            var actual = (result != null);
+
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
 
             // Assert
             Assert.AreEqual(expected, actual);

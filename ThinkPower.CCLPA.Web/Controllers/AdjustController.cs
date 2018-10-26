@@ -17,7 +17,6 @@ namespace ThinkPower.CCLPA.Web.Controllers
     public class AdjustController : Controller
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
-
         private PreAdjustService _preAdjustService;
 
         /// <summary>
@@ -45,7 +44,6 @@ namespace ThinkPower.CCLPA.Web.Controllers
 
 
 
-
         /// <summary>
         /// 預設首頁
         /// </summary>
@@ -54,7 +52,6 @@ namespace ThinkPower.CCLPA.Web.Controllers
         {
             return View();
         }
-
 
         /// <summary>
         /// 顯示預審名單匯入畫面
@@ -66,12 +63,12 @@ namespace ThinkPower.CCLPA.Web.Controllers
         }
 
         /// <summary>
-        /// 進行預審名單匯入動作
+        /// 進行預審名單驗證動作
         /// </summary>
         /// <param name="actionModel">來源資料</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult PreAdjustImport(PreAdjustImportActionModel actionModel)
+        public ActionResult PreAdjustValidate(PreAdjustValidateActionModel actionModel)
         {
             PreAdjustImportViewModel viewModel = null;
             string campaignId = null;
@@ -86,32 +83,17 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     throw new ArgumentNullException("actionModel");
                 }
 
-                PreAdjService.UserInfo = new UserInfoVO()
+                PreAdjService.UserInfo = new UserInfo()
                 {
                     Id = Session["UserId"] as string,
                     Name = Session["UserName"] as string,
                 };
 
-                campaignDetailCount = PreAdjService.Import(actionModel.CampaignId,
-                    actionModel.ExecuteImport);
+                PreAdjustValidateResult result = PreAdjService.Validate(actionModel.CampaignId);
 
                 campaignId = actionModel.CampaignId;
-                executeImport = actionModel.ExecuteImport;
-            }
-            catch (InvalidOperationException e)
-            {
-                string errorMsg = e.Data["ErrorMsg"] as string;
-
-                if (!String.IsNullOrEmpty(errorMsg))
-                {
-                    errorMessage = errorMsg;
-                }
-                else
-                {
-                    logger.Error(e);
-                    errorMessage = _systemErrorMsg;
-                }
-
+                errorMessage = result.ErrorMessage;
+                campaignDetailCount = result.CampaignDetailCount;
             }
             catch (Exception e)
             {
@@ -124,6 +106,50 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 CampaignId = campaignId,
                 ErrorMessage = errorMessage,
                 CampaignDetailCount = campaignDetailCount,
+                ExecuteImport = executeImport,
+            };
+
+            return View("PreAdjustImport", viewModel);
+        }
+
+        /// <summary>
+        /// 進行預審名單匯入動作
+        /// </summary>
+        /// <param name="actionModel">來源資料</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult PreAdjustImport(PreAdjustImportActionModel actionModel)
+        {
+            PreAdjustImportViewModel viewModel = null;
+            string errorMessage = null;
+            bool executeImport = false;
+
+            try
+            {
+                if (actionModel == null)
+                {
+                    throw new ArgumentNullException("actionModel");
+                }
+
+                PreAdjService.UserInfo = new UserInfo()
+                {
+                    Id = Session["UserId"] as string,
+                    Name = Session["UserName"] as string,
+                };
+
+                PreAdjService.Import(actionModel.CampaignId);
+
+                executeImport = true;
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                errorMessage = _systemErrorMsg;
+            }
+
+            viewModel = new PreAdjustImportViewModel()
+            {
+                ErrorMessage = errorMessage,
                 ExecuteImport = executeImport,
             };
 

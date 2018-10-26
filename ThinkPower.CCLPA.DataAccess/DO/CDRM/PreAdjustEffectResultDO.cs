@@ -3,7 +3,7 @@
     /// <summary>
     /// 預審生效條件檢核結果資料物件類別
     /// </summary>
-    public class PreAdjustEffectDO
+    public class PreAdjustEffectResultDO
     {
         /// <summary>
         /// 拒絕原因代碼
