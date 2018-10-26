@@ -3,9 +3,9 @@
 namespace ThinkPower.CCLPA.Domain.Service.Interface
 {
     /// <summary>
-    /// 條件檢核服務公開介面
+    /// CDRM臨調系統服務公開介面
     /// </summary>
-    public interface IConditionValidate
+    public interface IAdjustSystem
     {
         /// <summary>
         /// JCIC送查日期回傳

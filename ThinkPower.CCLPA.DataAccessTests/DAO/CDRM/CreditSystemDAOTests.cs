@@ -16,7 +16,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
         {
             // Arrange
             var id = "A177842053";
-            var dao = new CreditSystemDAO();
+            var dao = new AdjustSystemDAO();
             var expected = true;
 
             // Actual

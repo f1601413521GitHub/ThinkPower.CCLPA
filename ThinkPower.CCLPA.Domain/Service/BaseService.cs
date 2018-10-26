@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThinkPower.CCLPA.Domain.VO;
 
 namespace ThinkPower.CCLPA.Domain.Service
 {
@@ -16,5 +17,11 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// Nlog物件
         /// </summary>
         protected Logger logger = LogManager.GetCurrentClassLogger();
+
+
+        /// <summary>
+        /// 使用者資訊
+        /// </summary>
+        public UserInfo UserInfo { get; set; }
     }
 }

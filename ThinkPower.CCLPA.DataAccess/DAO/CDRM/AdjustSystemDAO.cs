@@ -6,9 +6,9 @@ using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 {
     /// <summary>
-    /// 授信系統資料存取類別
+    /// CDRM專案臨調系統資料存取類別
     /// </summary>
-    public class CreditSystemDAO : BaseDAO
+    public class AdjustSystemDAO : BaseDAO
     {
         /// <summary>
         /// 預審生效條件檢核

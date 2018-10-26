@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace ThinkPower.CCLPA.Domain.Entity
+namespace ThinkPower.CCLPA.Domain.VO
 {
     /// <summary>
     /// 臨調權限類別
     /// </summary>
-    public class AdjustPermissionEntity : BaseEntity
+    public class AdjustPermission
     {
         /// <summary> 
         /// 權限等級  

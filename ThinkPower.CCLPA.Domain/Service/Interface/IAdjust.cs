@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ThinkPower.CCLPA.Domain.Entity;
+using ThinkPower.CCLPA.Domain.VO;
 
 namespace ThinkPower.CCLPA.Domain.Service.Interface
 {
@@ -21,6 +22,12 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// 取得使用者臨調權限資訊
         /// </summary>
         /// <returns></returns>
-        AdjustPermissionEntity GetUserPermission();
+        AdjustPermission GetUserPermission();
+
+        /// <summary>
+        /// 取得使用者ICRS帳號
+        /// </summary>
+        /// <returns></returns>
+        string GetUserAccountByICRS();
     }
 }

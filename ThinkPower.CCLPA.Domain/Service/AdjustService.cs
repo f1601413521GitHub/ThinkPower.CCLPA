@@ -20,14 +20,6 @@ namespace ThinkPower.CCLPA.Domain.Service
     public class AdjustService : BaseService, IAdjust
     {
         /// <summary>
-        /// 使用者資訊
-        /// </summary>
-        public UserInfo UserInfo { get; set; }
-
-
-
-
-        /// <summary>
         /// 臨調處理
         /// </summary>
         public void AdjustProcessing()
@@ -40,16 +32,14 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// 取得使用者臨調權限資訊
         /// </summary>
         /// <returns></returns>
-        public AdjustPermissionEntity GetUserPermission()
+        public AdjustPermission GetUserPermission()
         {
-            AdjustPermissionEntity result = null;
+            AdjustPermission result = null;
 
             if (UserInfo == null)
             {
                 throw new InvalidOperationException("UserInfo");
             }
-
-
 
 
             AccountCorrespondDO correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
@@ -75,7 +65,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
-            result = new AdjustPermissionEntity()
+            result = new AdjustPermission()
             {
                 LevelCode = permissionInfo.LevelCode,
                 Amount = permissionInfo.Amount,
@@ -86,6 +76,33 @@ namespace ThinkPower.CCLPA.Domain.Service
                 SequenceNo = permissionInfo.SequenceNo,
             };
 
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// 取得使用者ICRS帳號
+        /// </summary>
+        /// <returns></returns>
+        public string GetUserAccountByICRS()
+        {
+            string result = null;
+
+            if (UserInfo == null)
+            {
+                throw new InvalidOperationException("UserInfo");
+            }
+
+
+            AccountCorrespondDO correspondInfo = new AccountCorrespondDAO().Get(UserInfo.Id);
+
+            if (correspondInfo == null)
+            {
+                throw new InvalidOperationException("AccountCorrespond not found");
+            }
+
+            result = correspondInfo.IcrsId;
 
             return result;
         }

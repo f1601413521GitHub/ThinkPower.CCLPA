@@ -7,22 +7,22 @@ using ThinkPower.CCLPA.Domain.VO;
 namespace ThinkPower.CCLPA.Domain.Service
 {
     /// <summary>
-    /// 條件檢核類別
+    /// CDRM臨調系統服務
     /// </summary>
-    public class ConditionValidateService : BaseService, IConditionValidate
+    public class AdjustSystemService : BaseService, IAdjustSystem
     {
-        private CreditSystemDAO _creditDAO;
+        private AdjustSystemDAO _creditDAO;
 
         /// <summary>
         /// 授信系統
         /// </summary>
-        public CreditSystemDAO CreditDAO
+        public AdjustSystemDAO CreditDAO
         {
             get
             {
                 if (_creditDAO == null)
                 {
-                    _creditDAO = new CreditSystemDAO();
+                    _creditDAO = new AdjustSystemDAO();
                 }
 
                 return _creditDAO;

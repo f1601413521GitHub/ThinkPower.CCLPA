@@ -128,6 +128,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         [TestMethod()]
         public void ImportTest()
         {
+
             // Arrange
             var campaignId = "AA20160401X99Y99Z99A";
             var service = new PreAdjustService();
@@ -360,6 +361,43 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
 
             // Assert
             CollectionAssert.AreEqual(expectedAnonymous, actualAnonymous);
+        }
+
+        [TestMethod()]
+        public void AgreeTest()
+        {
+            // Arrange
+            var preAdjustInfo = new PreAdjustInfo()
+            {
+                Condition = new PreAdjustCondition()
+                {
+                    PageIndex = null,
+                    PagingSize = null,
+                    CloseDate = new DateTime(2016, 5, 25),
+                    CcasReplyCode = null,
+                    CampaignId = "AA20160401X99Y99Z99A",
+                    Id = null,
+                },
+                PreAdjustList = new List<PreAdjustEntity>() {
+                    new PreAdjustEntity(){CampaignId = "AA20160401X99Y99Z99A",Id="Q100016360" },
+                    new PreAdjustEntity(){CampaignId = "AA20160401X99Y99Z99A",Id="D187388854" },
+                    new PreAdjustEntity(){CampaignId = "AA20160401X99Y99Z99A",Id="G183928828" },
+                },
+                Remark = "UnitTestAgree",
+            };
+            var service = new PreAdjustService();
+            service.UserInfo = new UserInfo() { Id = "58860", Name = "User58860" };
+            var expected = new PreAdjustAgreeResult()
+            {
+                EffectCount = 1,
+                FailCount = 2,
+            };
+
+            // Actual 
+            var actual = service.Agree(preAdjustInfo);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
     }
 }

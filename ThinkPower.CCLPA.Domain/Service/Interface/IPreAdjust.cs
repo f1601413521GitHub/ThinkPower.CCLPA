@@ -36,14 +36,14 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         IEnumerable<PreAdjustEntity> Query(PreAdjustCondition searchInfo);
 
         /// <summary>
-        /// 刪除等待的臨調預審名單
+        /// 刪除待生效的臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <returns>刪除預審名單筆數</returns>
         int DeleteNotEffect(PreAdjustInfo preAdjustInfo);
 
         /// <summary>
-        /// 刪除生效的臨調預審名單
+        /// 刪除生效中的臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <returns>刪除預審名單筆數</returns>
@@ -52,9 +52,18 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// <summary>
         /// 同意執行臨調預審名單
         /// </summary>
-        /// <param name="data">來源資料</param>
-        /// <param name="forceConsent">是否強制同意</param>
+        /// <param name="preAdjustInfo">來源資料</param>
+        /// <returns>同意執行預審名單處理結果</returns>
+        PreAdjustAgreeResult Agree(PreAdjustInfo preAdjustInfo);
+
+        /// <summary>
+        /// 強制同意臨調預審名單
+        /// </summary>
+        /// <param name="preAdjustInfo">來源資料</param>
+        /// <param name="forcedConsentFailCase">強制同意失敗案件</param>
         /// <returns></returns>
-        object Agree(object data, bool forceConsent = false);
+        PreAdjustForcedConsentResult ForcedConsent(PreAdjustInfo preAdjustInfo,
+            bool forcedConsentFailCase);
+
     }
 }
