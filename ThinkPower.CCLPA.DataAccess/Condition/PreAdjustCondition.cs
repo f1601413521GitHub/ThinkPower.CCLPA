@@ -67,7 +67,7 @@ namespace ThinkPower.CCLPA.DataAccess.Condition
         /// <summary>
         /// 身分證字號
         /// </summary>
-        public string Id { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// 行銷活動代碼

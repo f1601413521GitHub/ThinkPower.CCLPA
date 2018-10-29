@@ -41,6 +41,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
         }
 
+
         /// <summary>
         /// 臨調預審名單狀態列舉
         /// </summary>
@@ -69,8 +70,13 @@ namespace ThinkPower.CCLPA.Domain.Service
 
         #endregion
 
+        #region Public Property
+
+        #endregion
 
 
+
+        #region Public Method
 
 
         /// <summary>
@@ -85,12 +91,10 @@ namespace ThinkPower.CCLPA.Domain.Service
             int campaignDetailCount = 0;
 
 
-
             if (String.IsNullOrEmpty(campaignId))
             {
                 throw new ArgumentNullException("campaignId");
             }
-
 
 
             CampaignEntity campaignEntity = CampaignService.GetCampaign(campaignId);
@@ -110,7 +114,6 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
-
             if (String.IsNullOrEmpty(errorMsg))
             {
                 CampaignImportLogEntity importLogEntity = GetImportLog(campaignEntity.CampaignId);
@@ -125,7 +128,6 @@ namespace ThinkPower.CCLPA.Domain.Service
                     campaignDetailCount = campaignEntity.DetailList.Count();
                 }
             }
-
 
 
             result = new PreAdjustValidateResult()
@@ -155,6 +157,19 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
+            PreAdjustValidateResult validateResult = Validate(campaignId);
+
+            if (!String.IsNullOrEmpty(validateResult.ErrorMessage))
+            {
+                throw new InvalidOperationException("Import validate fail");
+            }
+            else if (validateResult.CampaignDetailCount == 0)
+            {
+                throw new InvalidOperationException("CampaignDetailCount is zero");
+            }
+
+
+
             CampaignEntity campaignEntity = CampaignService.GetCampaign(campaignId);
 
             if (campaignEntity == null)
@@ -173,8 +188,6 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            DateTime currentTime = DateTime.Now;
-
             CampaignImportLogDO importLog = new CampaignImportLogDO()
             {
                 CampaignId = campaignEntity.CampaignId,
@@ -183,8 +196,10 @@ namespace ThinkPower.CCLPA.Domain.Service
                 Count = campaignEntity.DetailList.Count(),
                 ImportUserId = UserInfo.Id,
                 ImportUserName = UserInfo.Name,
-                ImportDate = currentTime.ToString("yyyy/MM/dd"),
+                ImportDate = DateTime.Now.ToString("yyyy/MM/dd"),
             };
+
+
 
             List<PreAdjustDO> importPreAdjustList = new List<PreAdjustDO>();
 
@@ -207,7 +222,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                         tempCloseDate.ToString("yyyy/MM/dd") :
                         throw new InvalidOperationException("Convert campaignDetail Col3 Fail"),
 
-                    ImportDate = currentTime.ToString("yyyy/MM/dd"),
+                    ImportDate = DateTime.Now.ToString("yyyy/MM/dd"),
                     Kind = campaignDetail.Col4,
                     Status = ConvertPreAdjustStatus(PreAdjustStatus.NotEffect),
                 });
@@ -266,26 +281,23 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <returns></returns>
         public IEnumerable<PreAdjustEntity> Query(Condition.PreAdjustCondition condition)
         {
-            IEnumerable<PreAdjustEntity> result = null;
-
-            IEnumerable<PreAdjustDO> preAdjustDOList = null;
+            IEnumerable<PreAdjustEntity> preAdjustEntities = null;
 
             if (condition == null)
             {
                 throw new ArgumentNullException("condition");
             }
 
+
             DataAccess.Condition.PreAdjustCondition preAdjustCondition =
                 ConvertPreAdjustCondition(condition);
 
-            preAdjustDOList = new PreAdjustDAO().Get(preAdjustCondition);
+            IEnumerable<PreAdjustDO> preAdjustDOList = new PreAdjustDAO().Query(preAdjustCondition);
+
+            preAdjustEntities = (preAdjustDOList == null) ? null : ConvertPreAdjustEntity(preAdjustDOList);
 
 
-            result = (preAdjustDOList == null) ? null :
-                ConvertPreAdjustEntity(preAdjustDOList);
-
-
-            return result;
+            return preAdjustEntities;
         }
 
         /// <summary>
@@ -293,9 +305,9 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <returns>刪除預審名單筆數</returns>
-        public int DeleteNotEffect(PreAdjustInfo preAdjustInfo)
+        public PreAdjustResult DeleteNotEffect(PreAdjustInfo preAdjustInfo)
         {
-            int deleteCount = 0;
+            PreAdjustResult preAdjustResult = null;
 
             if (preAdjustInfo == null)
             {
@@ -305,10 +317,6 @@ namespace ThinkPower.CCLPA.Domain.Service
             {
                 throw new ArgumentNullException("PreAdjustList");
             }
-            else if (preAdjustInfo.Condition == null)
-            {
-                throw new AggregateException("PreAdjustCondition");
-            }
             else if (UserInfo == null)
             {
                 throw new ArgumentNullException("UserInfo");
@@ -316,36 +324,41 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            DataAccess.Condition.PreAdjustCondition preAdjustCondition =
-                ConvertPreAdjustCondition(preAdjustInfo.Condition);
+            List<PreAdjustEntity> preAdjustList = GetPreAdjustEntities(preAdjustInfo.PreAdjustList);
 
-            List<PreAdjustEntity> preAdjustList = GetPreAdjustEntities(preAdjustCondition,
-                preAdjustInfo.PreAdjustList);
+            preAdjustList = preAdjustList.
+                Where(x => x.Status == ConvertPreAdjustStatus(PreAdjustStatus.NotEffect)).ToList();
 
-
-
-            DateTime currentTime = DateTime.Now;
-
-            foreach (PreAdjustEntity entity in preAdjustList)
+            if (preAdjustList.Count == 0)
             {
-                if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
-                {
-                    entity.Remark = preAdjustInfo.Remark;
-                }
-
-                entity.DeleteUserId = UserInfo.Id;
-                entity.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
-                entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Delete);
+                throw new InvalidOperationException("PreAdjus not found");
             }
 
 
 
+            List<PreAdjustEntity> preAdjustEntities = new List<PreAdjustEntity>();
+
             try
             {
-                foreach (PreAdjustEntity preAdjust in preAdjustList)
+                foreach (PreAdjustEntity entity in preAdjustList)
                 {
-                    preAdjust.Update();
-                    deleteCount++;
+                    if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
+                    {
+                        entity.Remark = preAdjustInfo.Remark;
+                    }
+
+                    entity.DeleteUserId = UserInfo.Id;
+                    entity.DeleteDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Delete);
+
+                    entity.Update();
+
+                    preAdjustEntities.Add(new PreAdjustEntity()
+                    {
+                        CustomerId = entity.CustomerId,
+                        CampaignId = entity.CampaignId,
+                        Status = entity.Status,
+                    });
                 }
             }
             catch (Exception e)
@@ -354,10 +367,13 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
-            deleteCount = preAdjustList.Count;
 
+            preAdjustResult = new PreAdjustResult()
+            {
+                PreAdjustList = preAdjustEntities
+            };
 
-            return deleteCount;
+            return preAdjustResult;
         }
 
         /// <summary>
@@ -365,9 +381,9 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <returns>刪除預審名單筆數</returns>
-        public int DeleteEffect(PreAdjustInfo preAdjustInfo)
+        public PreAdjustResult DeleteEffect(PreAdjustInfo preAdjustInfo)
         {
-            int deleteCount = 0;
+            PreAdjustResult preAdjustResult = null;
 
             if (preAdjustInfo == null)
             {
@@ -377,10 +393,6 @@ namespace ThinkPower.CCLPA.Domain.Service
             {
                 throw new ArgumentNullException("PreAdjustList");
             }
-            else if (preAdjustInfo.Condition == null)
-            {
-                throw new AggregateException("PreAdjustCondition");
-            }
             else if (UserInfo == null)
             {
                 throw new ArgumentNullException("UserInfo");
@@ -388,48 +400,83 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            DataAccess.Condition.PreAdjustCondition preAdjustCondition =
-                ConvertPreAdjustCondition(preAdjustInfo.Condition);
+            List<PreAdjustEntity> preAdjustList = GetPreAdjustEntities(preAdjustInfo.PreAdjustList);
 
-            List<PreAdjustEntity> preAdjustList = GetPreAdjustEntities(preAdjustCondition,
-                preAdjustInfo.PreAdjustList);
+            preAdjustList = preAdjustList.
+                Where(x => x.Status == ConvertPreAdjustStatus(PreAdjustStatus.Effect)).ToList();
 
-
-
-            DateTime currentTime = DateTime.Now;
-
-            foreach (PreAdjustEntity entity in preAdjustList)
+            if (preAdjustList.Count == 0)
             {
-                if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
-                {
-                    entity.Remark = preAdjustInfo.Remark;
-                }
-
-                entity.DeleteUserId = UserInfo.Id;
-                entity.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
-                entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Delete);
+                throw new InvalidOperationException("PreAdjust not found");
             }
 
 
 
-            AdjustSystemService adjustSysService = new AdjustSystemService();
-            PreAdjustEffectResult effectResult = null;
-            int validateFailCount = 0;
+            CustomerService customerService = new CustomerService() { UserInfo = UserInfo };
+            string AccountByICRS = customerService.GetUserAccountByICRS();
+
+            CreditSystemService creditSysService = new CreditSystemService();
+            IncomeTaxCardAdjustInfo incomeTaxInfo = null;
+            string incomeTaxResultCode = null;
+
+            List<PreAdjustEntity> preAdjustEntities = new List<PreAdjustEntity>();
+
 
 
             try
             {
                 foreach (PreAdjustEntity entity in preAdjustList)
                 {
-                    effectResult = adjustSysService.PreAdjustEffect(entity.Id);
+                    if (!String.IsNullOrEmpty(preAdjustInfo.Remark))
+                    {
+                        entity.Remark = preAdjustInfo.Remark;
+                    }
 
-                    if (effectResult.ResponseCode != "00")
+                    entity.DeleteUserId = UserInfo.Id;
+                    entity.DeleteDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Delete);
+
+
+
+                    incomeTaxInfo = new IncomeTaxCardAdjustInfo()
+                    {
+                        ActionCode = "D",
+                        CustomerId = entity.CustomerId,
+                        CustomerIdNo = (entity.CustomerId.Length > 10) ?
+                            entity.CustomerId.Substring(10, 1) : String.Empty,
+
+                        ProjectName = entity.ProjectName,
+                        IncomeTaxAdjustAmount = entity.ProjectAmount,
+
+                        AdjustCloseDate = DateTime.TryParseExact(entity.CloseDate, "yyyy/MM/dd",
+                            null, DateTimeStyles.None, out DateTime tempCloseDate) ?
+                            tempCloseDate.ToString("yyyyMMdd") :
+                            throw new InvalidOperationException("Convert closeDate fail"),
+
+                        AdjustUserId = AccountByICRS,
+                    };
+
+                    incomeTaxResultCode = creditSysService.IncomeTaxCardAdjust(incomeTaxInfo);
+
+                    if (String.IsNullOrEmpty(incomeTaxResultCode) || (incomeTaxResultCode != "00"))
                     {
                         entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Fail);
-                        validateFailCount++;
+                        entity.CcasReplyCode = incomeTaxResultCode;
+                        entity.CcasReplyStatus = creditSysService.
+                            ConvertIncomeTaxResultCode(incomeTaxResultCode);
+
+                        entity.CcasReplyDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+
                     }
 
                     entity.Update();
+
+                    preAdjustEntities.Add(new PreAdjustEntity()
+                    {
+                        CustomerId = entity.CustomerId,
+                        CampaignId = entity.CampaignId,
+                        Status = entity.Status,
+                    });
                 }
             }
             catch (Exception e)
@@ -438,10 +485,13 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
-            deleteCount = (preAdjustList.Count() - validateFailCount);
 
+            preAdjustResult = new PreAdjustResult()
+            {
+                PreAdjustList = preAdjustEntities,
+            };
 
-            return deleteCount;
+            return preAdjustResult;
         }
 
         /// <summary>
@@ -449,9 +499,9 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <returns></returns>
-        public PreAdjustAgreeResult Agree(PreAdjustInfo preAdjustInfo)
+        public PreAdjustResult Agree(PreAdjustInfo preAdjustInfo)
         {
-            PreAdjustAgreeResult result = null;
+            PreAdjustResult preAdjustResult = null;
 
             if (preAdjustInfo == null)
             {
@@ -461,10 +511,6 @@ namespace ThinkPower.CCLPA.Domain.Service
             {
                 throw new ArgumentNullException("PreAdjustList");
             }
-            else if (preAdjustInfo.Condition == null)
-            {
-                throw new AggregateException("PreAdjustCondition");
-            }
             else if (UserInfo == null)
             {
                 throw new ArgumentNullException("UserInfo");
@@ -472,53 +518,52 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            DataAccess.Condition.PreAdjustCondition preAdjustCondition =
-                ConvertPreAdjustCondition(preAdjustInfo.Condition);
-
-            List<PreAdjustEntity> preAdjustList = GetPreAdjustEntities(preAdjustCondition,
-                preAdjustInfo.PreAdjustList);
-
+            List<PreAdjustEntity> preAdjustList = GetPreAdjustEntities(preAdjustInfo.PreAdjustList);
 
             preAdjustList = preAdjustList.
                 Where(x => x.Status == ConvertPreAdjustStatus(PreAdjustStatus.NotEffect)).ToList();
 
+            if (preAdjustList.Count == 0)
+            {
+                throw new InvalidOperationException("preAdjustList not found");
+            }
 
-            DateTime currentTime = DateTime.Now;
+
 
             AdjustSystemService adjustSysService = new AdjustSystemService();
             PreAdjustEffectResult effectResult = null;
-            int validateFailCount = 0;
 
-            AdjustService adjustService = new AdjustService();
-            adjustService.UserInfo = UserInfo;
+            CustomerService customerService = new CustomerService() { UserInfo = UserInfo };
+            string AccountByICRS = customerService.GetUserAccountByICRS();
 
-            IncomeTaxCardAdjustInfo cardAdjustInfo = null;
             CreditSystemService creditSysService = new CreditSystemService();
-            string IncomeTaxResultCode = null;
+            IncomeTaxCardAdjustInfo cardAdjustInfo = null;
+            string incomeTaxResultCode = null;
+
+            List<PreAdjustEntity> preAdjustEntities = new List<PreAdjustEntity>();
+
 
 
             try
             {
                 foreach (PreAdjustEntity entity in preAdjustList)
                 {
-
-                    effectResult = adjustSysService.PreAdjustEffect(entity.Id);
+                    effectResult = adjustSysService.PreAdjustEffect(entity.CustomerId);
 
                     if (effectResult.ResponseCode != "00")
                     {
                         entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Fail);
                         entity.RejectReasonCode = effectResult.RejectReason;
-
-                        validateFailCount++;
                     }
                     else
                     {
-
                         cardAdjustInfo = new IncomeTaxCardAdjustInfo()
                         {
                             ActionCode = "A",
-                            CustomerId = entity.Id,
-                            CustomerIdNo = (entity.Id.Length > 10) ? entity.Id.Substring(10, 1) : String.Empty,
+                            CustomerId = entity.CustomerId,
+                            CustomerIdNo = (entity.CustomerId.Length > 10) ?
+                                entity.CustomerId.Substring(10, 1) : String.Empty,
+
                             ProjectName = entity.ProjectName,
                             IncomeTaxAdjustAmount = entity.ProjectAmount,
 
@@ -527,19 +572,20 @@ namespace ThinkPower.CCLPA.Domain.Service
                                 tempCloseDate.ToString("yyyyMMdd") :
                                 throw new InvalidOperationException("Convert closeDate fail"),
 
-                            AdjustUserId = adjustService.GetUserAccountByICRS(),
+                            AdjustUserId = AccountByICRS,
                         };
 
-                        IncomeTaxResultCode = creditSysService.IncomeTaxCardAdjust(cardAdjustInfo);
+                        incomeTaxResultCode = creditSysService.IncomeTaxCardAdjust(cardAdjustInfo);
 
 
-
-                        if (String.IsNullOrEmpty(IncomeTaxResultCode) || (IncomeTaxResultCode != "00"))
+                        if (String.IsNullOrEmpty(incomeTaxResultCode) || (incomeTaxResultCode != "00"))
                         {
                             entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Fail);
-                            entity.CcasReplyCode = IncomeTaxResultCode;
+                            entity.CcasReplyCode = incomeTaxResultCode;
+                            entity.CcasReplyStatus = creditSysService.
+                                ConvertIncomeTaxResultCode(incomeTaxResultCode);
 
-                            validateFailCount++;
+                            entity.CcasReplyDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                         }
                         else
                         {
@@ -547,10 +593,18 @@ namespace ThinkPower.CCLPA.Domain.Service
                         }
                     }
 
-                    entity.DeleteUserId = UserInfo.Id;
-                    entity.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
+
+                    entity.ProcessingUserId = UserInfo.Id;
+                    entity.ProcessingDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
 
                     entity.Update();
+
+                    preAdjustEntities.Add(new PreAdjustEntity()
+                    {
+                        CustomerId = entity.CustomerId,
+                        CampaignId = entity.CampaignId,
+                        Status = entity.Status,
+                    });
                 }
             }
             catch (Exception e)
@@ -560,27 +614,23 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            result = new PreAdjustAgreeResult()
+            preAdjustResult = new PreAdjustResult()
             {
-                EffectCount = (preAdjustList.Count - validateFailCount),
-                FailCount = validateFailCount,
+                PreAdjustList = preAdjustEntities,
             };
 
-
-
-            return result;
+            return preAdjustResult;
         }
 
         /// <summary>
         /// 強制同意臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
-        /// <param name="forcedConsentFailCase">強制同意失敗案件</param>
+        /// <param name="needValidate">是否需要驗證</param>
         /// <returns></returns>
-        public PreAdjustForcedConsentResult ForcedConsent(PreAdjustInfo preAdjustInfo,
-            bool forcedConsentFailCase)
+        public PreAdjustResult ForceAgree(PreAdjustInfo preAdjustInfo, bool needValidate)
         {
-            PreAdjustForcedConsentResult result = null;
+            PreAdjustResult preAdjustResult = null;
 
             if (preAdjustInfo == null)
             {
@@ -590,10 +640,6 @@ namespace ThinkPower.CCLPA.Domain.Service
             {
                 throw new ArgumentNullException("PreAdjustList");
             }
-            else if (preAdjustInfo.Condition == null)
-            {
-                throw new AggregateException("PreAdjustCondition");
-            }
             else if (UserInfo == null)
             {
                 throw new ArgumentNullException("UserInfo");
@@ -601,59 +647,165 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            DataAccess.Condition.PreAdjustCondition preAdjustCondition =
-                ConvertPreAdjustCondition(preAdjustInfo.Condition);
+            List<PreAdjustEntity> preAdjustList = GetPreAdjustEntities(preAdjustInfo.PreAdjustList);
 
-            List<PreAdjustEntity> preAdjustList = GetPreAdjustEntities(preAdjustCondition,
-                preAdjustInfo.PreAdjustList);
+            preAdjustList = preAdjustList.
+                Where(x => x.Status == ConvertPreAdjustStatus(PreAdjustStatus.Fail)).ToList();
+
+            if (preAdjustList.Count == 0)
+            {
+                throw new InvalidOperationException("preAdjustList");
+            }
 
 
-
-            DateTime currentTime = DateTime.Now;
 
             AdjustSystemService adjustSysService = new AdjustSystemService();
             PreAdjustEffectResult effectResult = null;
 
-            List<ForcedConsentFailResult> FailResultList = new List<ForcedConsentFailResult>();
+            CustomerService customerService = new CustomerService() { UserInfo = UserInfo };
+            string AccountByICRS = customerService.GetUserAccountByICRS();
+
+            CreditSystemService creditSysService = new CreditSystemService();
+            IncomeTaxCardAdjustInfo incomeTaxInfo = null;
+            string incomeTaxResultCode = null;
+
+            PreAdjustEntity tempEntity = null;
+            PreAdjustStatus? tempStatus = null;
+
+            List<PreAdjustEntity> preAdjustEntities = new List<PreAdjustEntity>();
 
 
-
-            /*
-                 檢查案件狀態是否為「失敗」
-                     進行「生效狀態檢核」
-                        檢核結果:
-                            成功(生效中) 
-                                >> CALL CCAS 
-                                    >> 成功 >> Update 狀態(生效中)
-                                    >> 失敗 >> Update 狀態(失敗), 失敗原因, 失敗代碼
-
-                            失敗  >> Update 狀態(失敗), 失敗原因, 失敗代碼
-             */
 
             try
             {
                 foreach (PreAdjustEntity entity in preAdjustList)
                 {
-                    effectResult = adjustSysService.PreAdjustEffect(entity.Id);
-
-                    if (effectResult.ResponseCode != "00")
+                    if (needValidate)
                     {
-                        FailResultList.Add(new ForcedConsentFailResult()
+                        effectResult = adjustSysService.PreAdjustEffect(entity.CustomerId);
+
+                        if (effectResult.ResponseCode != "00")
                         {
-                            Id = entity.Id,
+                            entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Fail);
+                            entity.RejectReasonCode = effectResult.RejectReason;
+                        }
+                        else
+                        {
+                            incomeTaxInfo = new IncomeTaxCardAdjustInfo()
+                            {
+                                ActionCode = "A",
+                                CustomerId = entity.CustomerId,
+                                CustomerIdNo = (entity.CustomerId.Length > 10) ?
+                                    entity.CustomerId.Substring(10, 1) : String.Empty,
+
+                                ProjectName = entity.ProjectName,
+                                IncomeTaxAdjustAmount = entity.ProjectAmount,
+
+                                AdjustCloseDate = DateTime.TryParseExact(entity.CloseDate, "yyyy/MM/dd",
+                                    null, DateTimeStyles.None, out DateTime tempCloseDate) ?
+                                    tempCloseDate.ToString("yyyyMMdd") :
+                                    throw new InvalidOperationException("Convert closeDate fail"),
+
+                                AdjustUserId = AccountByICRS,
+                            };
+
+                            incomeTaxResultCode = creditSysService.IncomeTaxCardAdjust(incomeTaxInfo);
+
+
+                            if (String.IsNullOrEmpty(incomeTaxResultCode) || (incomeTaxResultCode != "00"))
+                            {
+                                entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Fail);
+                                entity.CcasReplyCode = incomeTaxResultCode;
+                                entity.CcasReplyStatus = creditSysService.
+                                    ConvertIncomeTaxResultCode(incomeTaxResultCode);
+                                entity.CcasReplyDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                            }
+                            else
+                            {
+                                entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Effect);
+                            }
+                        }
+
+
+                        entity.ForceAgreeUserId = UserInfo.Id;
+                        entity.ProcessingDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+
+                        entity.Update();
+
+                        preAdjustEntities.Add(new PreAdjustEntity()
+                        {
+                            CustomerId = entity.CustomerId,
                             CampaignId = entity.CampaignId,
-                            RejectReason = effectResult.RejectReason,
-                            ResponseCode = effectResult.ResponseCode,
+                            Status = entity.Status,
                         });
                     }
                     else
                     {
-                        entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Effect);
-                        entity.DeleteUserId = UserInfo.Id;
-                        entity.DeleteDateTime = currentTime.ToString("yyyy/MM/dd HH:mm:ss");
-                        entity.Update();
+                        tempEntity = preAdjustInfo.PreAdjustList.
+                            FirstOrDefault(x => (x.CustomerId == entity.CustomerId) &&
+                                (x.CampaignId == entity.CampaignId));
 
-                        // TODO CCAS Stored Procedure
+                        if (tempEntity == null)
+                        {
+                            throw new InvalidOperationException("PreAdjustInfo not found");
+                        }
+
+                        tempStatus = ConvertPreAdjustStatus(tempEntity.Status);
+
+
+
+                        if (tempStatus == PreAdjustStatus.Effect)
+                        {
+                            incomeTaxInfo = new IncomeTaxCardAdjustInfo()
+                            {
+                                ActionCode = "A",
+                                CustomerId = entity.CustomerId,
+                                CustomerIdNo = (entity.CustomerId.Length > 10) ?
+                                    entity.CustomerId.Substring(10, 1) : String.Empty,
+
+                                ProjectName = entity.ProjectName,
+                                IncomeTaxAdjustAmount = entity.ProjectAmount,
+
+                                AdjustCloseDate = DateTime.TryParseExact(entity.CloseDate, "yyyy/MM/dd",
+                                    null, DateTimeStyles.None, out DateTime tempCloseDate) ?
+                                    tempCloseDate.ToString("yyyyMMdd") :
+                                    throw new InvalidOperationException("Convert closeDate fail"),
+
+                                AdjustUserId = AccountByICRS,
+                            };
+
+                            incomeTaxResultCode = creditSysService.IncomeTaxCardAdjust(incomeTaxInfo);
+
+
+
+                            if (String.IsNullOrEmpty(incomeTaxResultCode) || (incomeTaxResultCode != "00"))
+                            {
+                                entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Fail);
+                                entity.CcasReplyCode = incomeTaxResultCode;
+                                entity.CcasReplyStatus = creditSysService.
+                                    ConvertIncomeTaxResultCode(incomeTaxResultCode);
+
+                                entity.CcasReplyDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                            }
+                            else
+                            {
+                                entity.Status = ConvertPreAdjustStatus(PreAdjustStatus.Effect);
+                            }
+
+
+
+                            entity.ForceAgreeUserId = UserInfo.Id;
+                            entity.ProcessingDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+
+                            entity.Update();
+
+                            preAdjustEntities.Add(new PreAdjustEntity()
+                            {
+                                CustomerId = entity.CustomerId,
+                                CampaignId = entity.CampaignId,
+                                Status = entity.Status,
+                            });
+                        }
                     }
                 }
             }
@@ -663,17 +815,20 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
-
-            result = new PreAdjustForcedConsentResult()
+            preAdjustResult = new PreAdjustResult()
             {
-                EffectCount = (preAdjustList.Count - FailResultList.Count),
-                FailResultList = FailResultList,
+                PreAdjustList = preAdjustEntities,
             };
 
 
-
-            return result;
+            return preAdjustResult;
         }
+
+
+
+
+        #endregion
+
 
 
         #region InternalMethod
@@ -691,11 +846,6 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
         #endregion
-
-
-
-
-
 
         #region PrivateMethod
 
@@ -735,54 +885,30 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <summary>
         /// 取得預審名單
         /// </summary>
-        /// <param name="preAdjustCondition">預審名單資料查詢條件</param>
         /// <param name="preAdjustList">預審名單資料</param>
         /// <returns></returns>
-        private List<PreAdjustEntity> GetPreAdjustEntities(PreAdjustCondition preAdjustCondition,
-            IEnumerable<PreAdjustEntity> preAdjustList)
+        private List<PreAdjustEntity> GetPreAdjustEntities(IEnumerable<PreAdjustEntity> preAdjustList)
         {
             List<PreAdjustEntity> preAdjustEntities = null;
 
-            if (preAdjustCondition == null)
-            {
-                throw new ArgumentNullException("preAdjustCondition");
-            }
-            else if ((preAdjustList == null) || !preAdjustList.Any())
+            if ((preAdjustList == null) || !preAdjustList.Any())
             {
                 throw new ArgumentNullException("preAdjustList");
             }
 
 
-
             PreAdjustDAO preAdjustDAO = new PreAdjustDAO();
-            IEnumerable<PreAdjustDO> preAdjustDOList = null;
             PreAdjustDO preAdjustDO = null;
             PreAdjustEntity preAdjustEntity = null;
             preAdjustEntities = new List<PreAdjustEntity>();
 
 
-
             foreach (PreAdjustEntity entity in preAdjustList)
             {
-                preAdjustCondition.Id = entity.Id;
-                preAdjustCondition.CampaignId = entity.CampaignId;
-
-                preAdjustDOList = preAdjustDAO.Get(preAdjustCondition);
-
-                if (preAdjustDOList == null || !preAdjustDOList.Any())
-                {
-                    throw new InvalidOperationException("preAdjustDOList not found");
-                }
-                else if (preAdjustDOList.Count() > 1)
-                {
-                    throw new InvalidOperationException("preAdjustDOList not the only");
-                }
-
-                preAdjustDO = preAdjustDOList.First();
+                preAdjustDO = preAdjustDAO.Get(entity.CustomerId, entity.CampaignId);
                 preAdjustEntity = ConvertPreAdjustEntity(preAdjustDO);
                 preAdjustEntities.Add(preAdjustEntity);
             }
-
 
 
             return preAdjustEntities;
@@ -807,7 +933,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return new PreAdjustEntity()
             {
                 CampaignId = preAdjustDO.CampaignId,
-                Id = preAdjustDO.Id,
+                CustomerId = preAdjustDO.Id,
                 ProjectName = preAdjustDO.ProjectName,
                 ProjectAmount = preAdjustDO.ProjectAmount,
                 CloseDate = preAdjustDO.CloseDate,
@@ -823,7 +949,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 Remark = preAdjustDO.Remark,
                 ClosingDay = preAdjustDO.ClosingDay,
                 PayDeadline = preAdjustDO.PayDeadline,
-                AgreeUserId = preAdjustDO.AgreeUserId,
+                ForceAgreeUserId = preAdjustDO.ForceAgreeUserId,
                 MobileTel = preAdjustDO.MobileTel,
                 RejectReasonCode = preAdjustDO.RejectReasonCode,
                 CcasReplyCode = preAdjustDO.CcasReplyCode,
@@ -847,7 +973,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return preAdjustDOList.Select(x => new PreAdjustEntity()
             {
                 CampaignId = x.CampaignId,
-                Id = x.Id,
+                CustomerId = x.Id,
                 ProjectName = x.ProjectName,
                 ProjectAmount = x.ProjectAmount,
                 CloseDate = x.CloseDate,
@@ -863,7 +989,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 Remark = x.Remark,
                 ClosingDay = x.ClosingDay,
                 PayDeadline = x.PayDeadline,
-                AgreeUserId = x.AgreeUserId,
+                ForceAgreeUserId = x.ForceAgreeUserId,
                 MobileTel = x.MobileTel,
                 RejectReasonCode = x.RejectReasonCode,
                 CcasReplyCode = x.CcasReplyCode,
@@ -889,7 +1015,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return new PreAdjustDO()
             {
                 CampaignId = preAdjustEntity.CampaignId,
-                Id = preAdjustEntity.Id,
+                Id = preAdjustEntity.CustomerId,
                 ProjectName = preAdjustEntity.ProjectName,
                 ProjectAmount = preAdjustEntity.ProjectAmount,
                 CloseDate = preAdjustEntity.CloseDate,
@@ -905,7 +1031,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 Remark = preAdjustEntity.Remark,
                 ClosingDay = preAdjustEntity.ClosingDay,
                 PayDeadline = preAdjustEntity.PayDeadline,
-                AgreeUserId = preAdjustEntity.AgreeUserId,
+                ForceAgreeUserId = preAdjustEntity.ForceAgreeUserId,
                 MobileTel = preAdjustEntity.MobileTel,
                 RejectReasonCode = preAdjustEntity.RejectReasonCode,
                 CcasReplyCode = preAdjustEntity.CcasReplyCode,
@@ -929,7 +1055,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return preAdjustEntities.Select(x => new PreAdjustDO()
             {
                 CampaignId = x.CampaignId,
-                Id = x.Id,
+                Id = x.CustomerId,
                 ProjectName = x.ProjectName,
                 ProjectAmount = x.ProjectAmount,
                 CloseDate = x.CloseDate,
@@ -945,7 +1071,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 Remark = x.Remark,
                 ClosingDay = x.ClosingDay,
                 PayDeadline = x.PayDeadline,
-                AgreeUserId = x.AgreeUserId,
+                ForceAgreeUserId = x.ForceAgreeUserId,
                 MobileTel = x.MobileTel,
                 RejectReasonCode = x.RejectReasonCode,
                 CcasReplyCode = x.CcasReplyCode,
@@ -954,6 +1080,32 @@ namespace ThinkPower.CCLPA.Domain.Service
             });
         }
 
+
+
+
+        /// <summary>
+        /// 轉換臨調預審名單查詢條件
+        /// </summary>
+        /// <param name="condition">臨調預審名單查詢條件</param>
+        /// <returns></returns>
+        private DataAccess.Condition.PreAdjustCondition ConvertPreAdjustCondition(
+            Condition.PreAdjustCondition condition)
+        {
+            if (condition == null)
+            {
+                throw new ArgumentNullException("condition");
+            }
+
+            return new DataAccess.Condition.PreAdjustCondition()
+            {
+                PageIndex = condition.PageIndex,
+                PagingSize = condition.PagingSize,
+                CloseDate = condition.CloseDate,
+                CcasReplyCode = condition.CcasReplyCode,
+                CustomerId = condition.Id,
+                CampaignId = condition.CampaignId,
+            };
+        }
 
 
 
@@ -987,31 +1139,35 @@ namespace ThinkPower.CCLPA.Domain.Service
         }
 
         /// <summary>
-        /// 轉換臨調預審名單查詢條件
+        /// 轉換預審名單狀態
         /// </summary>
-        /// <param name="condition">臨調預審名單查詢條件</param>
+        /// <param name="status">預審名單狀態</param>
         /// <returns></returns>
-        private DataAccess.Condition.PreAdjustCondition ConvertPreAdjustCondition(
-            Condition.PreAdjustCondition condition)
+        private PreAdjustStatus ConvertPreAdjustStatus(string status)
         {
-            if (condition == null)
+            PreAdjustStatus? result = null;
+
+            if (String.IsNullOrEmpty(status))
             {
-                throw new ArgumentNullException("condition");
+                throw new ArgumentNullException("status");
             }
 
-            return new DataAccess.Condition.PreAdjustCondition()
+
+            switch (status)
             {
-                PageIndex = condition.PageIndex,
-                PagingSize = condition.PagingSize,
-                CloseDate = condition.CloseDate,
-                CcasReplyCode = condition.CcasReplyCode,
-                Id = condition.Id,
-                CampaignId = condition.CampaignId,
-            };
+                case "待生效": result = PreAdjustStatus.NotEffect; break;
+                case "生效中": result = PreAdjustStatus.Effect; break;
+                case "失敗": result = PreAdjustStatus.Fail; break;
+                case "刪除": result = PreAdjustStatus.Delete; break;
+            }
+
+            if (result == null)
+            {
+                throw new InvalidOperationException("PreAdjustStatus not found");
+            }
+
+            return result.Value;
         }
-
-
-
 
         #endregion
     }

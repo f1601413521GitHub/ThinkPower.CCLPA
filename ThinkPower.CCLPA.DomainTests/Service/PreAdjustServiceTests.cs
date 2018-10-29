@@ -22,30 +22,46 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             // Arrange
             PreAdjustInfo preAdjustInfo = new PreAdjustInfo()
             {
-                Condition = new PreAdjustCondition()
-                {
-                    PageIndex = null,
-                    PagingSize = null,
-                    CloseDate = DateTime.Now,
-                    CcasReplyCode = null,
-                    CampaignId = null,
-                    Id = null,
-                },
+                //Condition = new PreAdjustCondition()
+                //{
+                //    PageIndex = null,
+                //    PagingSize = null,
+                //    CloseDate = DateTime.Now,
+                //    CcasReplyCode = null,
+                //    CampaignId = null,
+                //    Id = null,
+                //},
                 PreAdjustList = new List<PreAdjustEntity>() {
-                    new PreAdjustEntity(){CampaignId = "AA20991022X99Y99Z99A",Id="A177842053" },
-                    new PreAdjustEntity(){CampaignId = "AA20991022X99Y99Z99A",Id="B142357855" },
+                    new PreAdjustEntity(){CampaignId = "AA20991022X99Y99Z99A",CustomerId="A177842053" },
+                    new PreAdjustEntity(){CampaignId = "AA20991022X99Y99Z99A",CustomerId="B142357855" },
                 },
                 Remark = $"UnitTest Delete No.{DateTime.Now.Millisecond}",
             };
-            var service = new PreAdjustService();
-            service.UserInfo = new UserInfo() { Id = "14260", Name = "User14260" };
-            var expected = 2;
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
+
+            PreAdjustResult expected = new PreAdjustResult()
+            {
+                PreAdjustList = new List<PreAdjustEntity>() {
+                     new PreAdjustEntity(){CampaignId="AA20991022X99Y99Z99A", CustomerId="A177842053" ,Status="刪除" },
+                     new PreAdjustEntity(){CampaignId="AA20991022X99Y99Z99A", CustomerId="B142357855" ,Status="刪除" },
+                }
+            };
 
             // Actual
-            var actual = service.DeleteNotEffect(preAdjustInfo);
+            PreAdjustResult actual = service.DeleteNotEffect(preAdjustInfo);
+
+
+
+            var expectedAnonymous = expected.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+            var actualAnonymous = actual.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.IsTrue(expectedAnonymous.SequenceEqual(actualAnonymous));
         }
 
         [TestMethod()]
@@ -54,30 +70,38 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             // Arrange
             PreAdjustInfo preAdjustInfo = new PreAdjustInfo()
             {
-                Condition = new PreAdjustCondition()
-                {
-                    PageIndex = null,
-                    PagingSize = null,
-                    CloseDate = DateTime.Now,
-                    CcasReplyCode = "00",
-                    CampaignId = null,
-                    Id = null,
-                },
                 PreAdjustList = new List<PreAdjustEntity>() {
-                    new PreAdjustEntity(){CampaignId = "AA20981022X99Y99Z99A",Id="A177842053" },
-                    new PreAdjustEntity(){CampaignId = "AA20981022X99Y99Z99A",Id="B142357855" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
                 },
                 Remark = $"UnitTest Delete No.{DateTime.Now.Millisecond}",
+
             };
-            var service = new PreAdjustService();
-            service.UserInfo = new UserInfo() { Id = "14260", Name = "User14260" };
-            var expected = 2;
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
+
+            PreAdjustResult expected = new PreAdjustResult()
+            {
+                PreAdjustList = new List<PreAdjustEntity>() {
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="刪除" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="刪除" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="刪除" },
+                }
+            };
 
             // Actual
-            var actual = service.DeleteEffect(preAdjustInfo);
+            PreAdjustResult actual = service.DeleteEffect(preAdjustInfo);
+
+
+            var expectedAnonymous = expected.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+            var actualAnonymous = actual.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.IsTrue(expectedAnonymous.SequenceEqual(actualAnonymous));
         }
 
         #region ConvertPagingConditionTest
@@ -92,7 +116,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         //        OrderBy = PagingConditionEntity.OrderByKind.OrderDate,
         //    };
 
-        //    var service = new PreAdjustService();
+        //    var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
         //    service.UserInfo = new UserInfoVO() { Id = "14260", Name = "User14260" };
 
         //    var expected = new PagingCondition() {
@@ -128,11 +152,10 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         [TestMethod()]
         public void ImportTest()
         {
-
             // Arrange
-            var campaignId = "AA20160401X99Y99Z99A";
-            var service = new PreAdjustService();
-            service.UserInfo = new UserInfo() { Id = "14260", Name = "User14260" };
+            var campaignId = "ZZ20190101X99Y99Z99A";
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
+
             var expected = true;
 
             // Actual
@@ -141,7 +164,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             {
                 service.Import(campaignId);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 actual = false;
             }
@@ -155,7 +178,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         {
             // Arrange
             var campaignId = "TEST";
-            var service = new PreAdjustService();
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             PreAdjustValidateResult expected = new PreAdjustValidateResult()
             {
                 ErrorMessage = "ILRC行銷活動編碼，輸入錯誤。",
@@ -186,7 +209,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         {
             // Arrange
             var campaignId = "AA20181019X99Y99Z99A";
-            var service = new PreAdjustService();
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             string expected = "Convert ExpectedCloseDate Fail";
 
             // Actual
@@ -209,7 +232,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         {
             // Arrange
             var campaignId = "BB20181019X99Y99Z99A";
-            var service = new PreAdjustService();
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             PreAdjustValidateResult expected = new PreAdjustValidateResult()
             {
                 ErrorMessage = "此行銷活動已結案，無法進入匯入作業。",
@@ -240,7 +263,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         {
             // Arrange
             var campaignId = "CC20181019X99Y99Z99A";
-            var service = new PreAdjustService();
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             PreAdjustValidateResult expected = new PreAdjustValidateResult()
             {
                 ErrorMessage = "此行銷活動已於2018/10/19匯入過，無法再進行匯入。",
@@ -267,11 +290,11 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
         }
 
         [TestMethod()]
-        public void Validate_When_CampaignIdIsAA20160401X99Y99Z99A_Then_ResultCampaignDetailCountIs5()
+        public void Validate_When_CampaignIdIsZZ20190101X99Y99Z99A_Then_ResultCampaignDetailCountIs5()
         {
             // Arrange
-            var campaignId = "AA20160401X99Y99Z99A";
-            var service = new PreAdjustService();
+            var campaignId = "ZZ20190101X99Y99Z99A";
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             PreAdjustValidateResult expected = new PreAdjustValidateResult()
             {
                 ErrorMessage = null,
@@ -310,21 +333,21 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
                 CampaignId = "AA20160401X99Y99Z99A",
                 Id = null,
             };
-            var service = new PreAdjustService();
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             IEnumerable<PreAdjustEntity> expected = new List<PreAdjustEntity>() {
-                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",Id="A177842053"},
-                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",Id="B142357855"},
-                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",Id="D187388854"},
-                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",Id="G183928828"},
-                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",Id="Q100016360"},
+                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",CustomerId="A177842053"},
+                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",CustomerId="B142357855"},
+                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",CustomerId="D187388854"},
+                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",CustomerId="G183928828"},
+                new PreAdjustEntity(){ CampaignId = "AA20160401X99Y99Z99A",CustomerId="Q100016360"},
             };
 
             // Actual
             IEnumerable<PreAdjustEntity> actual = service.Query(condition);
 
-            var expectedAnonymous = expected.Select(x => new { x.CampaignId, x.Id }).ToList();
+            var expectedAnonymous = expected.Select(x => new { x.CampaignId, x.CustomerId }).ToList();
 
-            var actualAnonymous = actual.Select(x => new { x.CampaignId, x.Id }).ToList();
+            var actualAnonymous = actual.Select(x => new { x.CampaignId, x.CustomerId }).ToList();
 
             // Assert
             CollectionAssert.AreEqual(expectedAnonymous, actualAnonymous);
@@ -339,28 +362,29 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             {
                 PageIndex = null,
                 PagingSize = null,
-                CloseDate = new DateTime(2099, 10, 22),
+                CloseDate = new DateTime(2019, 01, 01),
                 CcasReplyCode = "00",
-                CampaignId = "AA20981022X99Y99Z99A",
+                CampaignId = "ZZ20190101X99Y99Z99A",
                 Id = null,
             };
-            var service = new PreAdjustService();
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             IEnumerable<PreAdjustEntity> expected = new List<PreAdjustEntity>() {
-                new PreAdjustEntity(){ CampaignId = "AA20981022X99Y99Z99A",Id="A177842053"},
-                new PreAdjustEntity(){ CampaignId = "AA20981022X99Y99Z99A",Id="B142357855"},
-                new PreAdjustEntity(){ CampaignId = "AA20981022X99Y99Z99A",Id="D187388854"},
+                new PreAdjustEntity(){ CampaignId = "ZZ20190101X99Y99Z99A",CustomerId="A177842053"},
+                new PreAdjustEntity(){ CampaignId = "ZZ20190101X99Y99Z99A",CustomerId="B142357855"},
+                new PreAdjustEntity(){ CampaignId = "ZZ20190101X99Y99Z99A",CustomerId="D187388854"},
+                new PreAdjustEntity(){ CampaignId = "ZZ20190101X99Y99Z99A",CustomerId="G183928828"},
+                new PreAdjustEntity(){ CampaignId = "ZZ20190101X99Y99Z99A",CustomerId="Q100016360"},
             };
 
 
             // Actual
             IEnumerable<PreAdjustEntity> actual = service.Query(condition);
 
-            var expectedAnonymous = expected.Select(x => new { x.CampaignId, x.Id }).ToList();
-
-            var actualAnonymous = actual.Select(x => new { x.CampaignId, x.Id }).ToList();
+            var expectedAnonymous = expected.Select(x => new { x.CampaignId, x.CustomerId });
+            var actualAnonymous = actual.Select(x => new { x.CampaignId, x.CustomerId });
 
             // Assert
-            CollectionAssert.AreEqual(expectedAnonymous, actualAnonymous);
+            Assert.IsTrue(expectedAnonymous.SequenceEqual(actualAnonymous));
         }
 
         [TestMethod()]
@@ -369,35 +393,110 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             // Arrange
             var preAdjustInfo = new PreAdjustInfo()
             {
-                Condition = new PreAdjustCondition()
-                {
-                    PageIndex = null,
-                    PagingSize = null,
-                    CloseDate = new DateTime(2016, 5, 25),
-                    CcasReplyCode = null,
-                    CampaignId = "AA20160401X99Y99Z99A",
-                    Id = null,
-                },
                 PreAdjustList = new List<PreAdjustEntity>() {
-                    new PreAdjustEntity(){CampaignId = "AA20160401X99Y99Z99A",Id="Q100016360" },
-                    new PreAdjustEntity(){CampaignId = "AA20160401X99Y99Z99A",Id="D187388854" },
-                    new PreAdjustEntity(){CampaignId = "AA20160401X99Y99Z99A",Id="G183928828" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
                 },
                 Remark = "UnitTestAgree",
             };
-            var service = new PreAdjustService();
-            service.UserInfo = new UserInfo() { Id = "58860", Name = "User58860" };
-            var expected = new PreAdjustAgreeResult()
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
+
+            var expected = new PreAdjustResult()
             {
-                EffectCount = 1,
-                FailCount = 2,
+                PreAdjustList = new List<PreAdjustEntity>() {
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" ,Status="生效中" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" ,Status="生效中" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" ,Status="生效中" },
+                }
             };
 
             // Actual 
             var actual = service.Agree(preAdjustInfo);
 
+
+            var expectedAnonymous = expected.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+            var actualAnonymous = actual.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.IsTrue(expectedAnonymous.SequenceEqual(actualAnonymous));
+        }
+
+        [TestMethod()]
+        public void ForceAgree_When_Validate_CustomTestCase_Then()
+        {
+            // Arrange
+            var preAdjustInfo = new PreAdjustInfo()
+            {
+                PreAdjustList = new List<PreAdjustEntity>() {
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
+                },
+                Remark = "UnitTestAgree",
+            };
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
+            var expected = new PreAdjustResult()
+            {
+                PreAdjustList = new List<PreAdjustEntity>() {
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="生效中" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
+                }
+            };
+
+            // Actual 
+            var actual = service.ForceAgree(preAdjustInfo, true);
+
+
+            var expectedAnonymous = expected.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+            var actualAnonymous = actual.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+            // Actaul
+            Assert.IsTrue(expectedAnonymous.SequenceEqual(actualAnonymous));
+        }
+
+        [TestMethod()]
+        public void ForceAgree_When_NotValidate_CustomTestCase_Then()
+        {
+            // Arrange
+            var preAdjustInfo = new PreAdjustInfo()
+            {
+                PreAdjustList = new List<PreAdjustEntity>() {
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="刪除"   },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
+                },
+                Remark = "UnitTestAgree",
+            };
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
+            var expected = new PreAdjustResult()
+            {
+                PreAdjustList = new List<PreAdjustEntity>() {
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
+                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
+                }
+            };
+
+            // Actual 
+            var actual = service.ForceAgree(preAdjustInfo, false);
+
+
+            var expectedAnonymous = expected.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+            var actualAnonymous = actual.PreAdjustList.
+                Select(x => new { x.CampaignId, x.CustomerId, x.Status });
+
+            // Actaul
+            Assert.IsTrue(expectedAnonymous.SequenceEqual(actualAnonymous));
         }
     }
 }

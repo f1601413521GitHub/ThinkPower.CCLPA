@@ -37,7 +37,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                     Remark                  = null,
                     ClosingDay              = "10",
                     PayDeadline             = "25",
-                    AgreeUserId             = null,
+                    ForceAgreeUserId             = null,
                     MobileTel               = "0933113885",
                     RejectReasonCode        = null,
                     CcasReplyCode           = null,
@@ -62,7 +62,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                     Remark                  = null,
                     ClosingDay              = "20",
                     PayDeadline             = "05",
-                    AgreeUserId             = null,
+                    ForceAgreeUserId             = null,
                     MobileTel               = "0916987456",
                     RejectReasonCode        = null,
                     CcasReplyCode           = null,
@@ -90,12 +90,12 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             // Arrange
             PreAdjustDO preAdjust = new PreAdjustDO()
             {
-                CampaignId = "AA20991024X99Y99Z99A",
-                Id = "A177842053",
+                CampaignId = "ZZ20190101X99Y99Z99A",
+                Id = "Z177842053",
                 ProjectName = "等待區測試資料Insert",
                 ProjectAmount = 30000,
-                CloseDate = "2099/10/22",
-                ImportDate = "2018/10/23",
+                CloseDate = "2019/01/01",
+                ImportDate = "2019/01/01",
                 ChineseName = "王小明",
                 Kind = "AA",
                 SmsCheckResult = null,
@@ -107,7 +107,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 Remark = null,
                 ClosingDay = "10",
                 PayDeadline = "25",
-                AgreeUserId = null,
+                ForceAgreeUserId = null,
                 MobileTel = "0933113885",
                 RejectReasonCode = null,
                 CcasReplyCode = null,
@@ -142,7 +142,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = null,
                 CloseDate = null,
                 CcasReplyCode = "00",
-                Id = null,
+                CustomerId = null,
                 CampaignId = null,
 
             };
@@ -150,7 +150,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             // Assert
@@ -167,14 +167,14 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = null,
                 CloseDate = null,
                 CcasReplyCode = null,
-                Id = null,
+                CustomerId = null,
                 CampaignId = null,
             };
             var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             // Assert
@@ -191,14 +191,14 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = null,
                 CloseDate = new DateTime(2016, 5, 25),
                 CcasReplyCode = null,
-                Id = null,
+                CustomerId = null,
                 CampaignId = null,
             };
             var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             // Assert
@@ -215,7 +215,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = 99,
                 CloseDate = null,
                 CcasReplyCode = null,
-                Id = null,
+                CustomerId = null,
                 CampaignId = null,
                 OrderBy = PreAdjustCondition.OrderByKind.CustomerId,
             };
@@ -223,7 +223,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
@@ -242,7 +242,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = 5,
                 CloseDate = null,
                 CcasReplyCode = null,
-                Id = null,
+                CustomerId = null,
                 CampaignId = null,
                 OrderBy = PreAdjustCondition.OrderByKind.CustomerId,
             };
@@ -250,7 +250,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
@@ -269,7 +269,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = 5,
                 CloseDate = null,
                 CcasReplyCode = null,
-                Id = null,
+                CustomerId = null,
                 CampaignId = null,
                 OrderBy = PreAdjustCondition.OrderByKind.CustomerId,
             };
@@ -277,7 +277,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
@@ -296,14 +296,14 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = null,
                 CloseDate = null,
                 CcasReplyCode = null,
-                Id = "A177842053",
+                CustomerId = "A177842053",
                 CampaignId = null,
             };
             var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
@@ -313,7 +313,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
         }
 
         [TestMethod()]
-        public void GetTest_When_CcasCodeIsNull_IdIsA177842053_CampaignIdIsAA20991022X99Y99Z99A_Then_ResultNotEffectCase()
+        public void GetTest_When_CcasCodeIsNull_IdIsA177842053_CampaignIdIsZZ20190101X99Y99Z99A_Then_ResultNotEffectCase()
         {
             // Arrange
             var condition = new PreAdjustCondition()
@@ -322,14 +322,14 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = null,
                 CloseDate = null,
                 CcasReplyCode = null,
-                Id = "A177842053",
-                CampaignId = "AA20991022X99Y99Z99A",
+                CustomerId = "A177842053",
+                CampaignId = "ZZ20190101X99Y99Z99A",
             };
             var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
@@ -339,7 +339,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
         }
 
         [TestMethod()]
-        public void GetTest_When_CcasCodeIsNull_CampaignIdIsAA20991022X99Y99Z99A_Then_ResultNotEffectCase()
+        public void GetTest_When_CcasCodeIsNull_CampaignIdIsZZ20190101X99Y99Z99A_Then_ResultNotEffectCase()
         {
             // Arrange
             var condition = new PreAdjustCondition()
@@ -348,14 +348,14 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 PagingSize = null,
                 CloseDate = null,
                 CcasReplyCode = null,
-                Id = null,
-                CampaignId = "AA20991022X99Y99Z99A",
+                CustomerId = null,
+                CampaignId = "ZZ20190101X99Y99Z99A",
             };
             var dao = new PreAdjustDAO();
             var expected = true;
 
             // Actual
-            var result = dao.Get(condition);
+            var result = dao.Query(condition);
             var actual = (result != null);
 
             Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));

@@ -40,30 +40,29 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <returns>刪除預審名單筆數</returns>
-        int DeleteNotEffect(PreAdjustInfo preAdjustInfo);
+        PreAdjustResult DeleteNotEffect(PreAdjustInfo preAdjustInfo);
 
         /// <summary>
         /// 刪除生效中的臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <returns>刪除預審名單筆數</returns>
-        int DeleteEffect(PreAdjustInfo preAdjustInfo);
+        PreAdjustResult DeleteEffect(PreAdjustInfo preAdjustInfo);
 
         /// <summary>
         /// 同意執行臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
         /// <returns>同意執行預審名單處理結果</returns>
-        PreAdjustAgreeResult Agree(PreAdjustInfo preAdjustInfo);
+        PreAdjustResult Agree(PreAdjustInfo preAdjustInfo);
 
         /// <summary>
         /// 強制同意臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
-        /// <param name="forcedConsentFailCase">強制同意失敗案件</param>
+        /// <param name="needValidate">是否需要驗證</param>
         /// <returns></returns>
-        PreAdjustForcedConsentResult ForcedConsent(PreAdjustInfo preAdjustInfo,
-            bool forcedConsentFailCase);
+        PreAdjustResult ForceAgree(PreAdjustInfo preAdjustInfo, bool needValidate);
 
     }
 }

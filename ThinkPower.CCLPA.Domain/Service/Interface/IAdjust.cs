@@ -17,17 +17,5 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// 臨調處理
         /// </summary>
         void AdjustProcessing();
-
-        /// <summary>
-        /// 取得使用者臨調權限資訊
-        /// </summary>
-        /// <returns></returns>
-        AdjustPermission GetUserPermission();
-
-        /// <summary>
-        /// 取得使用者ICRS帳號
-        /// </summary>
-        /// <returns></returns>
-        string GetUserAccountByICRS();
     }
 }

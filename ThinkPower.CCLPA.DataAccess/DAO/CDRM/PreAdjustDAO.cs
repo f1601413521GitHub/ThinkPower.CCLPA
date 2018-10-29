@@ -58,7 +58,7 @@ VALUES
                 command.Parameters.Add(new SqlParameter("@Remark", SqlDbType.NVarChar) { Value = preAdjust.Remark ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@ClosingDay", SqlDbType.NVarChar) { Value = preAdjust.ClosingDay ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@PayDeadline", SqlDbType.NVarChar) { Value = preAdjust.PayDeadline ?? Convert.DBNull, });
-                command.Parameters.Add(new SqlParameter("@AgreeUserId", SqlDbType.NVarChar) { Value = preAdjust.AgreeUserId ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@AgreeUserId", SqlDbType.NVarChar) { Value = preAdjust.ForceAgreeUserId ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@MobileTel", SqlDbType.NVarChar) { Value = preAdjust.MobileTel ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@RejectReasonCode", SqlDbType.NVarChar) { Value = preAdjust.RejectReasonCode ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@CcasReplyCode", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyCode ?? Convert.DBNull, });
@@ -130,7 +130,7 @@ UPDATE  [RG_PADJUST]
                 command.Parameters.Add(new SqlParameter("@Remark", SqlDbType.NVarChar) { Value = preAdjust.Remark ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@ClosingDay", SqlDbType.NVarChar) { Value = preAdjust.ClosingDay ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@PayDeadline", SqlDbType.NVarChar) { Value = preAdjust.PayDeadline ?? Convert.DBNull, });
-                command.Parameters.Add(new SqlParameter("@AgreeUserId", SqlDbType.NVarChar) { Value = preAdjust.AgreeUserId ?? Convert.DBNull, });
+                command.Parameters.Add(new SqlParameter("@AgreeUserId", SqlDbType.NVarChar) { Value = preAdjust.ForceAgreeUserId ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@MobileTel", SqlDbType.NVarChar) { Value = preAdjust.MobileTel ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@RejectReasonCode", SqlDbType.NVarChar) { Value = preAdjust.RejectReasonCode ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@CcasReplyCode", SqlDbType.NVarChar) { Value = preAdjust.CcasReplyCode ?? Convert.DBNull, });
@@ -143,11 +143,11 @@ UPDATE  [RG_PADJUST]
         }
 
         /// <summary>
-        /// 取得臨調預審名單
+        /// 查詢臨調預審名單
         /// </summary>
         /// <param name="condition">預審名單資料查詢條件</param>
         /// <returns></returns>
-        public IEnumerable<PreAdjustDO> Get(PreAdjustCondition condition)
+        public IEnumerable<PreAdjustDO> Query(PreAdjustCondition condition)
         {
             List<PreAdjustDO> result = null;
 
@@ -191,12 +191,12 @@ FROM [RG_PADJUST]");
                 queryCommand.Add("(CCAS_CODE = '00')");
             }
 
-            if (!String.IsNullOrEmpty(condition.Id))
+            if (!String.IsNullOrEmpty(condition.CustomerId))
             {
-                queryCommand.Add("ID = @Id");
-                sqlParameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar)
+                queryCommand.Add("ID = @CustomerId");
+                sqlParameters.Add(new SqlParameter("@CustomerId", SqlDbType.NVarChar)
                 {
-                    Value = condition.Id
+                    Value = condition.CustomerId
                 });
             }
 
@@ -258,56 +258,6 @@ FROM [RG_PADJUST]");
 
 
 
-
-            #region MyRegion
-            string query = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE != '00' OR CCAS_CODE IS NULL)
-ORDER BY [CMPN_ID]
-OFFSET     @Skip ROWS
-FETCH NEXT @Take ROWS ONLY
-;";
-
-            var queryID = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE != '00' OR CCAS_CODE IS NULL)
-    AND ID = @Id
-ORDER BY [CMPN_ID]
-OFFSET     @Skip ROWS
-FETCH NEXT @Take ROWS ONLY;";
-
-
-
-            string queryID2 = @"
-SELECT 
-    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
-    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
-    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
-FROM [RG_PADJUST]
-WHERE CLOSE_DT >= @CloseDate
-    AND (CCAS_CODE = '00')
-    AND ID = @Id
-    AND CMPN_ID = @CampaignId;";
-
-
-            #endregion
-
-
-
-
-
-
-
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
 
@@ -342,6 +292,73 @@ WHERE CLOSE_DT >= @CloseDate
         }
 
 
+        /// <summary>
+        /// 取得臨調預審名單
+        /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        /// <param name="campaignId">行銷活動代碼</param>
+        /// <returns></returns>
+        public PreAdjustDO Get(string customerId, string campaignId)
+        {
+            PreAdjustDO result = null;
+
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException("customerId");
+            }
+            else if (String.IsNullOrEmpty(campaignId))
+            {
+                throw new ArgumentNullException("campaignId");
+            }
+
+
+            string query = @"
+SELECT 
+    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
+    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
+    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
+FROM [RG_PADJUST]
+WHERE ID = @CustomerId
+    AND CMPN_ID = @CampaignId;";
+
+
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            {
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.Add(new SqlParameter("@CustomerId", SqlDbType.NVarChar)
+                {
+                    Value = customerId
+                });
+                command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
+                {
+                    Value = campaignId
+                });
+
+
+                connection.Open();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count == 1)
+                {
+                    result = ConvertPreAdjustDO(dt.Rows[0]);
+                }
+                else if (dt.Rows.Count > 1)
+                {
+                    throw new InvalidOperationException("PreAdjust not the only");
+                }
+
+                adapter = null;
+                dt = null;
+                command = null;
+            }
+
+            return result;
+        }
 
 
 
@@ -376,7 +393,7 @@ WHERE CLOSE_DT >= @CloseDate
                 Remark = preAdjustData.Field<string>("REMARK"),
                 ClosingDay = preAdjustData.Field<string>("STMT_CYCLE_DESC"),
                 PayDeadline = preAdjustData.Field<string>("PAY_DEADLINE"),
-                AgreeUserId = preAdjustData.Field<string>("SAGREE_ID"),
+                ForceAgreeUserId = preAdjustData.Field<string>("SAGREE_ID"),
                 MobileTel = preAdjustData.Field<string>("MOBIL_TEL"),
                 RejectReasonCode = preAdjustData.Field<string>("REJECTREASON"),
                 CcasReplyCode = preAdjustData.Field<string>("CCAS_CODE"),
@@ -384,6 +401,7 @@ WHERE CLOSE_DT >= @CloseDate
                 CcasReplyDateTime = preAdjustData.Field<string>("CCAS_DT"),
             };
         }
+
 
         #endregion
     }

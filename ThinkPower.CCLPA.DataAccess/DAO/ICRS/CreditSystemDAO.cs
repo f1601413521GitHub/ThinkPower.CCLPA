@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using ThinkPower.CCLPA.DataAccess.DO.ICRS;
+using ThinkPower.CCLPA.DataAccess.VO;
 
 namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
 {
@@ -15,7 +15,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
         /// </summary>
         /// <param name="adjustInfo">所得稅卡戶臨調資料</param>
         /// <returns></returns>
-        public string IncomeTaxCardAdjust(IncomeTaxCardAdjustDO adjustInfo)
+        public string IncomeTaxCardAdjust(IncomeTaxCardAdjust adjustInfo)
         {
             string result = null;
 

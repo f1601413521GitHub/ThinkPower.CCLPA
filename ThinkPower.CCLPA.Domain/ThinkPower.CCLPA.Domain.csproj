@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Service\CustomerService.cs" />
+    <Compile Include="Service\Interface\ICustomer.cs" />
     <Compile Include="VO\AdjustPermission.cs" />
     <Compile Include="Entity\CampaignDetailEntity.cs" />
     <Compile Include="Entity\CampaignEntity.cs" />
@@ -57,15 +59,13 @@
     <Compile Include="Service\CreditSystemService.cs" />
     <Compile Include="Service\Interface\ICreditSystem.cs" />
     <Compile Include="VO\IncomeTaxCardAdjustInfo.cs" />
-    <Compile Include="VO\PreAdjustAgreeResult.cs" />
     <Compile Include="VO\PreAdjustEffectResult.cs" />
     <Compile Include="Entity\PreAdjustEntity.cs" />
     <Compile Include="Service\BaseService.cs" />
-    <Compile Include="VO\ForcedConsentFailResult.cs" />
-    <Compile Include="VO\PreAdjustForcedConsentResult.cs" />
     <Compile Include="VO\PreAdjustInfo.cs" />
     <Compile Include="Service\AdjustSystemService.cs" />
     <Compile Include="Service\Interface\IAdjustSystem.cs" />
+    <Compile Include="VO\PreAdjustResult.cs" />
     <Compile Include="VO\UserInfo.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

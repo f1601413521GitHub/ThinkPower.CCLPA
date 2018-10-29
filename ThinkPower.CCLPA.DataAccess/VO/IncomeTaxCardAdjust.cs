@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
+namespace ThinkPower.CCLPA.DataAccess.VO
 {
     /// <summary>
     /// 所得稅卡戶臨調資料物件類別
     /// </summary>
-    public class IncomeTaxCardAdjustDO
+    public class IncomeTaxCardAdjust
     {
         /// <summary>
         /// 執行碼 A:新增 U:修改 D:刪除

@@ -95,7 +95,7 @@ namespace ThinkPower.CCLPA.DataAccess.DO.CDRM
         /// <summary>
         /// 強制同意人員
         /// </summary>
-        public string AgreeUserId { get; set; }
+        public string ForceAgreeUserId { get; set; }
 
         /// <summary>
         /// 行動電話

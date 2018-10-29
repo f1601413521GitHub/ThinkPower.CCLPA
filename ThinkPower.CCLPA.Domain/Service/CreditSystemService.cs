@@ -1,6 +1,7 @@
 ﻿using System;
 using ThinkPower.CCLPA.DataAccess.DAO.ICRS;
 using ThinkPower.CCLPA.DataAccess.DO.ICRS;
+using ThinkPower.CCLPA.DataAccess.VO;
 using ThinkPower.CCLPA.Domain.Service.Interface;
 using ThinkPower.CCLPA.Domain.VO;
 
@@ -35,7 +36,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new ArgumentNullException("info");
             }
 
-            IncomeTaxCardAdjustDO adjustInfoDO = ConvertIncomeTaxCardAdjustDO(adjustInfo);
+            IncomeTaxCardAdjust adjustInfoDO = ConvertIncomeTaxCardAdjustDO(adjustInfo);
 
             responseCode = new CreditSystemDAO().IncomeTaxCardAdjust(adjustInfoDO);
 
@@ -47,14 +48,14 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="info">所得稅卡戶資訊</param>
         /// <returns></returns>
-        private IncomeTaxCardAdjustDO ConvertIncomeTaxCardAdjustDO(IncomeTaxCardAdjustInfo info)
+        private IncomeTaxCardAdjust ConvertIncomeTaxCardAdjustDO(IncomeTaxCardAdjustInfo info)
         {
             if (info == null)
             {
                 throw new ArgumentNullException("info");
             }
 
-            return new IncomeTaxCardAdjustDO()
+            return new IncomeTaxCardAdjust()
             {
                 ActionCode = info.ActionCode,
                 CustomerId = info.CustomerId,
@@ -74,6 +75,34 @@ namespace ThinkPower.CCLPA.Domain.Service
         public object NonIncomeTaxCardAdjust(object data)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 轉換所得稅卡戶臨調回傳碼
+        /// </summary>
+        /// <param name="incomeTaxResultCode">回傳碼</param>
+        /// <returns>回傳結果</returns>
+        internal string ConvertIncomeTaxResultCode(string incomeTaxResultCode)
+        {
+            string result = null;
+
+            if (String.IsNullOrEmpty(incomeTaxResultCode))
+            {
+                throw new ArgumentNullException("incomeTaxResultCode");
+            }
+
+            switch (incomeTaxResultCode)
+            {
+                case "00": result = "更新成功"; break;
+                case "01": result = "查無資料"; break;
+                case "02": result = "臨調中"; break;
+                case "03": result = "非有效活卡"; break;
+                case "04": result = "資料已刪除"; break;
+                case "98": result = "LOG寫檔錯誤"; break;
+                case "99": result = "寫檔錯誤"; break;
+            }
+
+            return result;
         }
     }
 }

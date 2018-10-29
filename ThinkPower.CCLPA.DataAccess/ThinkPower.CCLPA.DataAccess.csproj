@@ -63,7 +63,7 @@
     <Compile Include="DO\ICRS\CustomerDO.cs" />
     <Compile Include="DO\ICRS\CustomerShortDO.cs" />
     <Compile Include="DO\CDRM\PreAdjustEffectResultDO.cs" />
-    <Compile Include="DO\ICRS\IncomeTaxCardAdjustDO.cs" />
+    <Compile Include="VO\IncomeTaxCardAdjust.cs" />
     <Compile Include="Helper\DbHelper.cs" />
     <Compile Include="Condition\PreAdjustCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

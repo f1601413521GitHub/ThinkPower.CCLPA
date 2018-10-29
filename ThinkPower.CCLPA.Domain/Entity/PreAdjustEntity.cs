@@ -16,7 +16,7 @@ namespace ThinkPower.CCLPA.Domain.Entity
         /// <summary>
         /// 客戶ID
         /// </summary>
-        public string Id { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// 預審專案
@@ -96,7 +96,7 @@ namespace ThinkPower.CCLPA.Domain.Entity
         /// <summary>
         /// 強制同意人員
         /// </summary>
-        public string AgreeUserId { get; set; }
+        public string ForceAgreeUserId { get; set; }
 
         /// <summary>
         /// 行動電話
