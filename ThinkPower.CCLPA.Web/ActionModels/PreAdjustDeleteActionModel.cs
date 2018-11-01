@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
-using ThinkPower.CCLPA.DataAccess.DO.CDRM;
-using ThinkPower.CCLPA.Domain.Condition;
 using ThinkPower.CCLPA.Domain.Entity;
+using ThinkPower.CCLPA.Domain.VO;
 
-namespace ThinkPower.CCLPA.Domain.VO
+namespace ThinkPower.CCLPA.Web.ActionModels
 {
     /// <summary>
-    /// 臨調預審名單資訊類別
+    /// 刪除臨調預審名單資料模型類別
     /// </summary>
-    public class PreAdjustInfo
+    public class PreAdjustDeleteActionModel
     {
         /// <summary>
-        /// 臨調預審名單
+        /// 預審名單
         /// </summary>
         public IEnumerable<PreAdjustShortData> PreAdjustList { get; set; }
 

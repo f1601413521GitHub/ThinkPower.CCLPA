@@ -65,7 +65,7 @@ namespace ThinkPower.CCLPA.DataAccess.Condition
         public string CcasReplyCode { get; set; }
 
         /// <summary>
-        /// 身分證字號
+        /// 客戶ID
         /// </summary>
         public string CustomerId { get; set; }
 

@@ -49,9 +49,9 @@ namespace ThinkPower.CCLPA.Domain.Condition
         public string CcasReplyCode { get; set; }
 
         /// <summary>
-        /// 身分證字號
+        /// 客戶ID
         /// </summary>
-        public string Id { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// 行銷活動代碼

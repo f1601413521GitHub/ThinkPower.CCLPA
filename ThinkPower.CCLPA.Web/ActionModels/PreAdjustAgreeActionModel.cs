@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using ThinkPower.CCLPA.Domain.Entity;
+using ThinkPower.CCLPA.Domain.VO;
 
-namespace ThinkPower.CCLPA.Domain.VO
+namespace ThinkPower.CCLPA.Web.ActionModels
 {
     /// <summary>
-    /// 臨調預審名單回傳結果類別
+    /// 同意臨調預審名單資料模型類別
     /// </summary>
-    public class PreAdjustResult
+    public class PreAdjustAgreeActionModel
     {
         /// <summary>
-        /// 臨調預審名單
+        /// 預審名單
         /// </summary>
         public IEnumerable<PreAdjustShortData> PreAdjustList { get; set; }
     }

@@ -288,7 +288,7 @@ FROM [RG_PADJUST]");
                 command = null;
             }
 
-            return result;
+            return (result == null) ? new List<PreAdjustDO>() : result;
         }
 
 

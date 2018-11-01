@@ -31,9 +31,9 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
                 //    CampaignId = null,
                 //    Id = null,
                 //},
-                PreAdjustList = new List<PreAdjustEntity>() {
-                    new PreAdjustEntity(){CampaignId = "AA20991022X99Y99Z99A",CustomerId="A177842053" },
-                    new PreAdjustEntity(){CampaignId = "AA20991022X99Y99Z99A",CustomerId="B142357855" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                    new PreAdjustShortData(){CampaignId = "AA20991022X99Y99Z99A",CustomerId="A177842053" },
+                    new PreAdjustShortData(){CampaignId = "AA20991022X99Y99Z99A",CustomerId="B142357855" },
                 },
                 Remark = $"UnitTest Delete No.{DateTime.Now.Millisecond}",
             };
@@ -41,9 +41,9 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
 
             PreAdjustResult expected = new PreAdjustResult()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="AA20991022X99Y99Z99A", CustomerId="A177842053" ,Status="刪除" },
-                     new PreAdjustEntity(){CampaignId="AA20991022X99Y99Z99A", CustomerId="B142357855" ,Status="刪除" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="AA20991022X99Y99Z99A", CustomerId="A177842053" ,Status="刪除" },
+                     new PreAdjustShortData(){CampaignId="AA20991022X99Y99Z99A", CustomerId="B142357855" ,Status="刪除" },
                 }
             };
 
@@ -70,10 +70,10 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             // Arrange
             PreAdjustInfo preAdjustInfo = new PreAdjustInfo()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
                 },
                 Remark = $"UnitTest Delete No.{DateTime.Now.Millisecond}",
 
@@ -82,10 +82,10 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
 
             PreAdjustResult expected = new PreAdjustResult()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="刪除" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="刪除" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="刪除" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="刪除" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="刪除" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="刪除" },
                 }
             };
 
@@ -331,7 +331,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
                 CloseDate = new DateTime(2016, 5, 25),
                 CcasReplyCode = null,
                 CampaignId = "AA20160401X99Y99Z99A",
-                Id = null,
+                CustomerId = null,
             };
             var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             IEnumerable<PreAdjustEntity> expected = new List<PreAdjustEntity>() {
@@ -365,7 +365,7 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
                 CloseDate = new DateTime(2019, 01, 01),
                 CcasReplyCode = "00",
                 CampaignId = "ZZ20190101X99Y99Z99A",
-                Id = null,
+                CustomerId = null,
             };
             var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             IEnumerable<PreAdjustEntity> expected = new List<PreAdjustEntity>() {
@@ -393,10 +393,10 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             // Arrange
             var preAdjustInfo = new PreAdjustInfo()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
                 },
                 Remark = "UnitTestAgree",
             };
@@ -404,10 +404,10 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
 
             var expected = new PreAdjustResult()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" ,Status="生效中" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" ,Status="生效中" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" ,Status="生效中" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" ,Status="生效中" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" ,Status="生效中" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" ,Status="生效中" },
                 }
             };
 
@@ -432,20 +432,20 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             // Arrange
             var preAdjustInfo = new PreAdjustInfo()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854" },
                 },
                 Remark = "UnitTestAgree",
             };
             var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             var expected = new PreAdjustResult()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="生效中" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="生效中" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
                 }
             };
 
@@ -469,19 +469,19 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
             // Arrange
             var preAdjustInfo = new PreAdjustInfo()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="刪除"   },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="A177842053",Status="刪除"   },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
                 },
                 Remark = "UnitTestAgree",
             };
             var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
             var expected = new PreAdjustResult()
             {
-                PreAdjustList = new List<PreAdjustEntity>() {
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
-                     new PreAdjustEntity(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
+                PreAdjustList = new List<PreAdjustShortData>() {
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="B142357855",Status="生效中" },
+                     new PreAdjustShortData(){CampaignId="ZZ20190101X99Y99Z99A", CustomerId="D187388854",Status="生效中" },
                 }
             };
 
@@ -496,6 +496,55 @@ namespace ThinkPower.CCLPA.Domain.Service.Tests
                 Select(x => new { x.CampaignId, x.CustomerId, x.Status });
 
             // Actaul
+            Assert.IsTrue(expectedAnonymous.SequenceEqual(actualAnonymous));
+        }
+
+        [TestMethod()]
+        public void Query_When_CloseDateIs20181030_CustomerIdIsA177842053_Then_Result_NotEffect_And_EffectCase()
+        {
+            // Arrange
+            var condition = new PreAdjustCondition()
+            {
+                PageIndex = null,
+                PagingSize = null,
+                CloseDate = new DateTime(2018, 10, 30),
+                CcasReplyCode = null,
+                CampaignId = null,
+                CustomerId = "A177842053",
+            };
+            var condition2 = new PreAdjustCondition()
+            {
+                PageIndex = null,
+                PagingSize = null,
+                CloseDate = new DateTime(2018, 10, 30),
+                CcasReplyCode = "00",
+                CampaignId = null,
+                CustomerId = "A177842053",
+            };
+
+            var service = new PreAdjustService() { UserInfo = new UserInfo() { Id = "58860", Name = "User58860" } };
+            IEnumerable<PreAdjustEntity> expected = new List<PreAdjustEntity>() {
+                new PreAdjustEntity(){ CampaignId = "AA20991022X99Y99Z99A",CustomerId="A177842053"},
+                new PreAdjustEntity(){ CampaignId = "AA20991024X99Y99Z99A",CustomerId="A177842053"},
+                new PreAdjustEntity(){ CampaignId = "ZZ20190101X99Y99Z99A",CustomerId="A177842053"},
+                new PreAdjustEntity(){ CampaignId = "AA20951022X99Y99Z99A",CustomerId="A177842053"},
+                new PreAdjustEntity(){ CampaignId = "AA20961022X99Y99Z99A",CustomerId="A177842053"},
+                new PreAdjustEntity(){ CampaignId = "AA20971022X99Y99Z99A",CustomerId="A177842053"},
+                new PreAdjustEntity(){ CampaignId = "AA20981022X99Y99Z99A",CustomerId="A177842053"},
+            };
+
+            // Actual
+            IEnumerable<PreAdjustEntity> result = service.Query(condition);
+            IEnumerable<PreAdjustEntity> result2 = service.Query(condition2);
+
+            List<PreAdjustEntity> actual = new List<PreAdjustEntity>();
+            actual.AddRange(result);
+            actual.AddRange(result2);
+
+            var expectedAnonymous = expected.Select(x => new { x.CampaignId, x.CustomerId });
+            var actualAnonymous = actual.Select(x => new { x.CampaignId, x.CustomerId });
+
+            // Assert
             Assert.IsTrue(expectedAnonymous.SequenceEqual(actualAnonymous));
         }
     }

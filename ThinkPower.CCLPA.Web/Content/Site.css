@@ -3,7 +3,13 @@
 body {
     font-family: Helvetica, Microsoft JhengHei;
     font-size: 16px;
+    background-color: #EFEEEF;
 }
+
+th, td {
+    white-space: nowrap;
+}
+
 
 
 
@@ -51,8 +57,24 @@ body {
 
 .layout-body-right {
     padding: 30px;
+    min-width: 80vh;
 }
 
 .layout-footer {
     background-color: #C2C2C2;
+}
+
+
+
+
+
+/*PreAdjustProcess*/
+.process-remark {
+    color: cornflowerblue;
+    font-weight: bold;
+}
+
+.process-options {
+    background-color: white;
+    padding: 12px 0;
 }

@@ -7,9 +7,9 @@ using ThinkPower.CCLPA.Domain.VO;
 namespace ThinkPower.CCLPA.Domain.Service
 {
     /// <summary>
-    /// 客戶服務
+    /// 使用者服務
     /// </summary>
-    public class CustomerService : BaseService, ICustomer
+    public class UserService : BaseService, IUser
     {
         /// <summary>
         /// 取得使用者臨調權限資訊

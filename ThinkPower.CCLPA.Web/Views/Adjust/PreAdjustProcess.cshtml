@@ -1,0 +1,246 @@
+﻿@model ThinkPower.CCLPA.Web.ViewModels.PreAdjustProcessViewModel
+
+@{
+    ViewBag.Title = "專案臨調預審名單處理";
+}
+
+<span>專案臨調預審名單處理</span>
+
+<hr />
+@using (Html.BeginForm("PreAdjustQuery", "Adjust", FormMethod.Get, new { id = "form-query" }))
+{
+    <div class="row">
+        <div class="col col-auto">
+            <span>身分證字號</span>
+        </div>
+
+        <div class="col col-auto">
+            @Html.TextBox("CustomerId", (Model == null) ? null : Model.CustomerId, new { @class = "form-control" })
+        </div>
+
+        <div class="col col-auto">
+            <input type="submit" name="query-pre-adjust" value="查詢" class="btn btn-primary" />
+        </div>
+    </div>
+}
+
+
+
+
+
+<hr />
+<div class="row process-options">
+    <div class="col col-auto process-remark">
+        <span>備註</span>
+    </div>
+
+    <div class="col col-auto">
+        @Html.TextBox("not-effect-remark", null, new { @class = "form-control" })
+    </div>
+
+    <div class="col col-auto">
+        <input type="button" name="name" id="delete-not-effect" value="刪除等待區" class="btn btn-danger" />
+    </div>
+    <div class="col col-auto">
+        <input type="button" name="name" id="force-agree" value="強制同意" class="btn btn-success" />
+    </div>
+    <div class="col col-auto">
+        <input type="button" name="name" id="agree" value="同意執行" class="btn btn-primary" />
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped" style="width:80%;" id="process-table-not-effect">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th scope="col">功能</th>
+                    <th scope="col">匯入日期</th>
+                    <th scope="col">預審專案</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">姓名</th>
+                    <th scope="col">預審金額</th>
+                    <th scope="col">截止日</th>
+                    <th scope="col">客戶類型</th>
+                    <th scope="col">簡訊比對</th>
+                    <th scope="col">狀態</th>
+                    <th scope="col">處理日期時間</th>
+                    <th scope="col">同意人員</th>
+                    <th scope="col">刪除人員</th>
+                    <th scope="col">刪除日期時間</th>
+                    <th scope="col">備註</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.PreAdjustList != null)
+                {
+                    foreach (var preAdjust in Model.PreAdjustList.Where(x => x.CcasReplyCode != "00"))
+                    {
+                        <tr data-campaign-id="@preAdjust.CampaignId"
+                            data-customer-id="@preAdjust.CustomerId"
+                            data-status="@preAdjust.Status">
+                            <th scope="row">
+                                <input type="checkbox" name="name" id="pre-adjust-check-box" value="" />
+                            </th>
+                            <td>@Html.DisplayFor(x => preAdjust.ImportDate)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ProjectName)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.CustomerId)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ChineseName)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ProjectAmount)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.CloseDate)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.Kind)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.SmsCheckResult)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.Status)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ProcessingDateTime)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ProcessingUserId)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.DeleteUserId)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.DeleteDateTime)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.Remark)</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+<hr />
+<div class="row process-options">
+    <div class="col col-auto process-remark">
+        <span>備註</span>
+    </div>
+
+    <div class="col col-auto">
+        @Html.TextBox("effect-remark", null, new { @class = "form-control" })
+    </div>
+
+    <div class="col col-auto">
+        <input type="button" name="name" id="delete-effect" value="刪除生效區" class="btn btn-danger" />
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped" style="width:80%;" id="process-table-effect">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th scope="col">功能</th>
+                    <th scope="col">匯入日期</th>
+                    <th scope="col">預審專案</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">姓名</th>
+                    <th scope="col">預審金額</th>
+                    <th scope="col">截止日</th>
+                    <th scope="col">客戶類型</th>
+                    <th scope="col">簡訊比對</th>
+                    <th scope="col">狀態</th>
+                    <th scope="col">處理日期時間</th>
+                    <th scope="col">同意人員</th>
+                    <th scope="col">強制人員</th>
+                    <th scope="col">刪除人員</th>
+                    <th scope="col">刪除日期時間</th>
+                    <th scope="col">備註</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.PreAdjustList != null)
+                {
+                    foreach (var preAdjust in Model.PreAdjustList.Where(x => x.CcasReplyCode == "00"))
+                    {
+                        <tr data-campaign-id="@preAdjust.CampaignId"
+                            data-customer-id="@preAdjust.CustomerId"
+                            data-status="@preAdjust.Status">
+                            <th scope="row">
+                                <input type="checkbox" name="name" id="pre-adjust-check-box" value="" />
+                            </th>
+                            <td>@Html.DisplayFor(x => preAdjust.ImportDate)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ProjectName)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.CustomerId)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ChineseName)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ProjectAmount)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.CloseDate)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.Kind)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.SmsCheckResult)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.Status)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ProcessingDateTime)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ProcessingUserId)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.ForceAgreeUserId)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.DeleteUserId)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.DeleteDateTime)</td>
+                            <td>@Html.DisplayFor(x => preAdjust.Remark)</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+<hr />
+<div class="row">
+
+    @if (Model != null)
+    {
+        string tipTitle = null;
+        string tipMessage = null;
+
+        if (!String.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            tipTitle = "錯誤訊息";
+            tipMessage = Model.ErrorMessage;
+        }
+        else if (!String.IsNullOrEmpty(Model.TipMessage))
+        {
+            tipTitle = "錯誤訊息";
+            tipMessage = Model.TipMessage;
+        }
+        else if (Model.PreAdjustList != null && Model.PreAdjustList.Count() == 0)
+        {
+            tipTitle = "提示訊息";
+            tipMessage = "查無相關資料，請確認是否有輸入錯誤。";
+        }
+
+        <div class="modal" tabindex="-1" role="dialog" id="tip-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">@tipTitle</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>@tipMessage</p>
+                    </div>
+                    <div class="modal-footer">
+                        <div id="tip-modal-type-show">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">確認</button>
+                        </div>
+                        <div id="tip-modal-type-dialog">
+                            <button type="button" class="btn btn-primary" id="tip-model-confirm">確定</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/PreAdjustProcess.js"></script>
+}
