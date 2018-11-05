@@ -15,7 +15,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// 取得使用者臨調權限資訊
         /// </summary>
         /// <returns></returns>
-        internal AdjustPermission GetUserPermission()
+        public AdjustPermission GetUserPermission()
         {
             AdjustPermission result = null;
 

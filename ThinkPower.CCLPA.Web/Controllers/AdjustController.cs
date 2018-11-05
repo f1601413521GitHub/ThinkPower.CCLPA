@@ -197,6 +197,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
             PreAdjustProcessViewModel viewModel = null;
             List<PreAdjustEntity> queryResult = null;
             string errorMessage = null;
+            bool canExecuteOperation = false;
 
             try
             {
@@ -214,6 +215,23 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     CustomerId = actionModel.CustomerId,
                     CampaignId = null,
                 });
+
+
+                var serviece = new UserService()
+                {
+                    UserInfo = new UserInfo()
+                    {
+                        Id = Session["UserId"] as string,
+                        Name = Session["UserName"] as string,
+                    }
+                };
+
+                AdjustPermission permission = serviece.GetUserPermission();
+
+                if (!String.IsNullOrEmpty(permission.AdjustExecute) && permission.AdjustExecute == "Y")
+                {
+                    canExecuteOperation = true;
+                }
             }
             catch (Exception e)
             {
@@ -227,6 +245,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 CustomerId = (actionModel == null) ? null : actionModel.CustomerId,
                 PreAdjustList = queryResult,
                 ErrorMessage = errorMessage,
+                CanExecuteOperation = canExecuteOperation,
             };
 
             return View(_preAdjustProcessPage, viewModel);

@@ -7,6 +7,11 @@
 <span>專案臨調預審名單處理</span>
 
 <hr />
+@if (Model != null && Model.CanExecuteOperation == true)
+{
+    @Html.Hidden("can-execute-operation")
+}
+
 @using (Html.BeginForm("PreAdjustQuery", "Adjust", FormMethod.Get, new { id = "form-query" }))
 {
     <div class="row">

@@ -15,6 +15,8 @@ const preAdjustStatus = {
 
 $(document).ready(function () {
 
+    disableOperation();
+
     showTip('show');
 
     $('#delete-not-effect').on('click', function () {
@@ -261,7 +263,23 @@ $(document).ready(function () {
 
 
 
+function disableOperation() {
 
+    if ($('#can-execute-operation').length > 0) {
+
+        $('#delete-not-effect').prop('disabled', false);
+        $('#agree').prop('disabled', false);
+        $('#force-agree').prop('disabled', false);
+        $('#delete-effect').prop('disabled', false);
+
+    } else {
+
+        $('#delete-not-effect').prop('disabled', true);
+        $('#agree').prop('disabled', true);
+        $('#force-agree').prop('disabled', true);
+        $('#delete-effect').prop('disabled', true);
+    }
+}
 
 function showTip(type, title, message) {
 

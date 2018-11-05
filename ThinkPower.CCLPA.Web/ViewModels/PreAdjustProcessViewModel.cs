@@ -27,5 +27,10 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// 客戶ID
         /// </summary>
         public string CustomerId { get; set; }
+
+        /// <summary>
+        /// 判斷是否可執行操作功能
+        /// </summary>
+        public bool CanExecuteOperation { get; set; }
     }
 }
