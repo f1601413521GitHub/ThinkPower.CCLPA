@@ -300,28 +300,6 @@ namespace ThinkPower.CCLPA.Domain.Service
         }
 
         /// <summary>
-        /// 查詢臨調預審名單筆數
-        /// </summary>
-        /// <param name="condition">預審名單資料查詢條件</param>
-        /// <returns></returns>
-        public int Count(Condition.PreAdjustCondition condition)
-        {
-            int result = 0;
-
-            if (condition == null)
-            {
-                throw new ArgumentNullException("condition");
-            }
-
-            DataAccess.Condition.PreAdjustCondition preAdjustCondition =
-                ConvertPreAdjustCondition(condition);
-
-            result = new PreAdjustDAO().Count(preAdjustCondition);
-
-            return result;
-        }
-
-        /// <summary>
         /// 刪除等待的臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>
