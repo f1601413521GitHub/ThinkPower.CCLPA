@@ -19,9 +19,9 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        public CustomerShortDO GetShortData(string customerId)
+        public CustomerPartialInfoDO GetPartialData(string customerId)
         {
-            CustomerShortDO result = null;
+            CustomerPartialInfoDO result = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
@@ -50,7 +50,7 @@ WHERE ACCT_ID =@CustomerId;";
 
                 if (dt.Rows.Count == 1)
                 {
-                    result = ConvertCustomerShortDO(dt.Rows[0]);
+                    result = ConvertCustomerPartialInfoDO(dt.Rows[0]);
                 }
                 else if(dt.Rows.Count > 1)
                 {
@@ -70,9 +70,9 @@ WHERE ACCT_ID =@CustomerId;";
         /// </summary>
         /// <param name="customerInfo">歸戶基本資料</param>
         /// <returns></returns>
-        private CustomerShortDO ConvertCustomerShortDO(DataRow customerInfo)
+        private CustomerPartialInfoDO ConvertCustomerPartialInfoDO(DataRow customerInfo)
         {
-            return new CustomerShortDO()
+            return new CustomerPartialInfoDO()
             {
                 ChineseName = customerInfo.Field<string>("CHI_NAME"),
                 MobileTel = customerInfo.Field<string>("MOBIL_TEL"),

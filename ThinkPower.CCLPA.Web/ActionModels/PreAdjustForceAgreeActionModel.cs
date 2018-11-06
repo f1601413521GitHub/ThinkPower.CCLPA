@@ -11,7 +11,7 @@ namespace ThinkPower.CCLPA.Web.ActionModels
         /// <summary>
         /// 預審名單
         /// </summary>
-        public IEnumerable<PreAdjustShortData> PreAdjustList { get; set; }
+        public IEnumerable<PreAdjustResultInfo> PreAdjustList { get; set; }
 
         /// <summary>
         /// 是否需要驗證

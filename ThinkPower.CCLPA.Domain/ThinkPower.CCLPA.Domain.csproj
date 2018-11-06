@@ -66,7 +66,7 @@
     <Compile Include="Service\AdjustSystemService.cs" />
     <Compile Include="Service\Interface\IAdjustSystem.cs" />
     <Compile Include="VO\PreAdjustResult.cs" />
-    <Compile Include="VO\PreAdjustShortData.cs" />
+    <Compile Include="VO\PreAdjustResultInfo.cs" />
     <Compile Include="VO\UserInfo.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

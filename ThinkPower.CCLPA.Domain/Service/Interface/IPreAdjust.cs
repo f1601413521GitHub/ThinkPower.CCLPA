@@ -36,6 +36,13 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         IEnumerable<PreAdjustEntity> Query(PreAdjustCondition searchInfo);
 
         /// <summary>
+        /// 查詢臨調預審名單總筆數
+        /// </summary>
+        /// <param name="condition">預審名單資料查詢條件</param>
+        /// <returns></returns>
+        int Count(Condition.PreAdjustCondition condition);
+
+        /// <summary>
         /// 刪除待生效的臨調預審名單
         /// </summary>
         /// <param name="preAdjustInfo">來源資料</param>

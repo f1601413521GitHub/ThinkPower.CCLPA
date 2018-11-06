@@ -1,4 +1,5 @@
 ﻿using NLog;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -178,24 +179,14 @@ namespace ThinkPower.CCLPA.Web.Controllers
 
 
         /// <summary>
-        /// 顯示預審名單處理畫面
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult PreAdjustProcessPage()
-        {
-            return View(_preAdjustProcessPage);
-        }
-
-        /// <summary>
-        /// 進行預審名單查詢動作
+        /// 進行預審名單載入動作
         /// </summary>
         /// <param name="actionModel">來源資料</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult PreAdjustQuery(PreAdjustQueryActionModel actionModel)
+        public ActionResult PreAdjustLoad(PreAdjustLoadActionModel actionModel)
         {
             PreAdjustProcessViewModel viewModel = null;
-            List<PreAdjustEntity> queryResult = null;
             string errorMessage = null;
             bool canExecuteOperation = false;
 
@@ -206,32 +197,54 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     throw new ArgumentNullException("actionModel");
                 }
 
-                queryResult = QueryPreAdjust(new PreAdjustCondition()
+
+
+                var currentTime = DateTime.Now;
+
+                var notEffectCondition = new PreAdjustCondition()
                 {
                     PageIndex = null,
                     PagingSize = null,
-                    CloseDate = DateTime.Now,
+                    CloseDate = currentTime,
                     CcasReplyCode = null,
                     CustomerId = actionModel.CustomerId,
                     CampaignId = null,
-                });
-
-
-                var serviece = new UserService()
-                {
-                    UserInfo = new UserInfo()
-                    {
-                        Id = Session["UserId"] as string,
-                        Name = Session["UserName"] as string,
-                    }
                 };
 
-                AdjustPermission permission = serviece.GetUserPermission();
+                IEnumerable<PreAdjustEntity> notEffect = PreAdjService.Query(notEffectCondition);
 
-                if (!String.IsNullOrEmpty(permission.AdjustExecute) && permission.AdjustExecute == "Y")
+
+
+                var effectCondition = new PreAdjustCondition()
                 {
-                    canExecuteOperation = true;
-                }
+                    PageIndex = null,
+                    PagingSize = null,
+                    CloseDate = currentTime,
+                    CcasReplyCode = "00",
+                    CustomerId = actionModel.CustomerId,
+                    CampaignId = null,
+                };
+
+                IEnumerable<PreAdjustEntity> effect = PreAdjService.Query(effectCondition);
+
+                canExecuteOperation = CheckUserPermission();
+
+                viewModel = new PreAdjustProcessViewModel()
+                {
+                    ErrorMessage = errorMessage,
+                    CanExecuteOperation = canExecuteOperation,
+
+                    CustomerId = String.IsNullOrEmpty(actionModel.CustomerId) ? null : actionModel.CustomerId,
+                    NotEffectPageIndex = actionModel.NotEffectPageIndex,
+                    EffectPageIndex = actionModel.EffectPageIndex,
+                    PagingSize = actionModel.PagingSize,
+
+                    NotEffectPreAdjustList = notEffect.ToPagedList(
+                        actionModel.NotEffectPageIndex + 1, actionModel.PagingSize),
+
+                    EffectPreAdjustList = effect.ToPagedList(
+                        actionModel.EffectPageIndex + 1, actionModel.PagingSize),
+                };
             }
             catch (Exception e)
             {
@@ -239,17 +252,17 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 errorMessage = _systemErrorMsg;
             }
 
-
-            viewModel = new PreAdjustProcessViewModel()
+            if (viewModel == null)
             {
-                CustomerId = (actionModel == null) ? null : actionModel.CustomerId,
-                PreAdjustList = queryResult,
-                ErrorMessage = errorMessage,
-                CanExecuteOperation = canExecuteOperation,
-            };
+                viewModel = new PreAdjustProcessViewModel()
+                {
+                    ErrorMessage = errorMessage
+                };
+            }
 
             return View(_preAdjustProcessPage, viewModel);
         }
+
 
         /// <summary>
         /// 進行預審名單刪除動作
@@ -270,6 +283,10 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 else if (actionModel == null)
                 {
                     throw new ArgumentNullException("actionModel");
+                }
+                else if (!CheckUserPermission())
+                {
+                    throw new InvalidOperationException("User does not permissions.");
                 }
 
                 var preAdjustInfo = new PreAdjustInfo()
@@ -307,6 +324,10 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 else if (actionModel == null)
                 {
                     throw new ArgumentNullException("actionModel");
+                }
+                else if (!CheckUserPermission())
+                {
+                    throw new InvalidOperationException("User does not permissions.");
                 }
 
                 var preAdjustInfo = new PreAdjustInfo()
@@ -346,6 +367,10 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 {
                     throw new ArgumentNullException("actionModel");
                 }
+                else if (!CheckUserPermission())
+                {
+                    throw new InvalidOperationException("User does not permissions.");
+                }
 
                 var preAdjustInfo = new PreAdjustInfo()
                 {
@@ -378,12 +403,14 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 {
                     throw new InvalidOperationException("Not ajax request");
                 }
-                if (actionModel == null)
+                else if (actionModel == null)
                 {
                     throw new ArgumentNullException("actionModel");
                 }
-
-
+                else if (!CheckUserPermission())
+                {
+                    throw new InvalidOperationException("User does not permissions.");
+                }
 
                 var preAdjustInfo = new PreAdjustInfo()
                 {
@@ -409,32 +436,33 @@ namespace ThinkPower.CCLPA.Web.Controllers
 
         #region Private Method
 
-        /// <summary>
-        /// 查詢預審名單
-        /// </summary>
-        /// <param name="condition">資料查詢條件</param>
-        /// <returns></returns>
-        private List<PreAdjustEntity> QueryPreAdjust(PreAdjustCondition condition)
-        {
-            List<PreAdjustEntity> queryResult = null;
 
-            if (condition == null)
+        /// <summary>
+        /// 檢核使用者操作權限
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckUserPermission()
+        {
+            bool canExecuteOperation = false;
+
+            var serviece = new UserService()
             {
-                throw new ArgumentNullException("condition");
+                UserInfo = new UserInfo()
+                {
+                    Id = Session["UserId"] as string,
+                    Name = Session["UserName"] as string,
+                }
+            };
+
+            AdjustPermission permission = serviece.GetUserPermission();
+
+            if (!String.IsNullOrEmpty(permission.AdjustExecute) && permission.AdjustExecute == "Y")
+            {
+                canExecuteOperation = true;
             }
 
-            IEnumerable<PreAdjustEntity> notEffect = PreAdjService.Query(condition);
-
-            condition.CcasReplyCode = "00";
-            IEnumerable<PreAdjustEntity> effect = PreAdjService.Query(condition);
-
-            queryResult = new List<PreAdjustEntity>();
-            queryResult.AddRange(notEffect);
-            queryResult.AddRange(effect);
-
-            return queryResult;
+            return canExecuteOperation;
         }
-
         #endregion
     }
 }

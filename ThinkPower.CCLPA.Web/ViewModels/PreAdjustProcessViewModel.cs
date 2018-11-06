@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PagedList;
+using System.Collections.Generic;
 using ThinkPower.CCLPA.Domain.Entity;
 
 namespace ThinkPower.CCLPA.Web.ViewModels
@@ -8,11 +9,6 @@ namespace ThinkPower.CCLPA.Web.ViewModels
     /// </summary>
     public class PreAdjustProcessViewModel
     {
-        /// <summary>
-        /// 預審名單
-        /// </summary>
-        public IEnumerable<PreAdjustEntity> PreAdjustList { get; set; }
-
         /// <summary>
         /// 錯誤訊息
         /// </summary>
@@ -32,5 +28,31 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// 判斷是否可執行操作功能
         /// </summary>
         public bool CanExecuteOperation { get; set; }
+
+        /// <summary>
+        /// 等待區資料分頁頁碼
+        /// </summary>
+        public int NotEffectPageIndex { get; set; }
+
+        /// <summary>
+        /// 生效區資料分頁頁碼
+        /// </summary>
+        public int EffectPageIndex { get; set; }
+
+        /// <summary>
+        /// 資料分頁每頁筆數
+        /// </summary>
+        public int PagingSize { get; set; }
+
+
+        /// <summary>
+        /// 待生效預審名單
+        /// </summary>
+        public IPagedList<PreAdjustEntity> NotEffectPreAdjustList { get; set; }
+
+        /// <summary>
+        /// 生效中預審名單
+        /// </summary>
+        public IPagedList<PreAdjustEntity> EffectPreAdjustList { get; set; }
     }
 }

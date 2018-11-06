@@ -1,18 +1,19 @@
 ﻿@model ThinkPower.CCLPA.Web.ViewModels.PreAdjustProcessViewModel
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "專案臨調預審名單處理";
+
+    var canExecuteOperation = (Model != null && Model.CanExecuteOperation == true) ? true : false;
+    var customerId = (Model == null) ? null : Model.CustomerId;
+    var pagingSize = (Model != null && Model.PagingSize > 0) ? Model.PagingSize : 5;
 }
 
 <span>專案臨調預審名單處理</span>
 
-<hr />
-@if (Model != null && Model.CanExecuteOperation == true)
-{
-    @Html.Hidden("can-execute-operation")
-}
 
-@using (Html.BeginForm("PreAdjustQuery", "Adjust", FormMethod.Get, new { id = "form-query" }))
+<hr />
+@using (Html.BeginForm("PreAdjustLoad", "Adjust", FormMethod.Get, new { id = "form-query" }))
 {
     <div class="row">
         <div class="col col-auto">
@@ -20,11 +21,40 @@
         </div>
 
         <div class="col col-auto">
-            @Html.TextBox("CustomerId", (Model == null) ? null : Model.CustomerId, new { @class = "form-control" })
+            @Html.TextBox("CustomerId", customerId, new { @class = "form-control" })
         </div>
 
         <div class="col col-auto">
-            <input type="submit" name="query-pre-adjust" value="查詢" class="btn btn-primary" />
+            <input type="button" name="query-pre-adjust" id="query-pre-adjust" value="查詢" class="btn btn-primary" />
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col col-auto">
+            <span>每頁筆數</span>
+        </div>
+
+        <div class="col col-auto">
+            @Html.TextBox("PagingSize", pagingSize, new { @class = "form-control",type="number" })
+        </div>
+    </div>
+
+    <div class="row d-none">
+        <div class="col col-auto">
+            <span>等待區頁數</span>
+        </div>
+
+        <div class="col col-auto">
+            @Html.TextBox("NotEffectPageIndex", Model.NotEffectPageIndex, new { @class = "form-control" })
+        </div>
+
+        <div class="col col-auto">
+            <span>生效區頁數</span>
+        </div>
+
+        <div class="col col-auto">
+            @Html.TextBox("EffectPageIndex", Model.EffectPageIndex, new { @class = "form-control" })
         </div>
     </div>
 }
@@ -43,15 +73,30 @@
         @Html.TextBox("not-effect-remark", null, new { @class = "form-control" })
     </div>
 
-    <div class="col col-auto">
-        <input type="button" name="name" id="delete-not-effect" value="刪除等待區" class="btn btn-danger" />
-    </div>
-    <div class="col col-auto">
-        <input type="button" name="name" id="force-agree" value="強制同意" class="btn btn-success" />
-    </div>
-    <div class="col col-auto">
-        <input type="button" name="name" id="agree" value="同意執行" class="btn btn-primary" />
-    </div>
+    @if (canExecuteOperation)
+    {
+        <div class="col col-auto">
+            <input type="button" name="name" id="delete-not-effect" value="刪除等待區" class="btn btn-danger" />
+        </div>
+        <div class="col col-auto">
+            <input type="button" name="name" id="force-agree" value="強制同意" class="btn btn-success" />
+        </div>
+        <div class="col col-auto">
+            <input type="button" name="name" id="agree" value="同意執行" class="btn btn-primary" />
+        </div>
+    }
+    else
+    {
+        <div class="col col-auto">
+            <input type="button" name="name" id="delete-not-effect" value="刪除等待區" class="btn btn-danger disabled" />
+        </div>
+        <div class="col col-auto">
+            <input type="button" name="name" id="force-agree" value="強制同意" class="btn btn-success disabled" />
+        </div>
+        <div class="col col-auto">
+            <input type="button" name="name" id="agree" value="同意執行" class="btn btn-primary disabled" />
+        </div>
+    }
 </div>
 
 <br />
@@ -79,9 +124,9 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null && Model.PreAdjustList != null)
+                @if (Model != null && Model.NotEffectPreAdjustList != null)
                 {
-                    foreach (var preAdjust in Model.PreAdjustList.Where(x => x.CcasReplyCode != "00"))
+                    foreach (var preAdjust in Model.NotEffectPreAdjustList.Where(x => x.CcasReplyCode != "00"))
                     {
                         <tr data-campaign-id="@preAdjust.CampaignId"
                             data-customer-id="@preAdjust.CustomerId"
@@ -108,8 +153,14 @@
                 }
             </tbody>
         </table>
+        @if (Model != null && Model.NotEffectPreAdjustList != null)
+        {
+            @Html.PagedListPager(Model.NotEffectPreAdjustList, page => $"?{page - 1},NotEffect")
+        }
     </div>
 </div>
+
+
 
 
 
@@ -125,9 +176,18 @@
         @Html.TextBox("effect-remark", null, new { @class = "form-control" })
     </div>
 
-    <div class="col col-auto">
-        <input type="button" name="name" id="delete-effect" value="刪除生效區" class="btn btn-danger" />
-    </div>
+    @if (canExecuteOperation)
+    {
+        <div class="col col-auto">
+            <input type="button" name="name" id="delete-effect" value="刪除生效區" class="btn btn-danger" />
+        </div>
+    }
+    else
+    {
+        <div class="col col-auto">
+            <input type="button" name="name" id="delete-effect" value="刪除生效區" class="btn btn-danger disabled" />
+        </div>
+    }
 </div>
 
 <br />
@@ -156,9 +216,9 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null && Model.PreAdjustList != null)
+                @if (Model != null && Model.EffectPreAdjustList != null)
                 {
-                    foreach (var preAdjust in Model.PreAdjustList.Where(x => x.CcasReplyCode == "00"))
+                    foreach (var preAdjust in Model.EffectPreAdjustList.Where(x => x.CcasReplyCode == "00"))
                     {
                         <tr data-campaign-id="@preAdjust.CampaignId"
                             data-customer-id="@preAdjust.CustomerId"
@@ -186,6 +246,10 @@
                 }
             </tbody>
         </table>
+        @if (Model != null && Model.EffectPreAdjustList != null)
+        {
+            @Html.PagedListPager(Model.EffectPreAdjustList, page => $"?{page - 1},Effect")
+        }
     </div>
 </div>
 
@@ -211,7 +275,10 @@
             tipTitle = "錯誤訊息";
             tipMessage = Model.TipMessage;
         }
-        else if (Model.PreAdjustList != null && Model.PreAdjustList.Count() == 0)
+        else if (
+            (Model.NotEffectPreAdjustList == null || !Model.NotEffectPreAdjustList.Any()) &&
+            (Model.EffectPreAdjustList == null || !Model.EffectPreAdjustList.Any())
+            )
         {
             tipTitle = "提示訊息";
             tipMessage = "查無相關資料，請確認是否有輸入錯誤。";

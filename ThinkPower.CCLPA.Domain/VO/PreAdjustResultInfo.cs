@@ -5,7 +5,7 @@ namespace ThinkPower.CCLPA.Domain.VO
     /// <summary>
     /// 臨調預審名單回傳資料類別
     /// </summary>
-    public class PreAdjustShortData
+    public class PreAdjustResultInfo
     {
         /// <summary>
         /// 行銷活動代號

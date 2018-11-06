@@ -28,7 +28,8 @@ namespace ThinkPower.CCLPA.Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-grid.css",
-                      "~/Content/site.css"));
+                      "~/Content/PagedList.css",
+                      "~/Content/Site.css"));
         }
     }
 }

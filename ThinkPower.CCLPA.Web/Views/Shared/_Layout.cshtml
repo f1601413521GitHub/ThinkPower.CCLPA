@@ -29,7 +29,13 @@
                     @Html.ActionLink("專案臨調預審名單匯入", "PreAdjustImportPage", "Adjust")
                 </div>
                 <div class="row layout-body-left-item">
-                    @Html.ActionLink("專案臨調預審名單處理", "PreAdjustProcessPage", "Adjust")
+                    @Html.ActionLink("專案臨調預審名單處理", "PreAdjustLoad", "Adjust",
+                        new {
+                            CustomerId = String.Empty,
+                            PagingSize = 5,
+                            NotEffectPageIndex = 0,
+                            EffectPageIndex = 0
+                        }, null)
                 </div>
                 <div class="row layout-body-left-item">
                     @Html.ActionLink("專案臨調處理", "Action", "Controller")

@@ -3,7 +3,7 @@
     /// <summary>
     /// 歸戶基本資料精簡資料物件類別
     /// </summary>
-    public class CustomerShortDO
+    public class CustomerPartialInfoDO
     {
         /// <summary>
         /// 中文姓名 

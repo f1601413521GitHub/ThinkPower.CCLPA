@@ -14,9 +14,7 @@ const preAdjustStatus = {
 
 
 $(document).ready(function () {
-
-    disableOperation();
-
+    
     showTip('show');
 
     $('#delete-not-effect').on('click', function () {
@@ -48,7 +46,6 @@ $(document).ready(function () {
 
                     alert('《等待區中》共' + ajaxResultInfo.info.PreAdjustList.length + '筆資料，已註記為刪除狀態。');
 
-                    debugger;
                     refreshPage();
                 }
             }
@@ -256,30 +253,54 @@ $(document).ready(function () {
             }
         }
     });
+
+
+    $('.pagination-container').find('a').each(function (i, e) {
+
+        let params = $(e).prop('href').split('?')[1];
+
+        if (params) {
+
+            let paramsInfo = params.split(',');
+            let page = paramsInfo[0];
+            let type = paramsInfo[1];
+
+            $(e).prop('href', '#');
+
+            $(e).on('click', function () {
+
+                let refresh = true;
+
+                if (type === 'NotEffect') {
+
+                    $('#NotEffectPageIndex').val(page);
+
+                } else if (type === 'Effect') {
+
+                    $('#EffectPageIndex').val(page);
+
+                } else {
+
+                    refresh = false;
+                }
+
+                if (refresh) {
+                    refreshPage();
+                }
+            });
+        }
+    });
+
+
+    $('#query-pre-adjust').on('click', function () {
+
+        $('#NotEffectPageIndex').val(0);
+        $('#EffectPageIndex').val(0);
+
+        refreshPage();
+    });
 });
 
-
-
-
-
-
-function disableOperation() {
-
-    if ($('#can-execute-operation').length > 0) {
-
-        $('#delete-not-effect').prop('disabled', false);
-        $('#agree').prop('disabled', false);
-        $('#force-agree').prop('disabled', false);
-        $('#delete-effect').prop('disabled', false);
-
-    } else {
-
-        $('#delete-not-effect').prop('disabled', true);
-        $('#agree').prop('disabled', true);
-        $('#force-agree').prop('disabled', true);
-        $('#delete-effect').prop('disabled', true);
-    }
-}
 
 function showTip(type, title, message) {
 

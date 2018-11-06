@@ -61,7 +61,7 @@
     <Compile Include="DO\CMPN\CampaignDetailDO.cs" />
     <Compile Include="DO\CDRM\PreAdjustDO.cs" />
     <Compile Include="DO\ICRS\CustomerDO.cs" />
-    <Compile Include="DO\ICRS\CustomerShortDO.cs" />
+    <Compile Include="DO\ICRS\CustomerPartialInfoDO.cs" />
     <Compile Include="DO\CDRM\PreAdjustEffectResultDO.cs" />
     <Compile Include="VO\IncomeTaxCardAdjust.cs" />
     <Compile Include="Helper\DbHelper.cs" />

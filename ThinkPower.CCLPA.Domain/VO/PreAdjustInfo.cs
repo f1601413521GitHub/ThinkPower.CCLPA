@@ -13,7 +13,7 @@ namespace ThinkPower.CCLPA.Domain.VO
         /// <summary>
         /// 臨調預審名單
         /// </summary>
-        public IEnumerable<PreAdjustShortData> PreAdjustList { get; set; }
+        public IEnumerable<PreAdjustResultInfo> PreAdjustList { get; set; }
 
         /// <summary>
         /// 刪除備註說明
