@@ -28,8 +28,10 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.CommandType = CommandType.StoredProcedure;
+                SqlCommand command = new SqlCommand(query, connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 command.Parameters.Add(new SqlParameter("@vID", SqlDbType.NVarChar, 11)
                 {

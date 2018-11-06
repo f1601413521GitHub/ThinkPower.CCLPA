@@ -28,8 +28,10 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
 
             using (SqlConnection connection = DbConnection(Connection.ICRS))
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                command.CommandType = CommandType.StoredProcedure;
+                SqlCommand command = new SqlCommand(query, connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 command.Parameters.Add(new SqlParameter("@Aadj_action", SqlDbType.NVarChar) { Value = adjustInfo.ActionCode, Direction = ParameterDirection.Input });
                 command.Parameters.Add(new SqlParameter("@Acard_acct_id", SqlDbType.NVarChar) { Value = adjustInfo.CustomerId, Direction = ParameterDirection.Input });
@@ -44,6 +46,68 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
                 command.ExecuteNonQuery();
 
                 string responseCode = command.Parameters["@Aresp_code"].Value as string;
+
+                if (String.IsNullOrEmpty(responseCode))
+                {
+                    throw new InvalidOperationException("responseCode not found");
+                }
+
+                result = responseCode;
+            }
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// ICRS查詢掛帳金額 (含已授權未清算)、可用額度
+        /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        /// <param name="serialNo">客戶ID序號</param>
+        /// <returns>回覆碼</returns>
+        public string QueryIcrsAmount(string customerId, string serialNo)
+        {
+            string result = null;
+
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException("customerId");
+            }
+            else if (String.IsNullOrEmpty(serialNo))
+            {
+                throw new ArgumentNullException("SerialNo");
+            }
+
+
+
+            string query = "SP_ICRS_CONSUME_QUERY ";
+
+            using (SqlConnection connection = DbConnection(Connection.ICRS))
+            {
+                SqlCommand command = new SqlCommand(query, connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                command.Parameters.Add(new SqlParameter("@LS_CARD_ACCT_ID", SqlDbType.NVarChar, 10) { Value = customerId, Direction = ParameterDirection.Input });
+                command.Parameters.Add(new SqlParameter("@LS_CARD_ACCT_ID_SEQ", SqlDbType.NVarChar, 1) { Value = serialNo, Direction = ParameterDirection.Input });
+
+                command.Parameters.Add(new SqlParameter("@LL_TOT_AMT_CONSUME", SqlDbType.Decimal, 4) { Direction = ParameterDirection.Output });
+                command.Parameters.Add(new SqlParameter("@LL_REMAIN", SqlDbType.Decimal, 4) { Direction = ParameterDirection.Output });
+                command.Parameters.Add(new SqlParameter("@LS_RISK_LEVEL", SqlDbType.NVarChar, 1) { Direction = ParameterDirection.Output });
+                command.Parameters.Add(new SqlParameter("@LS_SPEC_FLAG", SqlDbType.NVarChar, 1) { Direction = ParameterDirection.Output });
+                command.Parameters.Add(new SqlParameter("@LS_RESP_CODE", SqlDbType.NVarChar, 2) { Direction = ParameterDirection.Output });
+
+                connection.Open();
+                command.ExecuteNonQuery();
+
+
+
+                decimal? amount          = command.Parameters["@LL_TOT_AMT_CONSUME"].Value as decimal?;
+                decimal? availableCredit = command.Parameters["@LL_REMAIN"].Value as decimal?;
+                string level           = command.Parameters["@LS_RISK_LEVEL"].Value as string;
+                string flag            = command.Parameters["@LS_SPEC_FLAG"].Value as string;
+                string responseCode    = command.Parameters["@LS_RESP_CODE"].Value as string;
 
                 if (String.IsNullOrEmpty(responseCode))
                 {

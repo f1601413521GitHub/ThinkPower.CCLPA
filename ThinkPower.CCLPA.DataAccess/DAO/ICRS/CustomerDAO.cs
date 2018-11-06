@@ -14,6 +14,74 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
     /// </summary>
     public class CustomerDAO : BaseDAO
     {
+
+        /// <summary>
+        /// 取得歸戶基本資料
+        /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        /// <returns></returns>
+        public CustomerDO Get(string customerId)
+        {
+            CustomerDO result = null;
+
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException("customerId");
+            }
+
+            string query = @"
+SELECT 
+    [ACCT_ID],[CHI_NAME],[BIRTH_DATE],[RISK_LEVEL],[CA_REVOLVE_LEVEL],[TOT_LIMIT],[ACNO_STATUS],
+    [CA_FIRST_CARD_ISSU_DATE],[LV_CARD_COUNT],[STATUS],[VOCATION],[BILL_ADDR],[TEL_OFFICE],[TEL_HOME],
+    [MOBIL_TEL],[LATEST_1_MNTH],[LATEST_2_MNTH],[LATEST_3_MNTH],[LATEST_4_MNTH],[LATEST_5_MNTH],
+    [LATEST_6_MNTH],[LATEST_7_MNTH],[LATEST_8_MNTH],[LATEST_9_MNTH],[LATEST_10_MNTH],[LATEST_11_MNTH],
+    [LATEST_12_MNTH],[CONSUME_1],[CONSUME_2],[CONSUME_3],[CONSUME_4],[CONSUME_5],[CONSUME_6],[CONSUME_7],
+    [CONSUME_8],[CONSUME_9],[CONSUME_10],[CONSUME_11],[CONSUME_12],[PRECASH_1],[PRECASH_2],[PRECASH_3],
+    [PRECASH_4],[PRECASH_5],[PRECASH_6],[PRECASH_7],[PRECASH_8],[PRECASH_9],[PRECASH_10],[PRECASH_11],
+    [PRECASH_12],[UN_PAYMENT_RATE_1],[UN_PAYMENT_RATE_2],[UN_PAYMENT_RATE_3],[UN_PAYMENT_RATE_4],
+    [UN_PAYMENT_RATE_5],[UN_PAYMENT_RATE_6],[UN_PAYMENT_RATE_7],[UN_PAYMENT_RATE_8],[UN_PAYMENT_RATE_9],
+    [UN_PAYMENT_RATE_10],[UN_PAYMENT_RATE_11],[UN_PAYMENT_RATE_12],[STMT_CYCLE_DESC],[PAY_DEADLINE],
+    [ACCT_TOT_BILL],[ACCT_MIN_PAY],[CA_LAST_PAY_AMT],[CA_LAST_PAY_DATE],[ACNO_FEIBDM_AMT],
+    [C_CA_TOT_UNPAID_AMT],[C_CA_TOT_AMT_CONSUME],[ADJ_REASON],[ADJ_AREA],[ADJ_EFF_START_DATE],
+    [ADJ_EFF_END_DATE],[ADK_EFF_AMT],[CA_VINTAGE_MONTHS],[CA_SPEC_STATUS_FLAG],[GUTR_FLAG],[DELAY_CNT],
+    [CCAS_UNPAID_AMT],[CCAS_USABILITY_AMT],[CCAS_UNPAID_RATE],[DATA_DATE],[REVOLVER_YN],
+    [CA_SYSM_ADJ_REV_FLAG],[ACNO_DEDUCT_STATUS],[ACNO_DEDUCT_BANK],[ETAL_STATUS],[IDNO_TEL_RESIDENT],
+    [IDNO_STMT_SEND_TYPE],[IDNO_IB_FLAG],[IDNO_EMAIL_ADDR],[IDNO_IND_CAT],[IDNO_POSITION],
+    [IDNO_RESIDENT_ADDR],[IDNO_MAIL_ADDR],[IDNO_COMPANY_ADDR],[IDNO_ANNUAL_INCOME],[IDNO_IN_AMT],
+    [IDNO_IN2_AMT],[IDNO_IN3_AMT],[IDNO_RESIDENT_ZIP],[IDNO_MAIL_ZIP],[IDNO_COMPANY_ZIP]
+FROM [RG_ID]
+WHERE ACCT_ID=@CustomerId;";
+
+            using (SqlConnection connection = DbConnection(Connection.ICRS))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.Add(new SqlParameter("@CustomerId", SqlDbType.NVarChar) {
+                    Value = customerId
+                });
+
+                connection.Open();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 1)
+                {
+                    throw new InvalidOperationException("CustomerData not the only");
+                }
+                else if (dt.Rows.Count == 1)
+                {
+                    result = ConvertCustomerDO(dt.Rows[0]);
+                }
+
+                adapter = null;
+                dt = null;
+                command = null;
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// 取得歸戶部分基本資料
         /// </summary>
@@ -52,7 +120,7 @@ WHERE ACCT_ID =@CustomerId;";
                 {
                     result = ConvertCustomerPartialInfoDO(dt.Rows[0]);
                 }
-                else if(dt.Rows.Count > 1)
+                else if (dt.Rows.Count > 1)
                 {
                     throw new InvalidOperationException("CustomerData not the only");
                 }

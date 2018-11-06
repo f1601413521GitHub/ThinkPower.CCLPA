@@ -57,10 +57,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DAO\CDRM\AccountCorrespondDAOTests.cs" />
+    <Compile Include="DAO\CDRM\AdjustDAOTests.cs" />
     <Compile Include="DAO\CDRM\AdjustUserLevelDAOTests.cs" />
     <Compile Include="DAO\CDRM\CreditSystemDAOTests.cs" />
+    <Compile Include="DAO\CDRM\LogProgressDAOTests.cs" />
     <Compile Include="DAO\CDRM\PreAdjustDAOTests.cs" />
     <Compile Include="DAO\ICRS\CreditSystemDAOTests.cs" />
+    <Compile Include="DAO\ICRS\CustomerDAOTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

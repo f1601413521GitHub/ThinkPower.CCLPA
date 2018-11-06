@@ -20,7 +20,7 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
         /// <summary>
         /// 生日 
         /// </summary>
-        public Nullable<System.DateTime> BirthDay { get; set; }
+        public DateTime? BirthDay { get; set; }
 
         /// <summary>
         /// 卡戶等級 
@@ -35,7 +35,7 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
         /// <summary>
         /// 信用額度 
         /// </summary>
-        public Nullable<decimal> CreditLimit { get; set; }
+        public decimal? CreditLimit { get; set; }
 
         /// <summary>
         /// 歸戶狀態 
@@ -45,12 +45,12 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
         /// <summary>
         /// 最初發卡日 
         /// </summary>
-        public Nullable<System.DateTime> IssueDate { get; set; }
+        public DateTime? IssueDate { get; set; }
 
         /// <summary>
         /// 任一有效活卡(商務卡,政府採購卡,虛擬卡除外) 
         /// </summary>
-        public Nullable<decimal> LiveCardCount { get; set; }
+        public decimal? LiveCardCount { get; set; }
 
         /// <summary>
         /// 停卡狀態是否有3-77 
@@ -145,122 +145,122 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
         /// <summary>
         /// 前1月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume1 { get; set; }
+        public decimal? Consume1 { get; set; }
 
         /// <summary>
         /// 前2月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume2 { get; set; }
+        public decimal? Consume2 { get; set; }
 
         /// <summary>
         /// 前3月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume3 { get; set; }
+        public decimal? Consume3 { get; set; }
 
         /// <summary>
         /// 前4月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume4 { get; set; }
+        public decimal? Consume4 { get; set; }
 
         /// <summary>
         /// 前5月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume5 { get; set; }
+        public decimal? Consume5 { get; set; }
 
         /// <summary>
         /// 前6月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume6 { get; set; }
+        public decimal? Consume6 { get; set; }
 
         /// <summary>
         /// 前7月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume7 { get; set; }
+        public decimal? Consume7 { get; set; }
 
         /// <summary>
         /// 前8月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume8 { get; set; }
+        public decimal? Consume8 { get; set; }
 
         /// <summary>
         /// 前9月單月消費金額
         /// </summary>
-        public Nullable<decimal> Consume9 { get; set; }
+        public decimal? Consume9 { get; set; }
 
         /// <summary>
         /// 前10月單月消費金額 
         /// </summary>
-        public Nullable<decimal> Consume10 { get; set; }
+        public decimal? Consume10 { get; set; }
 
         /// <summary>
         /// 前11月單月消費金額 
         /// </summary>
-        public Nullable<decimal> Consume11 { get; set; }
+        public decimal? Consume11 { get; set; }
 
         /// <summary>
         /// 前12月單月消費金額 
         /// </summary>
-        public Nullable<decimal> Consume12 { get; set; }
+        public decimal? Consume12 { get; set; }
 
         /// <summary>
         /// 前1月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash1 { get; set; }
+        public decimal? PreCash1 { get; set; }
 
         /// <summary>
         /// 前2月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash2 { get; set; }
+        public decimal? PreCash2 { get; set; }
 
         /// <summary>
         /// 前3月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash3 { get; set; }
+        public decimal? PreCash3 { get; set; }
 
         /// <summary>
         /// 前4月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash4 { get; set; }
+        public decimal? PreCash4 { get; set; }
 
         /// <summary>
         /// 前5月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash5 { get; set; }
+        public decimal? PreCash5 { get; set; }
 
         /// <summary>
         /// 前6月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash6 { get; set; }
+        public decimal? PreCash6 { get; set; }
 
         /// <summary>
         /// 前7月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash7 { get; set; }
+        public decimal? PreCash7 { get; set; }
 
         /// <summary>
         /// 前8月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash8 { get; set; }
+        public decimal? PreCash8 { get; set; }
 
         /// <summary>
         /// 前9月單月預借現金
         /// </summary>
-        public Nullable<decimal> PreCash9 { get; set; }
+        public decimal? PreCash9 { get; set; }
 
         /// <summary>
         /// 前10月單月預借現金 
         /// </summary>
-        public Nullable<decimal> PreCash10 { get; set; }
+        public decimal? PreCash10 { get; set; }
 
         /// <summary>
         /// 前11月單月預借現金 
         /// </summary>
-        public Nullable<decimal> PreCash11 { get; set; }
+        public decimal? PreCash11 { get; set; }
 
         /// <summary>
         /// 前12月單月預借現金 
         /// </summary>
-        public Nullable<decimal> PreCash12 { get; set; }
+        public decimal? PreCash12 { get; set; }
 
         /// <summary>
         /// 前1期信貸評等
@@ -335,37 +335,37 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
         /// <summary>
         /// 最近一期關帳金額 
         /// </summary>
-        public Nullable<decimal> ClosingAmount { get; set; }
+        public decimal? ClosingAmount { get; set; }
 
         /// <summary>
         /// 最近一期最低應繳金額 
         /// </summary>
-        public Nullable<decimal> MinimumAmountPayable { get; set; }
+        public decimal? MinimumAmountPayable { get; set; }
 
         /// <summary>
         /// 最近付款金額 
         /// </summary>
-        public Nullable<decimal> RecentPaymentAmount { get; set; }
+        public decimal? RecentPaymentAmount { get; set; }
 
         /// <summary>
         /// 最近付款日期 
         /// </summary>
-        public Nullable<System.DateTime> RecentPaymentDate { get; set; }
+        public DateTime? RecentPaymentDate { get; set; }
 
         /// <summary>
         /// 優利餘額 
         /// </summary>
-        public Nullable<decimal> OfferAmount { get; set; }
+        public decimal? OfferAmount { get; set; }
 
         /// <summary>
         /// 總未付 
         /// </summary>
-        public Nullable<decimal> UnpaidTotal { get; set; }
+        public decimal? UnpaidTotal { get; set; }
 
         /// <summary>
         /// 已授權未入帳金額 
         /// </summary>
-        public Nullable<decimal> AuthorizedAmountNotAccount { get; set; }
+        public decimal? AuthorizedAmountNotAccount { get; set; }
 
         /// <summary>
         /// 最近一次臨調原因 
@@ -390,12 +390,12 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
         /// <summary>
         /// 最近一次臨調生效金額 
         /// </summary>
-        public Nullable<decimal> AdjustEffectAmount { get; set; }
+        public decimal? AdjustEffectAmount { get; set; }
 
         /// <summary>
         /// 本行持卡時間 
         /// </summary>
-        public Nullable<decimal> VintageMonths { get; set; }
+        public decimal? VintageMonths { get; set; }
 
         /// <summary>
         /// 所有有效卡都被下『特殊指示戶』(D控)
@@ -410,22 +410,22 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
         /// <summary>
         /// 延滯天數 
         /// </summary>
-        public Nullable<decimal> DelayCount { get; set; }
+        public decimal? DelayCount { get; set; }
 
         /// <summary>
         /// CCAS目前掛帳金額(含已授權未入帳) 
         /// </summary>
-        public Nullable<decimal> CcasUnderpaidAmount { get; set; }
+        public decimal? CcasUnderpaidAmount { get; set; }
 
         /// <summary>
         /// CCAS目前可用餘額 
         /// </summary>
-        public Nullable<decimal> CcasUsabilityAmount { get; set; }
+        public decimal? CcasUsabilityAmount { get; set; }
 
         /// <summary>
         /// CCAS目前掛帳比率 
         /// </summary>
-        public Nullable<decimal> CcasUnderpaidRate { get; set; }
+        public decimal? CcasUnderpaidRate { get; set; }
 
         /// <summary>
         /// 資料日期 
@@ -505,22 +505,22 @@ namespace ThinkPower.CCLPA.DataAccess.DO.ICRS
         /// <summary>
         /// 年收入 
         /// </summary>
-        public Nullable<decimal> AnnualIncome { get; set; }
+        public decimal? AnnualIncome { get; set; }
 
         /// <summary>
         /// IN1
         /// </summary>
-        public Nullable<decimal> In1 { get; set; }
+        public decimal? In1 { get; set; }
 
         /// <summary>
         /// IN2
         /// </summary>
-        public Nullable<decimal> In2 { get; set; }
+        public decimal? In2 { get; set; }
 
         /// <summary>
         /// IN3
         /// </summary>
-        public Nullable<decimal> In3 { get; set; }
+        public decimal? In3 { get; set; }
 
         /// <summary>
         /// 戶籍地址郵遞區號 
