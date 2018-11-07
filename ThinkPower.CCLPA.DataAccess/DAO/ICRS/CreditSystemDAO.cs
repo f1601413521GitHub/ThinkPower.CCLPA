@@ -60,14 +60,14 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
 
 
         /// <summary>
-        /// ICRS查詢掛帳金額 (含已授權未清算)、可用額度
+        /// 查詢ICRS掛帳金額 (含已授權未清算)、可用額度
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <param name="serialNo">客戶ID序號</param>
         /// <returns>回覆碼</returns>
-        public string QueryIcrsAmount(string customerId, string serialNo)
+        public QueryIcrsAmountResult QueryIcrsAmount(string customerId, string serialNo)
         {
-            string result = null;
+            QueryIcrsAmountResult result = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
@@ -80,7 +80,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
 
 
 
-            string query = "SP_ICRS_CONSUME_QUERY ";
+            string query = "SP_ICRS_CONSUME_QUERY";
 
             using (SqlConnection connection = DbConnection(Connection.ICRS))
             {
@@ -103,18 +103,25 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
 
 
 
-                decimal? amount          = command.Parameters["@LL_TOT_AMT_CONSUME"].Value as decimal?;
+                decimal? amount = command.Parameters["@LL_TOT_AMT_CONSUME"].Value as decimal?;
                 decimal? availableCredit = command.Parameters["@LL_REMAIN"].Value as decimal?;
-                string level           = command.Parameters["@LS_RISK_LEVEL"].Value as string;
-                string flag            = command.Parameters["@LS_SPEC_FLAG"].Value as string;
-                string responseCode    = command.Parameters["@LS_RESP_CODE"].Value as string;
+                string level = command.Parameters["@LS_RISK_LEVEL"].Value as string;
+                string flag = command.Parameters["@LS_SPEC_FLAG"].Value as string;
+                string responseCode = command.Parameters["@LS_RESP_CODE"].Value as string;
 
                 if (String.IsNullOrEmpty(responseCode))
                 {
                     throw new InvalidOperationException("responseCode not found");
                 }
 
-                result = responseCode;
+                result = new QueryIcrsAmountResult()
+                {
+                    Amount = amount,
+                    AvailableCredit = availableCredit,
+                    Level = level,
+                    Flag = flag,
+                    ResponseCode = responseCode,
+                };
             }
 
             return result;

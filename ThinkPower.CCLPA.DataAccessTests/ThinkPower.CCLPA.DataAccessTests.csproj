@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="DAO\CDRM\AccountCorrespondDAOTests.cs" />
     <Compile Include="DAO\CDRM\AdjustDAOTests.cs" />
+    <Compile Include="DAO\CDRM\AdjustSystemDAOTests.cs" />
     <Compile Include="DAO\CDRM\AdjustUserLevelDAOTests.cs" />
     <Compile Include="DAO\CDRM\CreditSystemDAOTests.cs" />
     <Compile Include="DAO\CDRM\LogProgressDAOTests.cs" />

@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
+using ThinkPower.CCLPA.DataAccess.VO;
 
 namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 {
@@ -65,6 +66,69 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
                 result = new PreAdjustEffectResultDO()
                 {
                     RejectReason = rejectReason,
+                    ResponseCode = responseCode,
+                };
+            }
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// 查詢JCIC送查日期
+        /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        /// <param name="loginAccount">登入帳號</param>
+        /// <param name="loginName">登入姓名</param>
+        /// <returns></returns>
+        public JcicQueryResult QueryJcicDate(string customerId, string loginAccount, string loginName)
+        {
+            JcicQueryResult result = null;
+
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException("customerId");
+            }
+            else if (String.IsNullOrEmpty(loginAccount))
+            {
+                throw new ArgumentNullException("loginAccount");
+            }
+            else if (String.IsNullOrEmpty(loginName))
+            {
+                throw new ArgumentNullException("loginName");
+            }
+
+
+
+            string query = "SP_ELGB_PAD01";
+
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            {
+                SqlCommand command = new SqlCommand(query, connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                command.Parameters.Add(new SqlParameter("@vID", SqlDbType.NVarChar, 11) { Value = customerId, Direction = ParameterDirection.Input });
+                command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.NVarChar, 7) { Value = loginAccount, Direction = ParameterDirection.Input });
+                command.Parameters.Add(new SqlParameter("@UserName", SqlDbType.NVarChar, 30) { Value = loginName, Direction = ParameterDirection.Input });
+                command.Parameters.Add(new SqlParameter("@JCIC_DATE", SqlDbType.NVarChar, 10) { Direction = ParameterDirection.Output });
+                command.Parameters.Add(new SqlParameter("@Resp_code", SqlDbType.NVarChar, 2) { Direction = ParameterDirection.Output });
+
+                connection.Open();
+                command.ExecuteNonQuery();
+
+                string jcicDate = command.Parameters["@JCIC_DATE"].Value as string;
+                string responseCode = command.Parameters["@Resp_code"].Value as string;
+
+                if (String.IsNullOrEmpty(responseCode))
+                {
+                    throw new InvalidOperationException("responseCode not found");
+                }
+
+                result = new JcicQueryResult()
+                {
+                    JcicQueryDate = jcicDate,
                     ResponseCode = responseCode,
                 };
             }
