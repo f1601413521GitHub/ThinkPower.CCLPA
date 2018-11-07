@@ -13,9 +13,5 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
     /// </summary>
     interface IAdjust
     {
-        /// <summary>
-        /// 臨調處理
-        /// </summary>
-        void AdjustProcessing();
     }
 }

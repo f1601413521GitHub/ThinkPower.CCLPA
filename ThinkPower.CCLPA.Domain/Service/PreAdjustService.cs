@@ -208,7 +208,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 importPreAdjustList.Add(new PreAdjustDO()
                 {
                     CampaignId = campaignEntity.CampaignId,
-                    Id = campaignDetail.CustomerId,
+                    CustomerId = campaignDetail.CustomerId,
                     ProjectName = campaignDetail.Col1,
 
                     ProjectAmount = String.IsNullOrEmpty(campaignDetail.Col2) ? null :
@@ -244,7 +244,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 }
 
                 tempPreAdjustDO = importPreAdjustList.
-                    FirstOrDefault(x => x.Id == campaignDetail.CustomerId);
+                    FirstOrDefault(x => x.CustomerId == campaignDetail.CustomerId);
 
                 if (tempPreAdjustDO == null)
                 {
@@ -893,7 +893,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return new PreAdjustEntity()
             {
                 CampaignId = preAdjustDO.CampaignId,
-                CustomerId = preAdjustDO.Id,
+                CustomerId = preAdjustDO.CustomerId,
                 ProjectName = preAdjustDO.ProjectName,
                 ProjectAmount = preAdjustDO.ProjectAmount,
                 CloseDate = preAdjustDO.CloseDate,
@@ -933,7 +933,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return preAdjustDOList.Select(x => new PreAdjustEntity()
             {
                 CampaignId = x.CampaignId,
-                CustomerId = x.Id,
+                CustomerId = x.CustomerId,
                 ProjectName = x.ProjectName,
                 ProjectAmount = x.ProjectAmount,
                 CloseDate = x.CloseDate,
@@ -975,7 +975,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return new PreAdjustDO()
             {
                 CampaignId = preAdjustEntity.CampaignId,
-                Id = preAdjustEntity.CustomerId,
+                CustomerId = preAdjustEntity.CustomerId,
                 ProjectName = preAdjustEntity.ProjectName,
                 ProjectAmount = preAdjustEntity.ProjectAmount,
                 CloseDate = preAdjustEntity.CloseDate,
@@ -1015,7 +1015,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             return preAdjustEntities.Select(x => new PreAdjustDO()
             {
                 CampaignId = x.CampaignId,
-                Id = x.CustomerId,
+                CustomerId = x.CustomerId,
                 ProjectName = x.ProjectName,
                 ProjectAmount = x.ProjectAmount,
                 CloseDate = x.CloseDate,

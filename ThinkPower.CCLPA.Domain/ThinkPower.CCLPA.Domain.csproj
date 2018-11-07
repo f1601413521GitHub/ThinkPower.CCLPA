@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\CustomerEntity.cs" />
     <Compile Include="Service\UserService.cs" />
     <Compile Include="Service\Interface\IUser.cs" />
     <Compile Include="VO\AdjustPermission.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Condition\PreAdjustCondition.cs" />
     <Compile Include="Service\CreditSystemService.cs" />
     <Compile Include="Service\Interface\ICreditSystem.cs" />
+    <Compile Include="VO\CheckResult.cs" />
     <Compile Include="VO\IncomeTaxCardAdjustInfo.cs" />
     <Compile Include="VO\PreAdjustEffectResult.cs" />
     <Compile Include="Entity\PreAdjustEntity.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Service\Interface\IPreAdjust.cs" />
     <Compile Include="Service\PreAdjustService.cs" />
     <Compile Include="VO\PreAdjustValidateResult.cs" />
+    <Compile Include="VO\VerifiedResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DTO\" />

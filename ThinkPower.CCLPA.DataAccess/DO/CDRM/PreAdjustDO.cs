@@ -15,7 +15,7 @@ namespace ThinkPower.CCLPA.DataAccess.DO.CDRM
         /// <summary>
         /// 客戶ID
         /// </summary>
-        public string Id { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// 預審專案

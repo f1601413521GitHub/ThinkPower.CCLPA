@@ -42,7 +42,7 @@ VALUES
             {
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId, });
-                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.Id, });
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.CustomerId, });
                 command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.NVarChar) { Value = preAdjust.ProjectName ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@ProjectAmount", SqlDbType.Decimal) { Value = preAdjust.ProjectAmount ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar) { Value = preAdjust.CloseDate ?? Convert.DBNull, });
@@ -69,6 +69,7 @@ VALUES
                 command.ExecuteNonQuery();
             }
         }
+
 
         /// <summary>
         /// 更新預審名單
@@ -114,7 +115,7 @@ UPDATE  [RG_PADJUST]
 
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar) { Value = preAdjust.CampaignId, });
-                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.Id, });
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.NVarChar) { Value = preAdjust.CustomerId, });
                 command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.NVarChar) { Value = preAdjust.ProjectName ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@ProjectAmount", SqlDbType.Decimal) { Value = preAdjust.ProjectAmount ?? Convert.DBNull, });
                 command.Parameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar) { Value = preAdjust.CloseDate ?? Convert.DBNull, });
@@ -363,6 +364,68 @@ WHERE ID = @CustomerId
         }
 
 
+        /// <summary>
+        /// 取得臨調預審名單
+        /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        /// <returns></returns>
+        public IEnumerable<PreAdjustDO> GetById(string customerId)
+        {
+            List<PreAdjustDO> result = null;
+
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException("customerId");
+            }
+
+
+            string query = @"
+SELECT 
+    [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
+    [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
+    [SAGREE_ID],[MOBIL_TEL],[REJECTREASON],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT]
+FROM [RG_PADJUST]
+WHERE ID = @CustomerId;";
+
+
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            {
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.Add(new SqlParameter("@CustomerId", SqlDbType.NVarChar)
+                {
+                    Value = customerId
+                });
+
+
+                connection.Open();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    result = new List<PreAdjustDO>();
+
+                    PreAdjustDO tempPreAdjust = null;
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        tempPreAdjust = ConvertPreAdjustDO(dr);
+
+                        result.Add(tempPreAdjust);
+                    }
+                }
+
+                adapter = null;
+                dt = null;
+                command = null;
+            }
+
+            return result ?? new List<PreAdjustDO>();
+        }
 
         /// <summary>
         /// 查詢臨調預審名單總筆數
@@ -460,7 +523,7 @@ WHERE ID = @CustomerId
             return new PreAdjustDO()
             {
                 CampaignId = preAdjustData.Field<string>("CMPN_ID"),
-                Id = preAdjustData.Field<string>("ID"),
+                CustomerId = preAdjustData.Field<string>("ID"),
                 ProjectName = preAdjustData.Field<string>("PJNAME"),
                 ProjectAmount = preAdjustData.Field<decimal?>("PRE_AMT"),
                 CloseDate = preAdjustData.Field<string>("CLOSE_DT"),

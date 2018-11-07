@@ -21,7 +21,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             {
                 new PreAdjustDO(){
                     CampaignId              = "AA20991022X99Y99Z99A",
-                    Id                      = "A177842053",
+                    CustomerId                      = "A177842053",
                     ProjectName             = "等待區測試資料Update",
                     ProjectAmount           = 30000,
                     CloseDate               = "2099/10/22",
@@ -46,7 +46,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
                 },
                 new PreAdjustDO(){
                     CampaignId              = "AA20991022X99Y99Z99A",
-                    Id                      = "B142357855",
+                    CustomerId                      = "B142357855",
                     ProjectName             = "等待區測試資料Update",
                     ProjectAmount           = 40000,
                     CloseDate               = "2099/10/22",
@@ -91,7 +91,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             PreAdjustDO preAdjust = new PreAdjustDO()
             {
                 CampaignId = "ZZ20190101X99Y99Z99A",
-                Id = "Z177842053",
+                CustomerId = "Z177842053",
                 ProjectName = "等待區測試資料Insert",
                 ProjectAmount = 30000,
                 CloseDate = "2019/01/01",
@@ -226,7 +226,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var result = dao.Query(condition);
             var actual = (result != null);
 
-            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.CustomerId })));
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -253,7 +253,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var result = dao.Query(condition);
             var actual = (result != null);
 
-            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.CustomerId })));
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -280,7 +280,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var result = dao.Query(condition);
             var actual = (result != null);
 
-            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.CustomerId })));
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -306,7 +306,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var result = dao.Query(condition);
             var actual = (result != null);
 
-            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.CustomerId })));
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -332,7 +332,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var result = dao.Query(condition);
             var actual = (result != null);
 
-            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.CustomerId })));
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -358,7 +358,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var result = dao.Query(condition);
             var actual = (result != null);
 
-            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.Id })));
+            Console.Write(String.Join(",", result.Select(x => new { x.CampaignId, x.CustomerId })));
 
             // Assert
             Assert.AreEqual(expected, actual);
