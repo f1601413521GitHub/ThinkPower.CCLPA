@@ -40,12 +40,6 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         public int EffectPageIndex { get; set; }
 
         /// <summary>
-        /// 資料分頁每頁筆數
-        /// </summary>
-        public int PagingSize { get; set; }
-
-
-        /// <summary>
         /// 待生效預審名單
         /// </summary>
         public IPagedList<PreAdjustEntity> NotEffectPreAdjustList { get; set; }

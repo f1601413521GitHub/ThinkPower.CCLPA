@@ -6,7 +6,6 @@
 
     var canExecuteOperation = (Model != null && Model.CanExecuteOperation == true) ? true : false;
     var customerId = (Model == null) ? null : Model.CustomerId;
-    var pagingSize = (Model != null && Model.PagingSize > 0) ? Model.PagingSize : 5;
 }
 
 <span>專案臨調預審名單處理</span>
@@ -21,7 +20,7 @@
         </div>
 
         <div class="col col-auto">
-            @Html.TextBox("CustomerId", customerId, new { @class = "form-control" })
+            @Html.TextBox("CustomerId", customerId, new { @class = "form-control", maxlength="10" })
         </div>
 
         <div class="col col-auto">
@@ -30,16 +29,6 @@
     </div>
 
     <br />
-    <div class="row">
-        <div class="col col-auto">
-            <span>每頁筆數</span>
-        </div>
-
-        <div class="col col-auto">
-            @Html.TextBox("PagingSize", pagingSize, new { @class = "form-control",type="number" })
-        </div>
-    </div>
-
     <div class="row d-none">
         <div class="col col-auto">
             <span>等待區頁數</span>
@@ -155,7 +144,7 @@
         </table>
         @if (Model != null && Model.NotEffectPreAdjustList != null)
         {
-            @Html.PagedListPager(Model.NotEffectPreAdjustList, page => $"?{page - 1},NotEffect")
+            @Html.PagedListPager(Model.NotEffectPreAdjustList, page => $"?{page},NotEffect")
         }
     </div>
 </div>
@@ -248,7 +237,7 @@
         </table>
         @if (Model != null && Model.EffectPreAdjustList != null)
         {
-            @Html.PagedListPager(Model.EffectPreAdjustList, page => $"?{page - 1},Effect")
+            @Html.PagedListPager(Model.EffectPreAdjustList, page => $"?{page},Effect")
         }
     </div>
 </div>

@@ -209,7 +209,8 @@ FROM [RG_PADJUST]");
                 });
             }
 
-            if ((condition.PageIndex != null) && (condition.PagingSize != null))
+            if ((condition.PageIndex != null && condition.PageIndex >= 1) &&
+                (condition.PagingSize != null && condition.PagingSize >= 1))
             {
                 switch (condition.OrderBy)
                 {
@@ -233,7 +234,7 @@ FROM [RG_PADJUST]");
                 pagingCommand.Add("OFFSET     @Skip ROWS");
                 sqlParameters.Add(new SqlParameter("@Skip", SqlDbType.Int)
                 {
-                    Value = (condition.PageIndex * condition.PagingSize)
+                    Value = ((condition.PageIndex - 1) * condition.PagingSize)
                 });
 
                 pagingCommand.Add("FETCH NEXT @Take ROWS ONLY");
@@ -251,6 +252,7 @@ FROM [RG_PADJUST]");
 
             if (pagingCommand.Count > 0)
             {
+                querySB.Append(" ");
                 querySB.Append(String.Join(" ", pagingCommand));
             }
 
@@ -362,6 +364,87 @@ WHERE ID = @CustomerId
 
 
 
+        /// <summary>
+        /// 查詢臨調預審名單總筆數
+        /// </summary>
+        /// <param name="condition">預審名單資料查詢條件</param>
+        /// <returns></returns>
+        public int Count(PreAdjustCondition condition)
+        {
+            int result = 0;
+
+            if (condition == null)
+            {
+                throw new ArgumentNullException("condition");
+            }
+
+
+
+            StringBuilder querySB = new StringBuilder(@"SELECT COUNT(1) FROM [RG_PADJUST]");
+
+
+            List<string> queryCommand = new List<string>();
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+
+
+
+            if (condition.CloseDate != null)
+            {
+                queryCommand.Add("CLOSE_DT >= @CloseDate");
+                sqlParameters.Add(new SqlParameter("@CloseDate", SqlDbType.NVarChar)
+                {
+                    Value = condition.CloseDate.Value.ToString("yyyy/MM/dd")
+                });
+            }
+
+            if (String.IsNullOrEmpty(condition.CcasReplyCode) || (condition.CcasReplyCode != "00"))
+            {
+                queryCommand.Add("(CCAS_CODE != '00' OR CCAS_CODE IS NULL)");
+            }
+            else
+            {
+                queryCommand.Add("(CCAS_CODE = '00')");
+            }
+
+            if (!String.IsNullOrEmpty(condition.CustomerId))
+            {
+                queryCommand.Add("ID = @CustomerId");
+                sqlParameters.Add(new SqlParameter("@CustomerId", SqlDbType.NVarChar)
+                {
+                    Value = condition.CustomerId
+                });
+            }
+
+            if (!String.IsNullOrEmpty(condition.CampaignId))
+            {
+                queryCommand.Add("CMPN_ID = @CampaignId");
+                sqlParameters.Add(new SqlParameter("@CampaignId", SqlDbType.NVarChar)
+                {
+                    Value = condition.CampaignId
+                });
+            }
+
+            if (queryCommand.Count > 0)
+            {
+                querySB.Append(" WHERE ");
+                querySB.Append(String.Join(" AND ", queryCommand));
+            }
+
+            querySB.Append(";");
+
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            {
+
+                SqlCommand command = new SqlCommand(querySB.ToString(), connection);
+                command.Parameters.AddRange(sqlParameters.ToArray());
+
+                connection.Open();
+
+                result = Convert.ToInt32(command.ExecuteScalar());
+            }
+
+            return result;
+        }
 
 
 

@@ -294,8 +294,8 @@ $(document).ready(function () {
 
     $('#query-pre-adjust').on('click', function () {
 
-        $('#NotEffectPageIndex').val(0);
-        $('#EffectPageIndex').val(0);
+        $('#NotEffectPageIndex').val(1);
+        $('#EffectPageIndex').val(1);
 
         refreshPage();
     });

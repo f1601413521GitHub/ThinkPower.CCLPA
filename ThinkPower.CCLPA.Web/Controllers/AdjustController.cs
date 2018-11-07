@@ -63,6 +63,11 @@ namespace ThinkPower.CCLPA.Web.Controllers
         /// </summary>
         private readonly string _preAdjustProcessPage = "PreAdjustProcess";
 
+        /// <summary>
+        /// 資料分頁每頁筆數
+        /// </summary>
+        private readonly int _pageSize = 5;
+
         #endregion
 
 
@@ -196,6 +201,14 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 {
                     throw new ArgumentNullException("actionModel");
                 }
+                else if (actionModel.NotEffectPageIndex == 0)
+                {
+                    throw new ArgumentNullException("NotEffectPageIndex");
+                }
+                else if (actionModel.EffectPageIndex == 0)
+                {
+                    throw new ArgumentNullException("EffectPageIndex");
+                }
 
 
 
@@ -211,6 +224,11 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     CampaignId = null,
                 };
 
+                int notEffectCount = PreAdjService.Count(notEffectCondition);
+
+
+                notEffectCondition.PageIndex = actionModel.NotEffectPageIndex;
+                notEffectCondition.PagingSize = _pageSize;
                 IEnumerable<PreAdjustEntity> notEffect = PreAdjService.Query(notEffectCondition);
 
 
@@ -225,6 +243,10 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     CampaignId = null,
                 };
 
+                int effectCount = PreAdjService.Count(effectCondition);
+
+                effectCondition.PageIndex = actionModel.EffectPageIndex;
+                effectCondition.PagingSize = _pageSize;
                 IEnumerable<PreAdjustEntity> effect = PreAdjService.Query(effectCondition);
 
                 canExecuteOperation = CheckUserPermission();
@@ -237,13 +259,12 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     CustomerId = String.IsNullOrEmpty(actionModel.CustomerId) ? null : actionModel.CustomerId,
                     NotEffectPageIndex = actionModel.NotEffectPageIndex,
                     EffectPageIndex = actionModel.EffectPageIndex,
-                    PagingSize = actionModel.PagingSize,
 
-                    NotEffectPreAdjustList = notEffect.ToPagedList(
-                        actionModel.NotEffectPageIndex + 1, actionModel.PagingSize),
+                    NotEffectPreAdjustList = new StaticPagedList<PreAdjustEntity>(notEffect, 
+                        actionModel.NotEffectPageIndex, _pageSize,notEffectCount),
 
-                    EffectPreAdjustList = effect.ToPagedList(
-                        actionModel.EffectPageIndex + 1, actionModel.PagingSize),
+                    EffectPreAdjustList = new StaticPagedList<PreAdjustEntity>(effect,
+                        actionModel.EffectPageIndex, _pageSize, effectCount),
                 };
             }
             catch (Exception e)
