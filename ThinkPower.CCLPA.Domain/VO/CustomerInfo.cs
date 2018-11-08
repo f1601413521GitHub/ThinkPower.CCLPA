@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace ThinkPower.CCLPA.Domain.Entity
+namespace ThinkPower.CCLPA.Domain.VO
 {
     /// <summary>
     /// 歸戶基本資料類別
     /// </summary>
-    public class CustomerEntity : BaseEntity
+    public class CustomerInfo 
     {
         /// <summary>
         /// 身份證字號 

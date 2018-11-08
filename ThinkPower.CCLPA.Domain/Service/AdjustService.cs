@@ -42,11 +42,11 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            AdjustDO adjustInfo = new AdjustDAO().Get(customerId);
+            IEnumerable<AdjustDO> adjustInfoList = new AdjustDAO().Get(customerId).
+                Where(x => ((x.ChiefFlag == "Y") || (x.PendingFlag == "Y")) &&
+                            (x.ProjectStatus == "Y"));
 
-            if (adjustInfo != null &&
-                (adjustInfo.ChiefFlag == "Y" || adjustInfo.PendingFlag == "Y") &&
-                adjustInfo.ProjectStatus == "Y")
+            if (adjustInfoList.Any())
             {
                 hasApply = true;
             }
@@ -129,9 +129,9 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        private CustomerEntity HasAdjustEffecting(string customerId)
+        private CustomerInfo HasAdjustEffecting(string customerId)
         {
-            CustomerEntity customer = null;
+            CustomerInfo customer = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
@@ -148,16 +148,16 @@ namespace ThinkPower.CCLPA.Domain.Service
 
                 DateTime startDate = DateTime.TryParseExact(customerInfo.AdjustStartDate, "yyyyMMdd", null,
                     DateTimeStyles.None, out DateTime tempStartDate) ? tempStartDate :
-                    throw new InvalidOperationException("Convert adjustStartDate fail");
+                    throw new InvalidOperationException("Convert AdjustStartDate fail");
 
                 DateTime endDate = DateTime.TryParseExact(customerInfo.AdjustEndDate, "yyyyMMdd", null,
                     DateTimeStyles.None, out DateTime tempEndDate) ? tempEndDate :
-                    throw new InvalidOperationException("Convert adjustEndDate fail");
+                    throw new InvalidOperationException("Convert AdjustEndDate fail");
 
                 if ((currentTime >= startDate) &&
                     (currentTime <= endDate))
                 {
-                    customer = ConvertCustomerEntity(customerInfo);
+                    customer = ConvertCustomerInfo(customerInfo);
                 }
             }
 
@@ -169,12 +169,12 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        public VerifiedResult Verified(string customerId)
+        public VerifiedResult Verifiy(string customerId)
         {
             VerifiedResult verifiedResult = null;
             Dictionary<string, string> errorInfo = null;
             PreAdjustEntity tempPreAdjust = null;
-            CustomerEntity tempCustomer = null;
+            CustomerInfo tempCustomer = null;
 
 
             if (String.IsNullOrEmpty(customerId))
@@ -209,7 +209,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 // TODO "此歸戶已有生效中的預審專案...";
             }
 
-            CustomerEntity customer = HasAdjustEffecting(customerId);
+            CustomerInfo customer = HasAdjustEffecting(customerId);
 
             if (customer != null)
             {
@@ -223,7 +223,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             verifiedResult = new VerifiedResult()
             {
                 ErrorInfo = errorInfo,
-                PreAdjustInfo =  tempPreAdjust,
+                PreAdjustInfo = tempPreAdjust,
                 CustomerInfo = tempCustomer,
             };
 
@@ -236,9 +236,9 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        public object ApplyForAdjustProcess(string customerId)
+        public AdjustProcessResult ApplyForAdjustProcess(string customerId)
         {
-            object result = null;
+            AdjustProcessResult result = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
@@ -247,12 +247,18 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-            VerifiedResult verifiedResult = Verified(customerId);
+
+
+            VerifiedResult verifiedResult = Verifiy(customerId);
 
             if (verifiedResult == null || verifiedResult.ErrorInfo.Any())
             {
                 throw new InvalidOperationException("Verified fail");
+                // TODO if else 拆解?
             }
+
+
+
 
 
             string serialNo = (customerId.Length > 10) ? customerId.Substring(10, 1) : null;
@@ -263,6 +269,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             if (icrsAmountInfo == null || icrsAmountInfo.ResponseCode != "00")
             {
                 throw new InvalidOperationException("QueryIcrsAmount fail");
+                // TODO Check ResponseCode!="00" is fail? / if else 拆解?
             }
 
 
@@ -272,7 +279,92 @@ namespace ThinkPower.CCLPA.Domain.Service
             if (icrsAmountInfo == null || icrsAmountInfo.ResponseCode != "00")
             {
                 throw new InvalidOperationException("QueryJcicDate fail");
+                // TODO Check ResponseCode!="00" is fail? / if else 拆解?
             }
+
+
+
+
+
+            CustomerDO customerInfo = new CustomerDAO().Get(customerId);
+
+            if (customerInfo == null)
+            {
+                throw new InvalidOperationException("Customer not found");
+            }
+
+
+            VipDO vipInfo = new VipDAO().Get(customerId, DateTime.Today);
+
+            if (vipInfo == null)
+            {
+                throw new InvalidOperationException("VipData not found");
+            }
+
+
+            IEnumerable<IncreaseReasonCodeDO> increaseReasonList = new IncreaseReasonCodeDAO().GetAll().
+                Where(x => x.UseFlag == "Y");
+
+            if (!increaseReasonList.Any())
+            {
+                throw new InvalidOperationException("IncreaseReason not found");
+            }
+
+
+            IEnumerable<ParamCurrentlyEffectDO> currentlyEffectList = new ParamCurrentlyEffectDAO().
+                Get(increaseReasonList.Select(x => x.Code));
+
+            if (!currentlyEffectList.Any())
+            {
+                throw new ArgumentNullException("CurrentlyEffect not found");
+            }
+            else
+            {
+                DateTime currentTime = DateTime.Today;
+                DateTime tempStartTime;
+                DateTime tempEndTime;
+                List<ParamCurrentlyEffectDO> tempCurrentlyEffect = new List<ParamCurrentlyEffectDO>();
+
+                foreach (ParamCurrentlyEffectDO effectItem in currentlyEffectList)
+                {
+                    if (!DateTime.TryParseExact(effectItem.AdjustDateStart, "yyyy/MM/dd", null,
+                            DateTimeStyles.None, out tempStartTime))
+                    {
+                        throw new InvalidOperationException("Convert AdjustDateStart fail");
+                    }
+
+                    if (!DateTime.TryParseExact(effectItem.AdjustDateEnd, "yyyy/MM/dd", null,
+                            DateTimeStyles.None, out tempEndTime))
+                    {
+                        throw new InvalidOperationException("Convert AdjustDateEnd fail");
+                    }
+
+                    if ((currentTime >= tempStartTime) &&
+                        (currentTime <= tempEndTime))
+                    {
+                        tempCurrentlyEffect.Add(effectItem);
+                    }
+                }
+
+                currentlyEffectList = tempCurrentlyEffect;
+            }
+
+
+            IEnumerable<AdjustDO> adjustList = new AdjustDAO().Get(customerId).
+                OrderByDescending(x => x.ProcessDate).ThenByDescending(x => x.ProcessTime).Take(5);
+
+
+            result = new AdjustProcessResult()
+            {
+                CustomerInfo = ConvertCustomerInfo(customerInfo),
+                VipInfo = ConvertVipInfo(vipInfo),
+                JcicInfo = ConvertJcicQueryResultInfo(jcicQueryInfo),
+                IncreaseReasonList = ConvertIncreaseReasonCodeInfo(increaseReasonList),
+                CurrentlyEffectList = ConvertParamCurrentlyEffectInfo(currentlyEffectList),
+                AdjustList = ConvertAdjustInfo(adjustList),
+            };
+
+
 
             return result;
         }
@@ -289,22 +381,21 @@ namespace ThinkPower.CCLPA.Domain.Service
 
 
 
-
-
+        #region Private Method
 
         /// <summary>
         /// 轉換歸戶基本資料
         /// </summary>
         /// <param name="customerInfo">歸戶基本資料</param>
         /// <returns></returns>
-        private CustomerEntity ConvertCustomerEntity(CustomerDO customerInfo)
+        private CustomerInfo ConvertCustomerInfo(CustomerDO customerInfo)
         {
             if (customerInfo == null)
             {
                 throw new ArgumentNullException("customerInfo");
             }
 
-            return new CustomerEntity()
+            return new CustomerInfo()
             {
                 AccountId = customerInfo.AccountId,
                 ChineseName = customerInfo.ChineseName,
@@ -415,7 +506,6 @@ namespace ThinkPower.CCLPA.Domain.Service
             };
         }
 
-
         /// <summary>
         /// 轉換臨調預審名單資訊
         /// </summary>
@@ -455,5 +545,171 @@ namespace ThinkPower.CCLPA.Domain.Service
                 CcasReplyDateTime = preAdjustDO.CcasReplyDateTime,
             };
         }
+
+        /// <summary>
+        /// 轉換臨調處理資訊
+        /// </summary>
+        /// <param name="adjustList">臨調處理資訊</param>
+        /// <returns></returns>
+        private IEnumerable<AdjustInfo> ConvertAdjustInfo(IEnumerable<AdjustDO> adjustList)
+        {
+            if (adjustList == null)
+            {
+                throw new ArgumentNullException("adjustList");
+            }
+
+            return adjustList.Select(x => new AdjustInfo()
+            {
+                Id = x.Id,
+                ApplyDate = x.ApplyDate,
+                ApplyTime = x.ApplyTime,
+                CustomerId = x.CustomerId,
+                CustomerName = x.CustomerName,
+                CreditLimit = x.CreditLimit,
+                ApplyAmount = x.ApplyAmount,
+                UseSite = x.UseSite,
+                Place = x.Place,
+                AdjustDateStart = x.AdjustDateStart,
+                AdjustDateEnd = x.AdjustDateEnd,
+                Reason1 = x.Reason1,
+                Reason2 = x.Reason2,
+                Reason3 = x.Reason3,
+                Reason = x.Reason,
+                Remark = x.Remark,
+                ForceAuthenticate = x.ForceAuthenticate,
+                ApproveAmountMax = x.ApproveAmountMax,
+                UsabilityAmount = x.UsabilityAmount,
+                OverpayAmountPro = x.OverpayAmountPro,
+                ApproveAmount = x.ApproveAmount,
+                OverpayAmount = x.OverpayAmount,
+                EstimateResult = x.EstimateResult,
+                RejectReason = x.RejectReason,
+                ApproveResult = x.ApproveResult,
+                ChiefFlag = x.ChiefFlag,
+                ChiefRemark = x.ChiefRemark,
+                PendingFlag = x.PendingFlag,
+                UserId = x.UserId,
+                UserName = x.UserName,
+                ChiefId = x.ChiefId,
+                ChiefName = x.ChiefName,
+                JcicDate = x.JcicDate,
+                Type = x.Type,
+                CcasCode = x.CcasCode,
+                CcasStatus = x.CcasStatus,
+                CcasDateTime = x.CcasDateTime,
+                ProcessDate = x.ProcessDate,
+                ProcessTime = x.ProcessTime,
+                IcareStatus = x.IcareStatus,
+                ProjectStatus = x.ProjectStatus,
+                ProjectAdjustResult = x.ProjectAdjustResult,
+                ProjectAdjustRejectReason = x.ProjectAdjustRejectReason,
+                CreditAmount = x.CreditAmount,
+            });
+        }
+
+        /// <summary>
+        /// 轉換參數目前生效資訊
+        /// </summary>
+        /// <param name="currentlyEffectList">參數目前生效資訊</param>
+        /// <returns></returns>
+        private IEnumerable<ParamCurrentlyEffectInfo> ConvertParamCurrentlyEffectInfo(
+            IEnumerable<ParamCurrentlyEffectDO> currentlyEffectList)
+        {
+            if (currentlyEffectList == null)
+            {
+                throw new ArgumentNullException("currentlyEffectList");
+            }
+
+            return currentlyEffectList.Select(x => new ParamCurrentlyEffectInfo()
+            {
+                Reason = x.Reason,
+                EffectDate = x.EffectDate,
+                AdjustDateStart = x.AdjustDateStart,
+                AdjustDateEnd = x.AdjustDateEnd,
+                ApproveAmountMax = x.ApproveAmountMax,
+                Remark = x.Remark,
+                VerifiyCondition = x.VerifiyCondition,
+                ApproveScaleMax = x.ApproveScaleMax,
+            });
+        }
+
+        /// <summary>
+        /// 轉換調高原因代碼資訊
+        /// </summary>
+        /// <param name="increaseReasonList">調高原因代碼資訊</param>
+        /// <returns></returns>
+        private IEnumerable<IncreaseReasonCodeInfo> ConvertIncreaseReasonCodeInfo(
+            IEnumerable<IncreaseReasonCodeDO> increaseReasonList)
+        {
+            if (increaseReasonList == null || !increaseReasonList.Any())
+            {
+                throw new ArgumentNullException("increaseReasonList");
+            }
+
+            return increaseReasonList.Select(x => new IncreaseReasonCodeInfo()
+            {
+                Code = x.Code,
+                Name = x.Name,
+                UseFlag = x.UseFlag,
+            });
+        }
+
+        /// <summary>
+        /// 轉換JCIC查詢結果
+        /// </summary>
+        /// <param name="jcicQueryInfo">JCIC查詢結果</param>
+        /// <returns></returns>
+        private JcicQueryResultInfo ConvertJcicQueryResultInfo(JcicQueryResult jcicQueryInfo)
+        {
+            if (jcicQueryInfo == null)
+            {
+                throw new ArgumentNullException("jcicQueryInfo");
+            }
+
+            return new JcicQueryResultInfo()
+            {
+                JcicQueryDate = jcicQueryInfo.JcicQueryDate,
+                ResponseCode = jcicQueryInfo.ResponseCode,
+            };
+        }
+
+        /// <summary>
+        /// 轉換貴賓資訊
+        /// </summary>
+        /// <param name="vipInfo">貴賓資訊</param>
+        /// <returns></returns>
+        private VipInfo ConvertVipInfo(VipDO vipInfo)
+        {
+            if (vipInfo == null)
+            {
+                throw new ArgumentNullException("vipInfo");
+            }
+
+            return new VipInfo()
+            {
+                CustomerId = vipInfo.CustomerId,
+                DataDate = vipInfo.DataDate,
+                DataChangeDate = vipInfo.DataChangeDate,
+                ApplicableStarLevel = vipInfo.ApplicableStarLevel,
+                ApplicableStarValidityPeriod = vipInfo.ApplicableStarValidityPeriod,
+                MonthStarLevel = vipInfo.MonthStarLevel,
+                MonthStarValidityPeriod = vipInfo.MonthStarValidityPeriod,
+                BusinessBalance = vipInfo.BusinessBalance,
+                AverageBalance = vipInfo.AverageBalance,
+                InventotyBalance = vipInfo.InventotyBalance,
+                PremiunsPaid = vipInfo.PremiunsPaid,
+                AUM = vipInfo.AUM,
+                NearlyYearSwipeAmount = vipInfo.NearlyYearSwipeAmount,
+                MortgageBalance = vipInfo.MortgageBalance,
+                ForexMargin = vipInfo.ForexMargin,
+                ConvertiblePrincipal = vipInfo.ConvertiblePrincipal,
+                ReDelegate = vipInfo.ReDelegate,
+                CardVipFlag = vipInfo.CardVipFlag,
+                HouseholdExceptionStars = vipInfo.HouseholdExceptionStars,
+                LegalExceptionStars = vipInfo.LegalExceptionStars,
+            };
+        } 
+
+        #endregion
     }
 }

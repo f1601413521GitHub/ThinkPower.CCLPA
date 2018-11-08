@@ -103,9 +103,9 @@ VALUES
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        public AdjustDO Get(string customerId)
+        public IEnumerable<AdjustDO> Get(string customerId)
         {
-            AdjustDO result = null;
+            List<AdjustDO> result = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
@@ -137,13 +137,18 @@ WHERE ID = @Id;";
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dt);
 
-                if (dt.Rows.Count > 1)
+                if (dt.Rows.Count > 0)
                 {
-                    throw new InvalidOperationException("Adjust not the only");
-                }
-                else if (dt.Rows.Count == 1)
-                {
-                    result = ConvertAdjustDO(dt.Rows[0]);
+                    result = new List<AdjustDO>();
+
+                    AdjustDO tempAdjust = null;
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        tempAdjust = ConvertAdjustDO(dr);
+
+                        result.Add(tempAdjust);
+                    }
                 }
 
                 adapter = null;
@@ -151,7 +156,7 @@ WHERE ID = @Id;";
                 command = null;
             }
 
-            return result;
+            return result ?? new List<AdjustDO>();
         }
 
         /// <summary>
