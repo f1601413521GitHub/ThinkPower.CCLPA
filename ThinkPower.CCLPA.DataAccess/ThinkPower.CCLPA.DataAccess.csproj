@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Condition\AdjustCondition.cs" />
     <Compile Include="DAO\BaseDAO.cs" />
     <Compile Include="DAO\CDRM\AccountCorrespondDAO.cs" />
     <Compile Include="DAO\CDRM\AdjustDAO.cs" />
@@ -49,7 +50,7 @@
     <Compile Include="DAO\CDRM\AdjustUserLevelDAO.cs" />
     <Compile Include="DAO\CDRM\CampaignImportLogDAO.cs" />
     <Compile Include="DAO\CDRM\AdjustSystemDAO.cs" />
-    <Compile Include="DAO\CDRM\IncreaseReasonCodeDAO.cs" />
+    <Compile Include="DAO\CDRM\AdjustReasonCodeDAO.cs" />
     <Compile Include="DAO\CDRM\LogProgressDAO.cs" />
     <Compile Include="DAO\CDRM\ParamCurrentlyEffectDAO.cs" />
     <Compile Include="DAO\CDRM\PreAdjustDAO.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="DO\CDRM\AdjustLevelPermissionDO.cs" />
     <Compile Include="DO\CDRM\AdjustUserLevelDO.cs" />
     <Compile Include="DO\CDRM\CampaignImportLogDO.cs" />
-    <Compile Include="DO\CDRM\IncreaseReasonCodeDO.cs" />
+    <Compile Include="DO\CDRM\AdjustReasonCodeDO.cs" />
     <Compile Include="DO\CDRM\LogProgressDO.cs" />
     <Compile Include="DO\CDRM\ParamCurrentlyEffectDO.cs" />
     <Compile Include="DO\CMPN\CampaignDO.cs" />
@@ -73,12 +74,12 @@
     <Compile Include="DO\ICRS\CustomerPartialInfoDO.cs" />
     <Compile Include="DO\CDRM\PreAdjustEffectResultDO.cs" />
     <Compile Include="DO\ICRS\VipDO.cs" />
-    <Compile Include="VO\QueryIcrsAmountResult.cs" />
+    <Compile Include="VO\IcrsAmount.cs" />
     <Compile Include="VO\IncomeTaxCardAdjust.cs" />
     <Compile Include="Helper\DbHelper.cs" />
     <Compile Include="Condition\PreAdjustCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VO\JcicQueryResult.cs" />
+    <Compile Include="VO\JcicDateResult.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

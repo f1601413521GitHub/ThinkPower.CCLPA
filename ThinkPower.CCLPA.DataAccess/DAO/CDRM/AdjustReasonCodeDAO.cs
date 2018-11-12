@@ -7,17 +7,17 @@ using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 {
     /// <summary>
-    /// 調高原因代碼檔資料存取類別
+    /// 調整原因代碼檔資料存取類別
     /// </summary>
-    public class IncreaseReasonCodeDAO : BaseDAO
+    public class AdjustReasonCodeDAO : BaseDAO
     {
         /// <summary>
-        /// 取出所有調高原因代碼
+        /// 取出所有調整原因代碼
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IncreaseReasonCodeDO> GetAll()
+        public IEnumerable<AdjustReasonCodeDO> GetAll()
         {
-            List<IncreaseReasonCodeDO> result = null;
+            List<AdjustReasonCodeDO> result = null;
 
             string query = @"
 SELECT 
@@ -36,8 +36,8 @@ FROM [COD_RG_REASON];";
 
                 if (dt.Rows.Count > 0)
                 {
-                    result = new List<IncreaseReasonCodeDO>();
-                    IncreaseReasonCodeDO item = null;
+                    result = new List<AdjustReasonCodeDO>();
+                    AdjustReasonCodeDO item = null;
 
                     foreach (DataRow dr in dt.Rows)
                     {
@@ -52,17 +52,17 @@ FROM [COD_RG_REASON];";
                 command = null;
             }
 
-            return result ?? new List<IncreaseReasonCodeDO>();
+            return result ?? new List<AdjustReasonCodeDO>();
         }
 
         /// <summary>
-        /// 轉換調高原因代碼
+        /// 轉換調整原因代碼
         /// </summary>
-        /// <param name="reasonCode">調高原因代碼</param>
+        /// <param name="reasonCode">調整原因代碼</param>
         /// <returns></returns>
-        private IncreaseReasonCodeDO ConvertIncreaseReasonCodeDO(DataRow reasonCode)
+        private AdjustReasonCodeDO ConvertIncreaseReasonCodeDO(DataRow reasonCode)
         {
-            return new IncreaseReasonCodeDO()
+            return new AdjustReasonCodeDO()
             {
                 Code = reasonCode.Field<string>("CODE"),
                 Name = reasonCode.Field<string>("NAME"),

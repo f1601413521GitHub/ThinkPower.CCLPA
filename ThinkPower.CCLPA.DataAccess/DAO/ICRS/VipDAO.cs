@@ -22,11 +22,11 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
 
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
             else if (date == null)
             {
-                throw new ArgumentNullException("date");
+                throw new ArgumentNullException(nameof(date));
             }
 
 
@@ -61,11 +61,7 @@ WHERE CST_ID = @CustomerId
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 adapter.Fill(dt);
 
-                if (dt.Rows.Count == 0)
-                {
-                    throw new InvalidOperationException("VipData not found");
-                }
-                else if (dt.Rows.Count > 1)
+                if (dt.Rows.Count > 1)
                 {
                     throw new InvalidOperationException("VipData not the only");
                 }

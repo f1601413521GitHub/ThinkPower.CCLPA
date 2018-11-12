@@ -25,7 +25,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             if (String.IsNullOrEmpty(campaignId))
             {
-                throw new ArgumentNullException("campaignId");
+                throw new ArgumentNullException(nameof(campaignId));
             }
 
             string query = @"
@@ -93,7 +93,7 @@ WHERE CMPN_ID = @CampaignId;";
         {
             if (importLog == null)
             {
-                throw new ArgumentNullException("importLog");
+                throw new ArgumentNullException(nameof(importLog));
             }
 
             string query = @"

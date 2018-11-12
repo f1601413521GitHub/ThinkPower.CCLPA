@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThinkPower.CCLPA.DataAccess.Condition;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
 
 namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
@@ -22,7 +23,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
         {
             if (adjustInfo == null)
             {
-                throw new ArgumentNullException("adjustInfo");
+                throw new ArgumentNullException(nameof(adjustInfo));
             }
 
             string query = @"
@@ -99,6 +100,120 @@ VALUES
         }
 
         /// <summary>
+        /// 查詢臨調資料
+        /// </summary>
+        /// <param name="condition">臨調資料查詢條件</param>
+        /// <returns></returns>
+        public IEnumerable<AdjustDO> Query(AdjustCondition condition)
+        {
+            List<AdjustDO> adjustList = null;
+
+            if (condition == null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+
+
+            StringBuilder sqlCommandBuilder = new StringBuilder(@"
+SELECT 
+    [ID],[APPLY_DATE],[APPLY_TIME],[ACCT_ID],[NAME],[TOT_LIMIT],[APPLY_AMT],[USESITE],[PLACE],
+    [ADJUST_DATE_S],[ADJUST_DATE_E],[REASON1],[REASON2],[REASON3],[REASON],[REMARK],[FAC_AUTH],
+    [APPROVE_AMT_MAX],[USABILITY_AMT],[OVERPAY_AMT_PRO],[APPROVE_AMT],[OVERPAY_AMT],[ESTIMATE_RESULT],
+    [REJECTREASON],[APPROVE_RESULT],[CHIEF_FLAG],[CHIEF_REMARK],[PENDING_FLAG],[USER_ID],[USER_NAME],
+    [CHIEF_ID],[CHIEF_NAME],[JCIC_DATE],[TYPE],[CCAS_CODE],[CCAS_STATUS],[CCAS_DT],[PROC_DATE],[PROC_TIME],
+    [ICARE_YN],[PRJ_YN],[PRJ_RESULT],[PRJ_REJECTREASON],[CREDIT_AMT]
+FROM [RG_ADJUST]");
+
+
+            List<string> queryCommand = new List<string>();
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+
+            if (!String.IsNullOrEmpty(condition.CustomerId))
+            {
+                queryCommand.Add("[ID] = @CustomerId");
+                sqlParameters.Add(new SqlParameter("@CustomerId", SqlDbType.NVarChar)
+                {
+                    Value = condition.CustomerId
+                });
+            }
+
+            if (!String.IsNullOrEmpty(condition.ChiefFlag) &&
+                !String.IsNullOrEmpty(condition.PendingFlag))
+            {
+                queryCommand.Add("[CHIEF_FLAG] = @ChiefFlag OR [PENDING_FLAG] = @PendingFlag");
+                sqlParameters.Add(new SqlParameter("@ChiefFlag", SqlDbType.NVarChar)
+                {
+                    Value = condition.ChiefFlag
+                });
+
+                sqlParameters.Add(new SqlParameter("@PendingFlag", SqlDbType.NVarChar)
+                {
+                    Value = condition.PendingFlag
+                });
+            }
+            else if (!String.IsNullOrEmpty(condition.ChiefFlag))
+            {
+                queryCommand.Add("[CHIEF_FLAG] = @ChiefFlag");
+                sqlParameters.Add(new SqlParameter("@ChiefFlag", SqlDbType.NVarChar)
+                {
+                    Value = condition.ChiefFlag
+                });
+            }
+            else if (!String.IsNullOrEmpty(condition.PendingFlag))
+            {
+                queryCommand.Add("[PENDING_FLAG] = @PendingFlag");
+                sqlParameters.Add(new SqlParameter("@PendingFlag", SqlDbType.NVarChar)
+                {
+                    Value = condition.PendingFlag
+                });
+            }
+
+            if (!String.IsNullOrEmpty(condition.ProjectStatus))
+            {
+                queryCommand.Add("[PRJ_YN] = @ProjectStatus");
+                sqlParameters.Add(new SqlParameter("@ProjectStatus", SqlDbType.NVarChar)
+                {
+                    Value = condition.ProjectStatus
+                });
+            }
+
+            if (queryCommand.Any())
+            {
+                sqlCommandBuilder.Append(" WHERE ");
+                sqlCommandBuilder.Append(String.Join(" AND ", queryCommand));
+            }
+
+            sqlCommandBuilder.Append(";");
+
+            using (SqlConnection connection = DbConnection(Connection.CDRM))
+            {
+                SqlCommand command = new SqlCommand(sqlCommandBuilder.ToString(), connection);
+                command.Parameters.AddRange(sqlParameters.ToArray());
+
+                connection.Open();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    adjustList = new List<AdjustDO>();
+                    AdjustDO adjust = null;
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        adjust = ConvertAdjustDO(dr);
+                        adjustList.Add(adjust);
+                    }
+                }
+            }
+
+            return adjustList ?? new List<AdjustDO>();
+        }
+
+        /// <summary>
         /// 取得臨調處理檔資訊
         /// </summary>
         /// <param name="customerId">客戶ID</param>
@@ -109,7 +224,7 @@ VALUES
 
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
 
             string query = @"

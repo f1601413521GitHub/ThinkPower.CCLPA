@@ -1,9 +1,9 @@
 ﻿namespace ThinkPower.CCLPA.DataAccess.VO
 {
     /// <summary>
-    /// ICRS查詢掛帳資訊結果類別
+    /// ICRS掛帳金額資料類別
     /// </summary>
-    public class QueryIcrsAmountResult
+    public class IcrsAmount
     {
         /// <summary>
         /// 掛帳金額 (含已授權未清算)

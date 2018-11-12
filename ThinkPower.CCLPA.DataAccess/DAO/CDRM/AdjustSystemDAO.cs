@@ -22,7 +22,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             if (String.IsNullOrEmpty(id))
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(id));
             }
 
             string query = "SP_ELGB_PAD03";
@@ -81,21 +81,21 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
         /// <param name="loginAccount">登入帳號</param>
         /// <param name="loginName">登入姓名</param>
         /// <returns></returns>
-        public JcicQueryResult QueryJcicDate(string customerId, string loginAccount, string loginName)
+        public JcicDateResult QueryJcicDate(string customerId, string loginAccount, string loginName)
         {
-            JcicQueryResult result = null;
+            JcicDateResult result = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
             else if (String.IsNullOrEmpty(loginAccount))
             {
-                throw new ArgumentNullException("loginAccount");
+                throw new ArgumentNullException(nameof(loginAccount));
             }
             else if (String.IsNullOrEmpty(loginName))
             {
-                throw new ArgumentNullException("loginName");
+                throw new ArgumentNullException(nameof(loginName));
             }
 
 
@@ -126,7 +126,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
                     throw new InvalidOperationException("responseCode not found");
                 }
 
-                result = new JcicQueryResult()
+                result = new JcicDateResult()
                 {
                     JcicQueryDate = jcicDate,
                     ResponseCode = responseCode,

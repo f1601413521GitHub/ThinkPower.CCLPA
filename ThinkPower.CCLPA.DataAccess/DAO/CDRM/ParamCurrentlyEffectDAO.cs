@@ -23,7 +23,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             if (reasonCodeList == null || !reasonCodeList.Any())
             {
-                throw new ArgumentNullException("reasonCodeList");
+                throw new ArgumentNullException(nameof(reasonCodeList));
             }
 
 

@@ -25,7 +25,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CMPN
 
             if (String.IsNullOrEmpty(campaignId))
             {
-                throw new ArgumentNullException("campaignId");
+                throw new ArgumentNullException(nameof(campaignId));
             }
 
             string query = @"

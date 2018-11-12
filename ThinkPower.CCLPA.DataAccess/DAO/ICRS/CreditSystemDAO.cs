@@ -21,7 +21,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
 
             if (adjustInfo == null)
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(adjustInfo));
             }
 
             string query = "SP_ICRS_TO_CCAS_ADJ_TAX";
@@ -65,17 +65,17 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
         /// <param name="customerId">客戶ID</param>
         /// <param name="serialNo">客戶ID序號</param>
         /// <returns>回覆碼</returns>
-        public QueryIcrsAmountResult QueryIcrsAmount(string customerId, string serialNo)
+        public IcrsAmount QueryIcrsAmount(string customerId, string serialNo)
         {
-            QueryIcrsAmountResult result = null;
+            IcrsAmount result = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
             else if (String.IsNullOrEmpty(serialNo))
             {
-                throw new ArgumentNullException("SerialNo");
+                throw new ArgumentNullException(nameof(serialNo));
             }
 
 
@@ -114,7 +114,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
                     throw new InvalidOperationException("responseCode not found");
                 }
 
-                result = new QueryIcrsAmountResult()
+                result = new IcrsAmount()
                 {
                     Amount = amount,
                     AvailableCredit = availableCredit,

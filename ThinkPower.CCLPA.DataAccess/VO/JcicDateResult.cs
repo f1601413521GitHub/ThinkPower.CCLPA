@@ -1,9 +1,9 @@
 ﻿namespace ThinkPower.CCLPA.DataAccess.VO
 {
     /// <summary>
-    /// JCIC查詢結果
+    /// JCIC送查日期結果類別
     /// </summary>
-    public class JcicQueryResult
+    public class JcicDateResult
     {
         /// <summary>
         /// JCIC查詢日期

@@ -21,7 +21,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             if (String.IsNullOrEmpty(id))
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(id));
             }
 
 

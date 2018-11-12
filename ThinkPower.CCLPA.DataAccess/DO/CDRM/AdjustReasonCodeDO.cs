@@ -1,16 +1,16 @@
 ﻿namespace ThinkPower.CCLPA.DataAccess.DO.CDRM
 {
     /// <summary>
-    /// 調高原因代碼檔資料物件類別
+    /// 調整原因代碼檔資料物件類別
     /// </summary>
-    public class IncreaseReasonCodeDO
+    public class AdjustReasonCodeDO
     {
         /// <summary>
-        /// 調高原因代碼
+        /// 調整原因代碼
         /// </summary>
         public string Code { get; set; }
         /// <summary>
-        /// 調高原因說明
+        /// 調整原因說明
         /// </summary>
         public string Name { get; set; }
         /// <summary>

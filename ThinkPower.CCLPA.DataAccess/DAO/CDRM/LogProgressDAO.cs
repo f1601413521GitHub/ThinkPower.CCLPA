@@ -23,7 +23,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
         {
             if (adjustLog == null)
             {
-                throw new ArgumentNullException("adjustLog");
+                throw new ArgumentNullException(nameof(adjustLog));
             }
 
             string query = @"

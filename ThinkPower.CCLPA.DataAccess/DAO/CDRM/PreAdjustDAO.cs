@@ -23,7 +23,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
         {
             if (preAdjust == null)
             {
-                throw new ArgumentNullException("preAdjust");
+                throw new ArgumentNullException(nameof(preAdjust));
             }
 
 
@@ -79,7 +79,7 @@ VALUES
         {
             if (preAdjust == null)
             {
-                throw new ArgumentNullException("preAdjust");
+                throw new ArgumentNullException(nameof(preAdjust));
             }
 
             string query = @"
@@ -150,16 +150,16 @@ UPDATE  [RG_PADJUST]
         /// <returns></returns>
         public IEnumerable<PreAdjustDO> Query(PreAdjustCondition condition)
         {
-            List<PreAdjustDO> result = null;
+            List<PreAdjustDO> preAdjustList = null;
 
             if (condition == null)
             {
-                throw new ArgumentNullException("condition");
+                throw new ArgumentNullException(nameof(condition));
             }
 
 
 
-            StringBuilder querySB = new StringBuilder(@"
+            StringBuilder sqlCommandBuilder = new StringBuilder(@"
 SELECT 
     [CMPN_ID],[ID],[PJNAME],[PRE_AMT],[CLOSE_DT],[IMPORT_DT],[CHI_NAME],[KIND],[SMS_CHECK],[STATUS],
     [USER_PROC_DTTM],[USER_ID],[DEL_PROC_DTTM],[DEL_ID],[REMARK],[STMT_CYCLE_DESC],[PAY_DEADLINE],
@@ -247,24 +247,24 @@ FROM [RG_PADJUST]");
 
             if (queryCommand.Count > 0)
             {
-                querySB.Append(" WHERE ");
-                querySB.Append(String.Join(" AND ", queryCommand));
+                sqlCommandBuilder.Append(" WHERE ");
+                sqlCommandBuilder.Append(String.Join(" AND ", queryCommand));
             }
 
             if (pagingCommand.Count > 0)
             {
-                querySB.Append(" ");
-                querySB.Append(String.Join(" ", pagingCommand));
+                sqlCommandBuilder.Append(" ");
+                sqlCommandBuilder.Append(String.Join(" ", pagingCommand));
             }
 
-            querySB.Append(";");
+            sqlCommandBuilder.Append(";");
 
 
 
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
 
-                SqlCommand command = new SqlCommand(querySB.ToString(), connection);
+                SqlCommand command = new SqlCommand(sqlCommandBuilder.ToString(), connection);
                 command.Parameters.AddRange(sqlParameters.ToArray());
 
                 connection.Open();
@@ -275,14 +275,14 @@ FROM [RG_PADJUST]");
 
                 if (dt.Rows.Count > 0)
                 {
-                    result = new List<PreAdjustDO>();
+                    preAdjustList = new List<PreAdjustDO>();
                     PreAdjustDO preAdjustDO = null;
 
                     foreach (DataRow dr in dt.Rows)
                     {
                         preAdjustDO = ConvertPreAdjustDO(dr);
 
-                        result.Add(preAdjustDO);
+                        preAdjustList.Add(preAdjustDO);
                     }
                 }
 
@@ -291,7 +291,7 @@ FROM [RG_PADJUST]");
                 command = null;
             }
 
-            return result ?? new List<PreAdjustDO>();
+            return preAdjustList ?? new List<PreAdjustDO>();
         }
 
 
@@ -307,11 +307,11 @@ FROM [RG_PADJUST]");
 
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
             else if (String.IsNullOrEmpty(campaignId))
             {
-                throw new ArgumentNullException("campaignId");
+                throw new ArgumentNullException(nameof(campaignId));
             }
 
 
@@ -375,7 +375,7 @@ WHERE ID = @CustomerId
 
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
 
 
@@ -438,7 +438,7 @@ WHERE ID = @CustomerId;";
 
             if (condition == null)
             {
-                throw new ArgumentNullException("condition");
+                throw new ArgumentNullException(nameof(condition));
             }
 
 

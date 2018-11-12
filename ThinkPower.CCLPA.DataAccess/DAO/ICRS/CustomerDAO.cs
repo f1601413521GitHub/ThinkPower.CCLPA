@@ -26,7 +26,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
 
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
 
             string query = @"
@@ -93,7 +93,7 @@ WHERE ACCT_ID=@CustomerId;";
 
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
 
             string query = @"

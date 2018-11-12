@@ -21,7 +21,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
 
             if (String.IsNullOrEmpty(levelCode))
             {
-                throw new ArgumentNullException("levelCode");
+                throw new ArgumentNullException(nameof(levelCode));
             }
 
 
