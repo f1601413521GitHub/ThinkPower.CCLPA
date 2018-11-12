@@ -8,11 +8,19 @@
     var customerId = (Model == null) ? null : Model.CustomerId;
 }
 
-<span>專案臨調預審名單處理</span>
+
+
+<div class="row">
+    <div class="col col-auto">
+        <h3>專案臨調預審名單處理</h3>
+    </div>
+</div>
+
+
 
 
 <hr />
-@using (Html.BeginForm("PreAdjustLoad", "Adjust", FormMethod.Get, new { id = "form-query" }))
+@using (Html.BeginForm("Load", "PreAdjust", FormMethod.Get, new { id = "form-query" }))
 {
     <div class="row">
         <div class="col col-auto">
@@ -20,7 +28,7 @@
         </div>
 
         <div class="col col-auto">
-            @Html.TextBox("CustomerId", customerId, new { @class = "form-control", maxlength="10" })
+            @Html.TextBox("CustomerId", customerId, new { @class = "form-control", maxlength = "10" })
         </div>
 
         <div class="col col-auto">
@@ -28,7 +36,6 @@
         </div>
     </div>
 
-    <br />
     <div class="row d-none">
         <div class="col col-auto">
             <span>等待區頁數</span>

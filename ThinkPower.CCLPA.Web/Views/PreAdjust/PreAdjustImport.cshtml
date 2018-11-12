@@ -5,6 +5,18 @@
 }
 
 
+
+
+<div class="row">
+    <div class="col col-auto">
+        <h3>專案臨調預審名單匯入</h3>
+    </div>
+</div>
+
+
+
+
+<hr />
 <div class="row">
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 </div>
@@ -13,7 +25,7 @@
 
 
 
-@using (Html.BeginForm("PreAdjustValidate", "Adjust", FormMethod.Get))
+@using (Html.BeginForm("Validate", "PreAdjust", FormMethod.Get))
 {
     <div class="row">
         <div class="col col-auto">
@@ -88,11 +100,11 @@
                     <div class="modal-footer">
                         @if (Model.ExecuteImport)
                         {
-                            @Html.ActionLink("確定", "PreAdjustImportPage", "Adjust", new { }, new { @class = "btn btn-primary" })
+                            @Html.ActionLink("確定", "Index", "PreAdjust", new { }, new { @class = "btn btn-primary" })
                         }
                         else if (executeImport)
                         {
-                            @Html.ActionLink("確定", "PreAdjustImport", "Adjust", new { CampaignId = Model.CampaignId, ExecuteImport = executeImport }, new { @class = "btn btn-primary" })
+                            @Html.ActionLink("確定", "Import", "PreAdjust", new { CampaignId = Model.CampaignId, ExecuteImport = executeImport }, new { @class = "btn btn-primary" })
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                         }
                         else

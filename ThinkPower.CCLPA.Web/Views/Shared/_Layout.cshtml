@@ -26,10 +26,10 @@
 
             <div class="col col-auto layout-body-left">
                 <div class="row layout-body-left-item">
-                    @Html.ActionLink("專案臨調預審名單匯入", "PreAdjustImportPage", "Adjust")
+                    @Html.ActionLink("專案臨調預審名單匯入", "Index", "PreAdjust")
                 </div>
                 <div class="row layout-body-left-item">
-                    @Html.ActionLink("專案臨調預審名單處理", "PreAdjustLoad", "Adjust",
+                    @Html.ActionLink("專案臨調預審名單處理", "Load", "PreAdjust",
                         new {
                             CustomerId = String.Empty,
                             NotEffectPageIndex = 1,
@@ -37,7 +37,7 @@
                         }, null)
                 </div>
                 <div class="row layout-body-left-item">
-                    @Html.ActionLink("專案臨調處理", "Action", "Controller")
+                    @Html.ActionLink("專案臨調處理", "AdjustProcessLoad", "Adjust")
                 </div>
             </div>
 

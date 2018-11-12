@@ -1,8 +1,8 @@
 ﻿const urlInfo = {
-    preAdjustDeleteNotEffect: 'PreAdjustDeleteNotEffect',
-    preAdjustDeleteEffect: 'PreAdjustDeleteEffect',
-    preAdjustAgree: 'PreAdjustAgree',
-    preAdjustForceAgree: 'PreAdjustForceAgree',
+    deleteNotEffect: 'DeleteNotEffect',
+    deleteEffect: 'DeleteEffect',
+    agree: 'Agree',
+    forceAgree: 'ForceAgree',
 };
 
 const preAdjustStatus = {
@@ -33,7 +33,7 @@ $(document).ready(function () {
 
                 let preAdjustInfoList = getPreAdjustInfoList(checkedItemList);
 
-                let ajaxResultInfo = callAjax('post', urlInfo.preAdjustDeleteNotEffect, {
+                let ajaxResultInfo = callAjax('post', urlInfo.deleteNotEffect, {
                     Remark: $('#not-effect-remark').val(),
                     PreAdjustList: preAdjustInfoList
                 });
@@ -88,7 +88,7 @@ $(document).ready(function () {
 
                 if (window.confirm(tipMsg)) {
 
-                    let ajaxResultInfo = callAjax('post', urlInfo.preAdjustAgree, {
+                    let ajaxResultInfo = callAjax('post', urlInfo.agree, {
                         PreAdjustList: preAdjustInfoList
                     });
 
@@ -157,7 +157,7 @@ $(document).ready(function () {
 
                 if (window.confirm(tipMsg)) {
 
-                    let ajaxResultInfo = callAjax('post', urlInfo.preAdjustForceAgree, {
+                    let ajaxResultInfo = callAjax('post', urlInfo.forceAgree, {
                         NeedValidate: true,
                         PreAdjustList: preAdjustInfoList
                     });
@@ -184,7 +184,7 @@ $(document).ready(function () {
 
                         if (needForceAgreeItem.length > 0) {
 
-                            ajaxResultInfo = callAjax('post', urlInfo.preAdjustForceAgree, {
+                            ajaxResultInfo = callAjax('post', urlInfo.forceAgree, {
                                 NeedValidate: false,
                                 PreAdjustList: needForceAgreeItem.toArray()
                             });
@@ -233,7 +233,7 @@ $(document).ready(function () {
 
                 let preAdjustInfoList = getPreAdjustInfoList(checkedItemList);
 
-                let ajaxResultInfo = callAjax('post', urlInfo.preAdjustDeleteEffect, {
+                let ajaxResultInfo = callAjax('post', urlInfo.deleteEffect, {
                     Remark: $('#effect-remark').val(),
                     PreAdjustList: preAdjustInfoList
                 });

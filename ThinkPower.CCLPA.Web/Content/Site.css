@@ -10,6 +10,9 @@ th, td {
     white-space: nowrap;
 }
 
+hr {
+    border: 1px solid red;
+}
 
 
 
@@ -77,4 +80,21 @@ th, td {
 .process-options {
     background-color: white;
     padding: 12px 0;
+}
+
+
+
+
+
+
+
+
+/*AdjustProcess*/
+.process-page .row{
+    padding: 8px 0;
+}
+
+.adjust-table-field {
+    color: #7E9BC3;
+    font-weight: bold;
 }
