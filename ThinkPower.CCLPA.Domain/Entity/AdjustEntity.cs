@@ -1,9 +1,9 @@
-﻿namespace ThinkPower.CCLPA.Domain.VO
+﻿namespace ThinkPower.CCLPA.Domain.Entity
 {
     /// <summary>
-    /// 臨調處理檔資料物件類別
+    /// 臨調資料類別
     /// </summary>
-    public class AdjustInfo
+    public class AdjustEntity : BaseEntity
     {
         /// <summary>
         /// 身分證字號
@@ -181,6 +181,5 @@
         /// 刷卡金額(不含額度)
         /// </summary> 
         public decimal? CreditAmount { get; set; }
-
     }
 }

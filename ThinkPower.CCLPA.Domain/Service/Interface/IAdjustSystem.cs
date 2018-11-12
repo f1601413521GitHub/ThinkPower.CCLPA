@@ -10,8 +10,9 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// <summary>
         /// JCIC送查日期回傳
         /// </summary>
+        /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        object JcicSendDate();
+        JcicDateInfo QueryJcicDate(string customerId);
 
         /// <summary>
         /// 專案臨調條件檢核

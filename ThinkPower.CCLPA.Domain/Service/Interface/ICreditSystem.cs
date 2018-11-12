@@ -10,9 +10,9 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// <summary>
         /// ICRS查詢掛帳金額 (含已授權未清算)、可用額度
         /// </summary>
-        /// <param name="data">來源資料</param>
+        /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        object QueryAmount(object data);
+        IcrsAmountInfo QueryIcrsAmount(string customerId);
 
         /// <summary>
         /// 所得稅卡戶臨調

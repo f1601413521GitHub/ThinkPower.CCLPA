@@ -182,6 +182,5 @@ namespace ThinkPower.CCLPA.DataAccess.DO.CDRM
         /// 刷卡金額(不含額度)
         /// </summary> 
         public decimal? CreditAmount { get; set; }
-
     }
 }

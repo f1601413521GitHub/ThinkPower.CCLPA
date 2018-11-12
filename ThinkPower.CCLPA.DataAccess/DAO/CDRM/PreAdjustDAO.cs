@@ -210,28 +210,28 @@ FROM [RG_PADJUST]");
                 });
             }
 
+            switch (condition.OrderBy)
+            {
+                case PreAdjustCondition.OrderByKind.None:
+                    pagingCommand.Add("ORDER BY [CMPN_ID]");
+                    break;
+                case PreAdjustCondition.OrderByKind.CustomerId:
+                    pagingCommand.Add("ORDER BY [ID]");
+                    break;
+                case PreAdjustCondition.OrderByKind.ImportDate:
+                    pagingCommand.Add("ORDER BY [IMPORT_DT]");
+                    break;
+                case PreAdjustCondition.OrderByKind.ImportDateByDescending:
+                    pagingCommand.Add("ORDER BY [IMPORT_DT] DESC");
+                    break;
+                case PreAdjustCondition.OrderByKind.CustomerIdAndImportDate:
+                    pagingCommand.Add("ORDER BY [ID], [IMPORT_DT]");
+                    break;
+            }
+
             if ((condition.PageIndex != null && condition.PageIndex >= 1) &&
                 (condition.PagingSize != null && condition.PagingSize >= 1))
             {
-                switch (condition.OrderBy)
-                {
-                    case PreAdjustCondition.OrderByKind.None:
-                        pagingCommand.Add("ORDER BY [CMPN_ID]");
-                        break;
-                    case PreAdjustCondition.OrderByKind.CustomerId:
-                        pagingCommand.Add("ORDER BY [ID]");
-                        break;
-                    case PreAdjustCondition.OrderByKind.ImportDate:
-                        pagingCommand.Add("ORDER BY [IMPORT_DT]");
-                        break;
-                    case PreAdjustCondition.OrderByKind.ImportDateByDescending:
-                        pagingCommand.Add("ORDER BY [IMPORT_DT] DESC");
-                        break;
-                    case PreAdjustCondition.OrderByKind.CustomerIdAndImportDate:
-                        pagingCommand.Add("ORDER BY [ID], [IMPORT_DT]");
-                        break;
-                }
-
                 pagingCommand.Add("OFFSET     @Skip ROWS");
                 sqlParameters.Add(new SqlParameter("@Skip", SqlDbType.Int)
                 {

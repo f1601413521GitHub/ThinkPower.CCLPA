@@ -15,15 +15,15 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM
         /// <summary>
         /// 取得目前生效主檔資訊
         /// </summary>
-        /// <param name="reasonCodeList">臨調原因代碼</param>
+        /// <param name="reasonCode">臨調原因代碼</param>
         /// <returns></returns>
-        public IEnumerable<ParamCurrentlyEffectDO> Get(IEnumerable<string> reasonCodeList)
+        public ParamCurrentlyEffectDO Get(string reasonCode)
         {
-            List<ParamCurrentlyEffectDO> result = null;
+            ParamCurrentlyEffectDO result = null;
 
-            if (reasonCodeList == null || !reasonCodeList.Any())
+            if (String.IsNullOrEmpty(reasonCode))
             {
-                throw new ArgumentNullException(nameof(reasonCodeList));
+                throw new ArgumentNullException(nameof(reasonCode));
             }
 
 
@@ -36,44 +36,30 @@ WHERE RG_REASON = @ReasonCode;";
 
             using (SqlConnection connection = DbConnection(Connection.CDRM))
             {
-                connection.Open();
-
-                SqlCommand command = null;
-                DataTable dt = null;
-                SqlDataAdapter adapter = null;
-                ParamCurrentlyEffectDO item = null;
-
-                result = new List<ParamCurrentlyEffectDO>();
-
-                foreach (string reasonCode in reasonCodeList)
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.Add(new SqlParameter("@ReasonCode", SqlDbType.NVarChar)
                 {
-                    command = new SqlCommand(query, connection);
+                    Value = reasonCode
+                });
 
-                    command.Parameters.Add(new SqlParameter("@ReasonCode", SqlDbType.NVarChar)
-                    {
-                        Value = reasonCode
-                    });
+                connection.Open();
+                command.ExecuteNonQuery();
 
-                    command.ExecuteNonQuery();
+                DataTable dt = new DataTable();
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
 
-                    dt = new DataTable();
-                    adapter = new SqlDataAdapter(command);
-                    adapter.Fill(dt);
-
-                    if (dt.Rows.Count > 1)
-                    {
-                        throw new InvalidOperationException("CurrentlyEffectData not the only");
-                    }
-                    else if (dt.Rows.Count == 1)
-                    {
-                        item = ConvertParamCurrentlyEffectDO(dt.Rows[0]);
-
-                        result.Add(item);
-                    }
+                if (dt.Rows.Count > 1)
+                {
+                    throw new InvalidOperationException("CurrentlyEffectData not the only");
+                }
+                else if (dt.Rows.Count == 1)
+                {
+                    result = ConvertParamCurrentlyEffectDO(dt.Rows[0]);
                 }
             }
 
-            return result ?? new List<ParamCurrentlyEffectDO>();
+            return result;
         }
 
         /// <summary>

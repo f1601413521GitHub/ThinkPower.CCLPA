@@ -93,7 +93,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (String.IsNullOrEmpty(campaignId))
             {
-                throw new ArgumentNullException("campaignId");
+                throw new ArgumentNullException(nameof(campaignId));
             }
 
 
@@ -148,11 +148,11 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             if (String.IsNullOrEmpty(campaignId))
             {
-                throw new ArgumentNullException("campaignId");
+                throw new ArgumentNullException(nameof(campaignId));
             }
             else if (UserInfo == null)
             {
-                throw new ArgumentNullException("UserInfo");
+                throw new ArgumentNullException(nameof(UserInfo));
             }
 
 
@@ -285,7 +285,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (condition == null)
             {
-                throw new ArgumentNullException("condition");
+                throw new ArgumentNullException(nameof(condition));
             }
 
             DataAccess.Condition.PreAdjustCondition preAdjustCondition =
@@ -293,10 +293,30 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             IEnumerable<PreAdjustDO> preAdjustDOList = new PreAdjustDAO().Query(preAdjustCondition);
 
-            preAdjustEntities = !preAdjustDOList.Any() ? new List<PreAdjustEntity>() :
-                ConvertPreAdjustEntity(preAdjustDOList);
+            preAdjustEntities = ConvertPreAdjustEntity(preAdjustDOList);
 
             return preAdjustEntities;
+        }
+
+        /// <summary>
+        /// 取得生效的預審名單
+        /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        /// <returns></returns>
+        internal IEnumerable<PreAdjustEntity> GetEffectPreAdjust(string customerId)
+        {
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException(nameof(customerId));
+            }
+
+            IEnumerable<PreAdjustDO> preAdjustList = new PreAdjustDAO().Query(new PreAdjustCondition()
+            {
+                CustomerId = customerId,
+                CcasReplyCode = "00",
+            });
+
+            return ConvertPreAdjustEntity(preAdjustList);
         }
 
         /// <summary>
@@ -310,15 +330,15 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (preAdjustInfo == null)
             {
-                throw new ArgumentNullException("preAdjustInfo");
+                throw new ArgumentNullException(nameof(preAdjustInfo));
             }
             else if ((preAdjustInfo.PreAdjustList == null) || !preAdjustInfo.PreAdjustList.Any())
             {
-                throw new ArgumentNullException("PreAdjustList");
+                throw new ArgumentNullException(nameof(preAdjustInfo.PreAdjustList));
             }
             else if (UserInfo == null)
             {
-                throw new ArgumentNullException("UserInfo");
+                throw new ArgumentNullException(nameof(UserInfo));
             }
 
 
@@ -386,15 +406,15 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (preAdjustInfo == null)
             {
-                throw new ArgumentNullException("preAdjustInfo");
+                throw new ArgumentNullException(nameof(preAdjustInfo));
             }
             else if ((preAdjustInfo.PreAdjustList == null) || !preAdjustInfo.PreAdjustList.Any())
             {
-                throw new ArgumentNullException("PreAdjustList");
+                throw new ArgumentNullException(nameof(preAdjustInfo.PreAdjustList));
             }
             else if (UserInfo == null)
             {
-                throw new ArgumentNullException("UserInfo");
+                throw new ArgumentNullException(nameof(UserInfo));
             }
 
 
@@ -500,15 +520,15 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (preAdjustInfo == null)
             {
-                throw new ArgumentNullException("preAdjustInfo");
+                throw new ArgumentNullException(nameof(preAdjustInfo));
             }
             else if ((preAdjustInfo.PreAdjustList == null) || !preAdjustInfo.PreAdjustList.Any())
             {
-                throw new ArgumentNullException("PreAdjustList");
+                throw new ArgumentNullException(nameof(preAdjustInfo.PreAdjustList));
             }
             else if (UserInfo == null)
             {
-                throw new ArgumentNullException("UserInfo");
+                throw new ArgumentNullException(nameof(UserInfo));
             }
 
 
@@ -629,15 +649,15 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (preAdjustInfo == null)
             {
-                throw new ArgumentNullException("preAdjustInfo");
+                throw new ArgumentNullException(nameof(preAdjustInfo));
             }
             else if ((preAdjustInfo.PreAdjustList == null) || !preAdjustInfo.PreAdjustList.Any())
             {
-                throw new ArgumentNullException("PreAdjustList");
+                throw new ArgumentNullException(nameof(preAdjustInfo.PreAdjustList));
             }
             else if (UserInfo == null)
             {
-                throw new ArgumentNullException("UserInfo");
+                throw new ArgumentNullException(nameof(UserInfo));
             }
 
 
@@ -776,7 +796,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (condition == null)
             {
-                throw new ArgumentNullException("condition");
+                throw new ArgumentNullException(nameof(condition));
             }
 
             DataAccess.Condition.PreAdjustCondition preAdjustCondition =
@@ -820,7 +840,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (String.IsNullOrEmpty(campaignId))
             {
-                throw new ArgumentNullException("campaignId");
+                throw new ArgumentNullException(nameof(campaignId));
             }
 
             CampaignImportLogDO campaignImportLogDO = new CampaignImportLogDAO().Get(campaignId);
@@ -853,7 +873,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if ((preAdjustList == null) || !preAdjustList.Any())
             {
-                throw new ArgumentNullException("preAdjustList");
+                throw new ArgumentNullException(nameof(preAdjustList));
             }
 
 
@@ -887,7 +907,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             if (preAdjustDO == null)
             {
-                throw new ArgumentNullException("preAdjustDO");
+                throw new ArgumentNullException(nameof(preAdjustDO));
             }
 
             return new PreAdjustEntity()
@@ -923,39 +943,36 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="preAdjustDOList">臨調預審名單資料</param>
         /// <returns></returns>
-        private IEnumerable<PreAdjustEntity> ConvertPreAdjustEntity(IEnumerable<PreAdjustDO> preAdjustDOList)
+        private IEnumerable<PreAdjustEntity> ConvertPreAdjustEntity(
+            IEnumerable<PreAdjustDO> preAdjustDOList)
         {
-            if (preAdjustDOList == null || !preAdjustDOList.Any())
-            {
-                throw new ArgumentNullException("preAdjustList");
-            }
-
-            return preAdjustDOList.Select(x => new PreAdjustEntity()
-            {
-                CampaignId = x.CampaignId,
-                CustomerId = x.CustomerId,
-                ProjectName = x.ProjectName,
-                ProjectAmount = x.ProjectAmount,
-                CloseDate = x.CloseDate,
-                ImportDate = x.ImportDate,
-                ChineseName = x.ChineseName,
-                Kind = x.Kind,
-                SmsCheckResult = x.SmsCheckResult,
-                Status = x.Status,
-                ProcessingDateTime = x.ProcessingDateTime,
-                ProcessingUserId = x.ProcessingUserId,
-                DeleteDateTime = x.DeleteDateTime,
-                DeleteUserId = x.DeleteUserId,
-                Remark = x.Remark,
-                ClosingDay = x.ClosingDay,
-                PayDeadline = x.PayDeadline,
-                ForceAgreeUserId = x.ForceAgreeUserId,
-                MobileTel = x.MobileTel,
-                RejectReasonCode = x.RejectReasonCode,
-                CcasReplyCode = x.CcasReplyCode,
-                CcasReplyStatus = x.CcasReplyStatus,
-                CcasReplyDateTime = x.CcasReplyDateTime,
-            });
+            return (preAdjustDOList == null) ? new List<PreAdjustEntity>() :
+                preAdjustDOList.Select(x => new PreAdjustEntity()
+                {
+                    CampaignId = x.CampaignId,
+                    CustomerId = x.CustomerId,
+                    ProjectName = x.ProjectName,
+                    ProjectAmount = x.ProjectAmount,
+                    CloseDate = x.CloseDate,
+                    ImportDate = x.ImportDate,
+                    ChineseName = x.ChineseName,
+                    Kind = x.Kind,
+                    SmsCheckResult = x.SmsCheckResult,
+                    Status = x.Status,
+                    ProcessingDateTime = x.ProcessingDateTime,
+                    ProcessingUserId = x.ProcessingUserId,
+                    DeleteDateTime = x.DeleteDateTime,
+                    DeleteUserId = x.DeleteUserId,
+                    Remark = x.Remark,
+                    ClosingDay = x.ClosingDay,
+                    PayDeadline = x.PayDeadline,
+                    ForceAgreeUserId = x.ForceAgreeUserId,
+                    MobileTel = x.MobileTel,
+                    RejectReasonCode = x.RejectReasonCode,
+                    CcasReplyCode = x.CcasReplyCode,
+                    CcasReplyStatus = x.CcasReplyStatus,
+                    CcasReplyDateTime = x.CcasReplyDateTime,
+                });
         }
 
 
@@ -969,7 +986,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             if (preAdjustEntity == null)
             {
-                throw new ArgumentNullException("preAdjust");
+                throw new ArgumentNullException(nameof(preAdjustEntity));
             }
 
             return new PreAdjustDO()
@@ -1009,7 +1026,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             if ((preAdjustEntities == null) || !preAdjustEntities.Any())
             {
-                throw new ArgumentNullException("preAdjust");
+                throw new ArgumentNullException(nameof(preAdjustEntities));
             }
 
             return preAdjustEntities.Select(x => new PreAdjustDO()
@@ -1053,7 +1070,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             if (condition == null)
             {
-                throw new ArgumentNullException("condition");
+                throw new ArgumentNullException(nameof(condition));
             }
 
             return new DataAccess.Condition.PreAdjustCondition()
@@ -1109,7 +1126,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (String.IsNullOrEmpty(status))
             {
-                throw new ArgumentNullException("status");
+                throw new ArgumentNullException(nameof(status));
             }
 
 

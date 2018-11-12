@@ -127,6 +127,7 @@ FROM [RG_ADJUST]");
 
 
             List<string> queryCommand = new List<string>();
+            List<string> pagingCommand = new List<string>();
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
 
             if (!String.IsNullOrEmpty(condition.CustomerId))
@@ -178,10 +179,43 @@ FROM [RG_ADJUST]");
                 });
             }
 
+            switch (condition.OrderBy)
+            {
+                case AdjustCondition.OrderByKind.None:
+                    pagingCommand.Add("ORDER BY [PROC_DATE]");
+                    break;
+                case AdjustCondition.OrderByKind.ProcessDateByDescendingAndProcessTimeByDescending:
+                    pagingCommand.Add("ORDER BY [PROC_DATE] DESC, [PROC_TIME] DESC");
+                    break;
+            }
+
+            if ((condition.PageIndex != null && condition.PageIndex >= 1) &&
+                (condition.PagingSize != null && condition.PagingSize >= 1))
+            {
+
+                pagingCommand.Add("OFFSET     @Skip ROWS");
+                sqlParameters.Add(new SqlParameter("@Skip", SqlDbType.Int)
+                {
+                    Value = ((condition.PageIndex - 1) * condition.PagingSize)
+                });
+
+                pagingCommand.Add("FETCH NEXT @Take ROWS ONLY");
+                sqlParameters.Add(new SqlParameter("@Take", SqlDbType.Int)
+                {
+                    Value = condition.PagingSize
+                });
+            }
+
             if (queryCommand.Any())
             {
                 sqlCommandBuilder.Append(" WHERE ");
                 sqlCommandBuilder.Append(String.Join(" AND ", queryCommand));
+            }
+
+            if (pagingCommand.Any())
+            {
+                sqlCommandBuilder.Append(" ");
+                sqlCommandBuilder.Append(String.Join(" ", pagingCommand));
             }
 
             sqlCommandBuilder.Append(";");

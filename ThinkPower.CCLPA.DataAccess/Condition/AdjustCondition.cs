@@ -34,6 +34,7 @@
         public enum OrderByKind
         {
             None = 0,
+            ProcessDateByDescendingAndProcessTimeByDescending = 1,
         }
 
         #endregion

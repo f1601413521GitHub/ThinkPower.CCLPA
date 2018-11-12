@@ -1,6 +1,7 @@
 ﻿using System;
 using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
+using ThinkPower.CCLPA.DataAccess.VO;
 using ThinkPower.CCLPA.Domain.Service.Interface;
 using ThinkPower.CCLPA.Domain.VO;
 
@@ -32,10 +33,42 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <summary>
         /// JCIC送查日期回傳
         /// </summary>
+        /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        public object JcicSendDate()
+        public JcicDateInfo QueryJcicDate(string customerId)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException(nameof(customerId));
+            }
+            else if (UserInfo == null)
+            {
+                throw new ArgumentNullException(nameof(UserInfo));
+            }
+
+            JcicDateResult jcicDateResult = new AdjustSystemDAO().
+                QueryJcicDate(customerId, UserInfo.Id, UserInfo.Name);
+
+            if (jcicDateResult == null)
+            {
+                throw new InvalidOperationException($"{nameof(jcicDateResult)} not found");
+            }
+
+            return ConvertJcicDateInfo(jcicDateResult);
+        }
+
+        /// <summary>
+        /// 轉換JCIC送查日期
+        /// </summary>
+        /// <param name="jcicDateResult">JCIC送查日期</param>
+        /// <returns></returns>
+        private JcicDateInfo ConvertJcicDateInfo(JcicDateResult jcicDateResult)
+        {
+            return (jcicDateResult == null) ? null : new JcicDateInfo()
+            {
+                JcicQueryDate = jcicDateResult.JcicQueryDate,
+                ResponseCode = jcicDateResult.ResponseCode,
+            };
         }
 
         /// <summary>
@@ -58,7 +91,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (String.IsNullOrEmpty(id))
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(id));
             }
 
             PreAdjustEffectResultDO preAdjustEffect = CreditDAO.PreAdjustEffectCondition(id);
@@ -77,7 +110,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             if (preAdjustEffect == null)
             {
-                throw new ArgumentNullException("preAdjustEffect");
+                throw new ArgumentNullException(nameof(preAdjustEffect));
             }
 
             return new PreAdjustEffectResult()

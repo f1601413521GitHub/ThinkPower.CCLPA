@@ -1,4 +1,5 @@
-﻿
+﻿@model ThinkPower.CCLPA.Web.ViewModels.AdjustProcessViewModel
+
 @{
     ViewBag.Title = "AdjustProcess";
 }
@@ -13,19 +14,22 @@
 
     <hr />
     <!--查詢-->
-    <div class="row">
-        <div class="col col-auto">
-            <span>歸戶ID</span>
-        </div>
+    @using (Html.BeginForm("Query", "Adjust", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col col-auto">
+                <span>歸戶ID</span>
+            </div>
 
-        <div class="col col-auto">
-            <input type="text" name="name" value="" class="form-control" />
-        </div>
+            <div class="col col-auto">
+                <input type="text" name="name" value="" class="form-control" />
+            </div>
 
-        <div class="col col-auto">
-            <input type="button" name="name" value="查詢" class="btn btn-primary" />
+            <div class="col col-auto">
+                <input type="button" name="name" value="查詢" class="btn btn-primary" />
+            </div>
         </div>
-    </div>
+    }
 
     <hr />
     <!--顯示-->
@@ -35,13 +39,15 @@
                 <span>資料日期</span>
             </div>
             <div class="col col-2">
-                <span>2016/03/10</span>
+
+                <span>@Html.DisplayFor(x => x.DataDate)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>本月VIP星等</span>
             </div>
             <div class="col col-2">
-                <span>3</span>
+
+                <span>@Html.DisplayFor(x => x.MonthStarLevel)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -49,19 +55,19 @@
                 <span>身分證字號</span>
             </div>
             <div class="col col-2">
-                <span>H142700334</span>
+                <span>@Html.DisplayFor(x => x.AccountId)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>正卡有效卡</span>
             </div>
             <div class="col col-2">
-                <span>Y</span>
+                <span>@Html.DisplayFor(x => x.LiveCardCount)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>停卡狀態中是否有3-77</span>
             </div>
             <div class="col col-2">
-                <span>N</span>
+                <span>@Html.DisplayFor(x => x.Status)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -69,19 +75,19 @@
                 <span>中文姓名</span>
             </div>
             <div class="col col-2">
-                <span>王小明</span>
+                <span>@Html.DisplayFor(x => x.ChineseName)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>生日</span>
             </div>
             <div class="col col-2">
-                <span>1972/05/19</span>
+                <span>@Html.DisplayFor(x => x.BirthDay)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>歸戶狀態</span>
             </div>
             <div class="col col-2">
-                <span>Y</span>
+                <span>@Html.DisplayFor(x => x.AboutDataStatus)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -89,19 +95,19 @@
                 <span>卡戶等級</span>
             </div>
             <div class="col col-2">
-                <span>3</span>
+                <span>@Html.DisplayFor(x => x.RiskLevel)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>風險評等</span>
             </div>
             <div class="col col-2">
-                <span>002</span>
+                <span>@Html.DisplayFor(x => x.RiskRating)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最初發卡日</span>
             </div>
             <div class="col col-2">
-                <span>2011/04/01</span>
+                <span>@Html.DisplayFor(x => x.IssueDate)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -109,13 +115,13 @@
                 <span>關帳日</span>
             </div>
             <div class="col col-2">
-                <span>20</span>
+                <span>@Html.DisplayFor(x => x.ClosingDay)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>繳款期限</span>
             </div>
             <div class="col col-2">
-                <span>05</span>
+                <span>@Html.DisplayFor(x => x.PayDeadline)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -123,7 +129,7 @@
                 <span>職業／職級</span>
             </div>
             <div class="col col-2">
-                <span>M</span>
+                <span>@Html.DisplayFor(x => x.Vocation)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -131,19 +137,19 @@
                 <span>住家電話</span>
             </div>
             <div class="col col-2">
-                <span>03-12345678</span>
+                <span>@Html.DisplayFor(x => x.TelHome)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>公司電話</span>
             </div>
             <div class="col col-2">
-                <span>03-12345678</span>
+                <span>@Html.DisplayFor(x => x.TelOffice)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>行動電話</span>
             </div>
             <div class="col col-2">
-                <span>09123456789</span>
+                <span>@Html.DisplayFor(x => x.MobileTel)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -152,20 +158,22 @@
                     帳單地址
                 </span>
             </div>
-            <div class="col col-10">114台北市內湖區內湖路一段360巷15號6號</div>
+            <div class="col col-10">
+                <span>@Html.DisplayFor(x => x.BillAddr)</span>
+            </div>
         </div>
         <div class="row border-top">
             <div class="col col-2 adjust-table-field">
                 <span>近一年最高消費金額</span>
             </div>
             <div class="col col-2">
-                <span>1,201</span>
+                <span>@Html.DisplayFor(x => x.NearlyYearMaxConsumptionAmount)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>註記</span>
             </div>
             <div class="col col-2">
-                <span>N</span>
+                <span>@Html.DisplayFor(x => x.SystemAdjustRevFlag)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -173,19 +181,19 @@
                 <span>信用額度</span>
             </div>
             <div class="col col-2">
-                <span>40,000</span>
+                <span>@Html.DisplayFor(x => x.CreditLimit)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>近期關帳</span>
             </div>
             <div class="col col-2">
-                <span>9,000</span>
+                <span>@Html.DisplayFor(x => x.ClosingAmount)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最低應繳</span>
             </div>
             <div class="col col-2">
-                <span>900</span>
+                <span>@Html.DisplayFor(x => x.MinimumAmountPayable)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -193,19 +201,19 @@
                 <span>臨調後額度</span>
             </div>
             <div class="col col-2">
-                <span>40,000</span>
+                <span>@Html.DisplayFor(x => x.ShowAfterAdjustAmount)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最近付款日期</span>
             </div>
             <div class="col col-2">
-                <span>2016/03/29</span>
+                <span>@Html.DisplayFor(x => x.RecentPaymentDate)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最近付款金額</span>
             </div>
             <div class="col col-2">
-                <span>10,000</span>
+                <span>@Html.DisplayFor(x => x.RecentPaymentAmount)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -213,19 +221,19 @@
                 <span>優利餘額</span>
             </div>
             <div class="col col-2">
-                <span>77</span>
+                <span>@Html.DisplayFor(x => x.OfferAmount)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>總未付</span>
             </div>
             <div class="col col-2">
-                <span>0</span>
+                <span>@Html.DisplayFor(x => x.UnpaidTotal)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>未入帳金額</span>
             </div>
             <div class="col col-2">
-                <span>4,000</span>
+                <span>@Html.DisplayFor(x => x.AuthorizedAmountNotAccount)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -233,19 +241,19 @@
                 <span>CCAS掛帳</span>
             </div>
             <div class="col col-2">
-                <span>20,000</span>
+                <span>@Html.DisplayFor(x => x.CcasUnderpaidAmount)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>可用餘額</span>
             </div>
             <div class="col col-2">
-                <span>20,000</span>
+                <span>@Html.DisplayFor(x => x.CcasUsabilityAmount)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>掛帳比率</span>
             </div>
             <div class="col col-2">
-                <span>33.50</span>
+                <span>@Html.DisplayFor(x => x.CcasUnderpaidRate)</span>
             </div>
         </div>
     </div>
@@ -259,21 +267,19 @@
                 <span>調高原因</span>
             </div>
             <div class="col col-2">
-                <select class="form-control">
-                    <option value="value">請選擇</option>
-                </select>
+                @Html.DropDownListFor(x => Model.AdjustReason, Model.AdjustReason, "請選擇", new { @class = "form-control" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>調高原因備註</span>
             </div>
             <div class="col col-2">
-                <input type="text" name="name" value="" class="form-control" />
+                @Html.TextBoxFor(x => Model.AdjustReasonRemark, new { @class = "form-control" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>JCIC日期</span>
             </div>
             <div class="col col-2">
-                <input type="text" name="name" value="" class="form-control" />
+                @Html.TextBoxFor(x => Model.JcicQueryDate, new { @class = "form-control", disabled = "disabled" })
             </div>
         </div>
         <div class="row border-top">
@@ -281,19 +287,19 @@
                 <span>調額上限</span>
             </div>
             <div class="col col-2">
-                <input type="text" name="name" value="" class="form-control" disabled />
+                @Html.TextBoxFor(x => Model.AdjustmentAmountCeiling, new { @class = "form-control", disabled = "disabled" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>刷卡金額(不含額度)</span>
             </div>
             <div class="col col-2">
-                <input type="text" name="name" value="" class="form-control" />
+                @Html.TextBoxFor(x => Model.SwipeAmount, new { @class = "form-control" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>臨調後額度</span>
             </div>
             <div class="col col-2">
-                <input type="text" name="name" value="" class="form-control" />
+                @Html.TextBoxFor(x => Model.AfterAdjustAmount, new { @class = "form-control" })
             </div>
         </div>
         <div class="row border-top">
@@ -301,21 +307,19 @@
                 <span>有效日期(起)</span>
             </div>
             <div class="col col-2">
-                <input type="text" name="name" value="" class="form-control" disabled />
+                @Html.TextBoxFor(x => Model.ValidDateStart, new { @class = "form-control", disabled = "disabled" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>有效日期(迄)</span>
             </div>
             <div class="col col-2">
-                <input type="text" name="name" value="" class="form-control" disabled />
+                @Html.TextBoxFor(x => Model.ValidDateEnd, new { @class = "form-control", disabled = "disabled" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>是否可人工授權</span>
             </div>
             <div class="col col-2">
-                <select class="form-control">
-                    <option value="value">請選擇</option>
-                </select>
+                @Html.DropDownListFor(x => Model.ManualAuthorization, Model.ManualAuthorization, "請選擇", new { @class = "form-control" })
             </div>
         </div>
         <div class="row border-top">
@@ -323,15 +327,13 @@
                 <span>使用地點</span>
             </div>
             <div class="col col-2">
-                <select class="form-control">
-                    <option value="value">請選擇</option>
-                </select>
+                @Html.DropDownListFor(x => Model.UseLocation, Model.UseLocation, "請選擇", new { @class = "form-control" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>出國地點</span>
             </div>
             <div class="col col-2">
-                <input type="text" name="name" value="" class="form-control" />
+                @Html.TextBoxFor(x => Model.PlaceOfGoingAbroad, new { @class = "form-control" })
             </div>
         </div>
     </div>
@@ -345,10 +347,13 @@
                 <span>專案臨調結果</span>
             </div>
             <div class="col col-2">
-                <span>預審臨調拒絕</span>
+                <span>@Html.DisplayFor(x => x.ProjectAdjustResult)</span>
             </div>
-            <div class="col col-8 adjust-table-field">
+            <div class="col col-2 adjust-table-field">
                 <span>拒絕原因(專案)</span>
+            </div>
+            <div class="col col-6">
+                <span>@Html.DisplayFor(x => x.ProjectRejectReason)</span>
             </div>
         </div>
         <div class="row">
@@ -356,10 +361,13 @@
                 <span>一般臨調結果</span>
             </div>
             <div class="col col-2">
-                <span>預審臨調拒絕</span>
+                <span>@Html.DisplayFor(x => x.GeneralAdjustResult)</span>
             </div>
-            <div class="col col-8 adjust-table-field">
+            <div class="col col-2 adjust-table-field">
                 <span>拒絕原因(一般)</span>
+            </div>
+            <div class="col col-6">
+                <span>@Html.DisplayFor(x => x.GeneralRejectReason)</span>
             </div>
         </div>
         <div class="row justify-content-between">
@@ -367,16 +375,16 @@
                 <span>轉授信主管原因</span>
             </div>
             <div class="col col-4">
-                <input type="text" name="name" value="" class="form-control" />
+                @Html.TextBoxFor(x => Model.TransferSupervisorReason, new { @class = "form-control" })
             </div>
             <div class="col col-2">
-                <input type="button" name="name" value="轉授信主管" class="btn btn-primary" />
+                <input type="button" name="forwarding" id="forwarding" value="轉授信主管" class="btn btn-primary" />
             </div>
 
             <div class="col offset-1">
-                <input type="button" name="name" value="核准" class="btn btn-success" />
-                <input type="button" name="name" value="拒絕" class="btn btn-danger" />
-                <input type="button" name="name" value="取消" class="btn btn-primary" />
+                <input type="button" name="Approved" id="Approved" value="核准" class="btn btn-success" />
+                <input type="button" name="Refuse" id="Refuse" value="拒絕" class="btn btn-danger" />
+                <input type="button" name="Cancel" id="Cancel" value="取消" class="btn btn-primary" />
             </div>
         </div>
     </div>
@@ -393,38 +401,77 @@
                     <td class="adjust-table-field">
                         <span>原因：</span>
                     </td>
-                    <td></td>
+                    <td>
+                        <span>@Html.DisplayFor(x => x.LatestAdjustReason)</span>
+                    </td>
                     <td class="adjust-table-field">
                         <span>區域：</span>
                     </td>
-                    <td></td>
+                    <td>
+                        <span>@Html.DisplayFor(x => x.LatestAdjustArea)</span>
+                    </td>
                     <td class="adjust-table-field">
                         <span>起日：</span>
                     </td>
-                    <td></td>
+                    <td>
+                        <span>@Html.DisplayFor(x => x.LatestAdjustStartDate)</span>
+                    </td>
                     <td class="adjust-table-field">
                         <span>迄日：</span>
                     </td>
-                    <td></td>
+                    <td>
+                        <span>@Html.DisplayFor(x => x.LatestAdjustEndDate)</span>
+                    </td>
                     <td class="adjust-table-field">
                         <span>生效金額：</span>
                     </td>
-                    <td></td>
+                    <td>
+                        <span>@Html.DisplayFor(x => x.LatestAdjustEffectAmount)</span>
+                    </td>
                 </tr>
             </tbody>
         </table>
 
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="col col-auto">
-                <span>最近一次臨調(清單)</span>
-            </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>臨調日期</th>
+                        <th>臨調時間</th>
+                        <th>調高原因</th>
+                        <th>使用地點</th>
+                        <th>出國地點</th>
+                        <th>臨調起日</th>
+                        <th>臨調迄日</th>
+                        <th>生效金額</th>
+                        <th>申請狀態</th>
+                        <th>處理日期時間</th>
+                        <th>拒絕原因</th>
+                        <th>CCAS回覆碼</th>
+                        <th>CCAS回覆時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.LatestAdjustInfo)
+                    {
+                        <tr>
+                            <td><span>@item.ApplyDate</span></td>
+                            <td><span>@item.ApplyTime</span></td>
+                            <td><span>@item.Reason</span></td>
+                            <td><span>@item.UseSite</span></td>
+                            <td><span>@item.Place</span></td>
+                            <td><span>@item.AdjustDateStart</span></td>
+                            <td><span>@item.AdjustDateEnd</span></td>
+                            <td><span>@item.ApproveAmount</span></td>
+                            <td><span>@item.ApproveResult</span></td>
+                            <td><span>@($"{item.ProcessDate} {item.ProcessTime}")</span></td>
+                            <td><span>@item.RejectReason</span></td>
+                            <td><span>@($"{item.CcasCode},{item.CcasStatus}")</span></td>
+                            <td><span>@item.CcasDateTime</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

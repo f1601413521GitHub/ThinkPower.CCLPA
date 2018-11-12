@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Transactions;
+using ThinkPower.CCLPA.DataAccess.Condition;
 using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DAO.ICRS;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
@@ -21,544 +22,326 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// </summary>
     public class AdjustService : BaseService, IAdjust
     {
+        #region Private Property
+
         /// <summary>
         /// 處理代碼
         /// </summary>
         private readonly string _progressCode = "B1";
 
-        /// <summary>
-        /// 是否已申請專案臨調
-        /// </summary>
-        /// <param name="customerId">客戶ID</param>
-        /// <returns>檢核結果</returns>
-        private bool HasApplyForAdjustment(string customerId)
-        {
-            bool hasApply = false;
-
-            if (String.IsNullOrEmpty(customerId))
-            {
-                throw new ArgumentNullException("customerId");
-            }
+        #endregion
 
 
 
-            IEnumerable<AdjustDO> adjustInfoList = new AdjustDAO().Get(customerId).
-                Where(x => ((x.ChiefFlag == "Y") || (x.PendingFlag == "Y")) &&
-                            (x.ProjectStatus == "Y"));
-
-            if (adjustInfoList.Any())
-            {
-                hasApply = true;
-            }
-            else
-            {
-                DateTime currentTime = DateTime.Now;
-
-                new LogProgressDAO().Insert(new LogProgressDO()
-                {
-                    ApplicationNo = customerId,
-                    ApplicationKind = null,
-                    ProgressCode = _progressCode,
-                    ProgressId = UserInfo.Id,
-                    ProgressName = UserInfo.Name,
-                    ProgressDate = currentTime.ToString("yyyyMMdd"),
-                    ProgressTime = currentTime.ToString("HHmmss"),
-                    SerialNo = null,
-                    Memo = null,
-                });
-            }
-
-            return hasApply;
-        }
+        #region Public Method
 
         /// <summary>
-        /// 是否存在於歸戶基本資料
-        /// </summary>
-        /// <param name="customerId">客戶ID</param>
-        /// <returns>檢核結果</returns>
-        private bool HasExistCustomer(string customerId)
-        {
-            bool hasExist = false;
-
-            if (String.IsNullOrEmpty(customerId))
-            {
-                throw new ArgumentNullException("customerId");
-            }
-
-
-
-            CustomerDO customerInfo = new CustomerDAO().Get(customerId);
-
-            if (customerInfo != null)
-            {
-                hasExist = true;
-            }
-
-            return hasExist;
-        }
-
-        /// <summary>
-        /// 是否存在生效中的預審專案
+        /// 檢核歸戶ID
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        private PreAdjustEntity HasExistEffectPreAdjust(string customerId)
+        public AdjustVerifyResult Verify(string customerId)
         {
-            PreAdjustEntity preAdjust = null;
-
-            if (String.IsNullOrEmpty(customerId))
-            {
-                throw new ArgumentNullException("customerId");
-            }
-
-
-
-            IEnumerable<PreAdjustDO> preAdjustList = new PreAdjustDAO().GetById(customerId).
-                Where(x => x.CcasReplyCode == "00");
-
-            if (preAdjustList.Any())
-            {
-                preAdjust = ConvertPreAdjustEntity(preAdjustList.First());
-            }
-
-            return preAdjust;
-        }
-
-        /// <summary>
-        /// 是否為臨調生效中
-        /// </summary>
-        /// <param name="customerId">客戶ID</param>
-        /// <returns></returns>
-        private CustomerInfo HasAdjustEffecting(string customerId)
-        {
-            CustomerInfo customer = null;
-
-            if (String.IsNullOrEmpty(customerId))
-            {
-                throw new ArgumentNullException("customerId");
-            }
-
-
-
-            CustomerDO customerInfo = new CustomerDAO().Get(customerId);
-
-            if (customerInfo != null)
-            {
-                DateTime currentTime = DateTime.Today;
-
-                DateTime startDate = DateTime.TryParseExact(customerInfo.AdjustStartDate, "yyyyMMdd", null,
-                    DateTimeStyles.None, out DateTime tempStartDate) ? tempStartDate :
-                    throw new InvalidOperationException("Convert AdjustStartDate fail");
-
-                DateTime endDate = DateTime.TryParseExact(customerInfo.AdjustEndDate, "yyyyMMdd", null,
-                    DateTimeStyles.None, out DateTime tempEndDate) ? tempEndDate :
-                    throw new InvalidOperationException("Convert AdjustEndDate fail");
-
-                if ((currentTime >= startDate) &&
-                    (currentTime <= endDate))
-                {
-                    customer = ConvertCustomerInfo(customerInfo);
-                }
-            }
-
-            return customer;
-        }
-
-        /// <summary>
-        /// 檢核臨調流程
-        /// </summary>
-        /// <param name="customerId">客戶ID</param>
-        /// <returns></returns>
-        public VerifiedResult Verifiy(string customerId)
-        {
-            VerifiedResult verifiedResult = null;
-            Dictionary<string, string> errorInfo = null;
+            List<string> errorCodeList = null;
             PreAdjustEntity tempPreAdjust = null;
             CustomerInfo tempCustomer = null;
 
-
             if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerId");
+                throw new ArgumentNullException(nameof(customerId));
             }
 
 
 
-            errorInfo = new Dictionary<string, string>();
+            errorCodeList = new List<string>();
 
-            bool hasApply = HasApplyForAdjustment(customerId);
+            IEnumerable<AdjustEntity> adjustList = GetApplyForAdjustment(customerId);
 
-            if (hasApply)
+            if (adjustList.Any())
             {
-                errorInfo.Add("01", "此歸戶ID，目前專案臨調PENDING處理中，無法再做申請動作。");
-            }
-
-            bool hasExist = HasExistCustomer(customerId);
-
-            if (!hasExist)
-            {
-                errorInfo.Add("02", "查無相關資料，請確認是否有輸入錯誤。");
-            }
-
-            PreAdjustEntity preAdjust = HasExistEffectPreAdjust(customerId);
-
-            if (preAdjust != null)
-            {
-                errorInfo.Add("03", "Dialog");
-                tempPreAdjust = preAdjust;
-                // TODO "此歸戶已有生效中的預審專案...";
-            }
-
-            CustomerInfo customer = HasAdjustEffecting(customerId);
-
-            if (customer != null)
-            {
-                errorInfo.Add("04", "Dialog");
-                tempCustomer = customer;
-                // TODO "此歸戶已有生效中的臨調...您現在是否要繼續做專案臨調申請?";
-            }
-
-
-
-            verifiedResult = new VerifiedResult()
-            {
-                ErrorInfo = errorInfo,
-                PreAdjustInfo = tempPreAdjust,
-                CustomerInfo = tempCustomer,
-            };
-
-            return verifiedResult;
-        }
-
-
-        /// <summary>
-        /// 申請臨調處理
-        /// </summary>
-        /// <param name="customerId">客戶ID</param>
-        /// <returns></returns>
-        public AdjustProcessResult ApplyForAdjustProcess(string customerId)
-        {
-            AdjustProcessResult result = null;
-
-            if (String.IsNullOrEmpty(customerId))
-            {
-                throw new ArgumentNullException("customerId");
-            }
-
-
-
-
-
-            VerifiedResult verifiedResult = Verifiy(customerId);
-
-            if (verifiedResult == null || verifiedResult.ErrorInfo.Any())
-            {
-                throw new InvalidOperationException("Verified fail");
-                // TODO if else 拆解?
-            }
-
-
-
-
-
-            string serialNo = (customerId.Length > 10) ? customerId.Substring(10, 1) : null;
-
-            QueryIcrsAmountResult icrsAmountInfo = new CreditSystemDAO().
-                QueryIcrsAmount(customerId, serialNo);
-
-            if (icrsAmountInfo == null || icrsAmountInfo.ResponseCode != "00")
-            {
-                throw new InvalidOperationException("QueryIcrsAmount fail");
-                // TODO Check ResponseCode!="00" is fail? / if else 拆解?
-            }
-
-
-            JcicQueryResult jcicQueryInfo = new AdjustSystemDAO().
-                QueryJcicDate(customerId, UserInfo.Id, UserInfo.Name);
-
-            if (icrsAmountInfo == null || icrsAmountInfo.ResponseCode != "00")
-            {
-                throw new InvalidOperationException("QueryJcicDate fail");
-                // TODO Check ResponseCode!="00" is fail? / if else 拆解?
-            }
-
-
-
-
-
-            CustomerDO customerInfo = new CustomerDAO().Get(customerId);
-
-            if (customerInfo == null)
-            {
-                throw new InvalidOperationException("Customer not found");
-            }
-
-
-            VipDO vipInfo = new VipDAO().Get(customerId, DateTime.Today);
-
-            if (vipInfo == null)
-            {
-                throw new InvalidOperationException("VipData not found");
-            }
-
-
-            IEnumerable<IncreaseReasonCodeDO> increaseReasonList = new IncreaseReasonCodeDAO().GetAll().
-                Where(x => x.UseFlag == "Y");
-
-            if (!increaseReasonList.Any())
-            {
-                throw new InvalidOperationException("IncreaseReason not found");
-            }
-
-
-            IEnumerable<ParamCurrentlyEffectDO> currentlyEffectList = new ParamCurrentlyEffectDAO().
-                Get(increaseReasonList.Select(x => x.Code));
-
-            if (!currentlyEffectList.Any())
-            {
-                throw new ArgumentNullException("CurrentlyEffect not found");
+                // TODO ClientSide ErrorMsg: 此歸戶ID，目前專案臨調PENDING處理中，無法再做申請動作。
+                errorCodeList.Add("01");
             }
             else
             {
-                DateTime currentTime = DateTime.Today;
-                DateTime tempStartTime;
-                DateTime tempEndTime;
-                List<ParamCurrentlyEffectDO> tempCurrentlyEffect = new List<ParamCurrentlyEffectDO>();
+                InsertLogProgress(customerId);
+            }
 
-                foreach (ParamCurrentlyEffectDO effectItem in currentlyEffectList)
-                {
-                    if (!DateTime.TryParseExact(effectItem.AdjustDateStart, "yyyy/MM/dd", null,
-                            DateTimeStyles.None, out tempStartTime))
-                    {
-                        throw new InvalidOperationException("Convert AdjustDateStart fail");
-                    }
+            CustomerInfo customer = GetCustomer(customerId);
 
-                    if (!DateTime.TryParseExact(effectItem.AdjustDateEnd, "yyyy/MM/dd", null,
-                            DateTimeStyles.None, out tempEndTime))
-                    {
-                        throw new InvalidOperationException("Convert AdjustDateEnd fail");
-                    }
+            if (customer == null)
+            {
+                // TODO ClientSide ErrorMsg: 查無相關資料，請確認是否有輸入錯誤。
+                errorCodeList.Add("02");
+            }
 
-                    if ((currentTime >= tempStartTime) &&
-                        (currentTime <= tempEndTime))
-                    {
-                        tempCurrentlyEffect.Add(effectItem);
-                    }
-                }
+            IEnumerable<PreAdjustEntity> preAdjustList = GetEffectPreAdjust(customerId);
 
-                currentlyEffectList = tempCurrentlyEffect;
+            if (preAdjustList != null && preAdjustList.Any())
+            {
+                // TODO ClientSide ErrorMsg: 此歸戶已有生效中的預審專案...。
+                errorCodeList.Add("03");
+                tempPreAdjust = preAdjustList.First();
+            }
+
+            if (customer != null && HasAdjustEffecting(customer))
+            {
+                // TODO ClientSide ErrorMsg: 此歸戶已有生效中的臨調...您現在是否要繼續做專案臨調申請?
+                errorCodeList.Add("04");
+                tempCustomer = customer;
+            }
+
+            return new AdjustVerifyResult()
+            {
+                ErrorCodeList = errorCodeList,
+                PreAdjustInfo = tempPreAdjust,
+                CustomerInfo = tempCustomer,
+            };
+        }
+
+        /// <summary>
+        /// 取得臨調申請資料
+        /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        /// <returns></returns>
+        public AdjustApplicationInfo GetApplicationData(string customerId)
+        {
+            AdjustApplicationInfo adjustApplicationInfo = null;
+
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException(nameof(customerId));
             }
 
 
-            IEnumerable<AdjustDO> adjustList = new AdjustDAO().Get(customerId).
-                OrderByDescending(x => x.ProcessDate).ThenByDescending(x => x.ProcessTime).Take(5);
 
+            IcrsAmountInfo icrsAmountInfo = new CreditSystemService().QueryIcrsAmount(customerId);
 
-            result = new AdjustProcessResult()
+            if ((icrsAmountInfo == null) ||
+                (icrsAmountInfo.ResponseCode != "00"))
             {
-                CustomerInfo = ConvertCustomerInfo(customerInfo),
-                VipInfo = ConvertVipInfo(vipInfo),
-                JcicInfo = ConvertJcicQueryResultInfo(jcicQueryInfo),
-                IncreaseReasonList = ConvertIncreaseReasonCodeInfo(increaseReasonList),
-                CurrentlyEffectList = ConvertParamCurrentlyEffectInfo(currentlyEffectList),
-                AdjustList = ConvertAdjustInfo(adjustList),
+                throw new InvalidOperationException($"{nameof(icrsAmountInfo)} not found or query fail");
+            }
+
+            JcicDateInfo jcicDateInfo = new AdjustSystemService() { UserInfo = UserInfo }.QueryJcicDate(customerId);
+
+            if ((icrsAmountInfo == null) ||
+                (icrsAmountInfo.ResponseCode != "00") ||
+                (icrsAmountInfo.ResponseCode != "72") ||
+                (icrsAmountInfo.ResponseCode != "73"))
+            {
+                throw new InvalidOperationException($"{nameof(jcicDateInfo)} not found or query fail");
+            }
+
+
+            CustomerService customerSerivce = new CustomerService();
+
+            CustomerInfo customerInfo = customerSerivce.Get(customerId);
+
+            if (customerInfo == null)
+            {
+                throw new InvalidOperationException($"{nameof(customerInfo)} not found");
+            }
+
+
+            VipInfo vipInfo = customerSerivce.GetVip(customerId, DateTime.Today);
+
+            if (vipInfo == null)
+            {
+                throw new InvalidOperationException($"{nameof(vipInfo)} not found");
+            }
+
+            IEnumerable<AdjustEntity> adjustList = QueryAdjust(new AdjustCondition()
+            {
+                PageIndex = 1,
+                PagingSize = 5,
+                CustomerId = customerId,
+                OrderBy = AdjustCondition.OrderByKind.ProcessDateByDescendingAndProcessTimeByDescending
+            });
+
+
+            adjustApplicationInfo = new AdjustApplicationInfo()
+            {
+                Customer = customerInfo,
+                Vip = vipInfo,
+                JcicDate = jcicDateInfo,
+                AdjustLogList = adjustList,
             };
 
-
-
-            return result;
+            return adjustApplicationInfo;
         }
 
+        public void Application()
+        {
+            // TODO 申請
+            throw new NotImplementedException();
+        }
 
+        public void Approved()
+        {
+            // TODO 核准
+            throw new NotImplementedException();
+        }
 
+        public void Refused()
+        {
+            // TODO 拒絕
+            throw new NotImplementedException();
+        }
 
+        public void Cancel()
+        {
+            // TODO 取消
+            throw new NotImplementedException();
+        }
 
-
-
-
-
-
+        #endregion
 
 
 
         #region Private Method
 
+        #region Verify
+
         /// <summary>
-        /// 轉換歸戶基本資料
+        /// 取得已申請的臨調資料
         /// </summary>
-        /// <param name="customerInfo">歸戶基本資料</param>
-        /// <returns></returns>
-        private CustomerInfo ConvertCustomerInfo(CustomerDO customerInfo)
+        /// <param name="customerId">客戶ID</param>
+        /// <returns>檢核結果</returns>
+        private IEnumerable<AdjustEntity> GetApplyForAdjustment(string customerId)
         {
-            if (customerInfo == null)
+            if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("customerInfo");
+                throw new ArgumentNullException(nameof(customerId));
             }
 
-            return new CustomerInfo()
+            IEnumerable<AdjustDO> adjustList = new AdjustDAO().Query(new AdjustCondition
             {
-                AccountId = customerInfo.AccountId,
-                ChineseName = customerInfo.ChineseName,
-                BirthDay = customerInfo.BirthDay,
-                RiskLevel = customerInfo.RiskLevel,
-                RiskRating = customerInfo.RiskRating,
-                CreditLimit = customerInfo.CreditLimit,
-                AboutDataStatus = customerInfo.AboutDataStatus,
-                IssueDate = customerInfo.IssueDate,
-                LiveCardCount = customerInfo.LiveCardCount,
-                Status = customerInfo.Status,
-                Vocation = customerInfo.Vocation,
-                BillAddr = customerInfo.BillAddr,
-                TelOffice = customerInfo.TelOffice,
-                TelHome = customerInfo.TelHome,
-                MobileTel = customerInfo.MobileTel,
-                Latest1Mnth = customerInfo.Latest1Mnth,
-                Latest2Mnth = customerInfo.Latest2Mnth,
-                Latest3Mnth = customerInfo.Latest3Mnth,
-                Latest4Mnth = customerInfo.Latest4Mnth,
-                Latest5Mnth = customerInfo.Latest5Mnth,
-                Latest6Mnth = customerInfo.Latest6Mnth,
-                Latest7Mnth = customerInfo.Latest7Mnth,
-                Latest8Mnth = customerInfo.Latest8Mnth,
-                Latest9Mnth = customerInfo.Latest9Mnth,
-                Latest10Mnth = customerInfo.Latest10Mnth,
-                Latest11Mnth = customerInfo.Latest11Mnth,
-                Latest12Mnth = customerInfo.Latest12Mnth,
-                Consume1 = customerInfo.Consume1,
-                Consume2 = customerInfo.Consume2,
-                Consume3 = customerInfo.Consume3,
-                Consume4 = customerInfo.Consume4,
-                Consume5 = customerInfo.Consume5,
-                Consume6 = customerInfo.Consume6,
-                Consume7 = customerInfo.Consume7,
-                Consume8 = customerInfo.Consume8,
-                Consume9 = customerInfo.Consume9,
-                Consume10 = customerInfo.Consume10,
-                Consume11 = customerInfo.Consume11,
-                Consume12 = customerInfo.Consume12,
-                PreCash1 = customerInfo.PreCash1,
-                PreCash2 = customerInfo.PreCash2,
-                PreCash3 = customerInfo.PreCash3,
-                PreCash4 = customerInfo.PreCash4,
-                PreCash5 = customerInfo.PreCash5,
-                PreCash6 = customerInfo.PreCash6,
-                PreCash7 = customerInfo.PreCash7,
-                PreCash8 = customerInfo.PreCash8,
-                PreCash9 = customerInfo.PreCash9,
-                PreCash10 = customerInfo.PreCash10,
-                PreCash11 = customerInfo.PreCash11,
-                PreCash12 = customerInfo.PreCash12,
-                CreditRating1 = customerInfo.CreditRating1,
-                CreditRating2 = customerInfo.CreditRating2,
-                CreditRating3 = customerInfo.CreditRating3,
-                CreditRating4 = customerInfo.CreditRating4,
-                CreditRating5 = customerInfo.CreditRating5,
-                CreditRating6 = customerInfo.CreditRating6,
-                CreditRating7 = customerInfo.CreditRating7,
-                CreditRating8 = customerInfo.CreditRating8,
-                CreditRating9 = customerInfo.CreditRating9,
-                CreditRating10 = customerInfo.CreditRating10,
-                CreditRating11 = customerInfo.CreditRating11,
-                CreditRating12 = customerInfo.CreditRating12,
-                ClosingDay = customerInfo.ClosingDay,
-                PayDeadline = customerInfo.PayDeadline,
-                ClosingAmount = customerInfo.ClosingAmount,
-                MinimumAmountPayable = customerInfo.MinimumAmountPayable,
-                RecentPaymentAmount = customerInfo.RecentPaymentAmount,
-                RecentPaymentDate = customerInfo.RecentPaymentDate,
-                OfferAmount = customerInfo.OfferAmount,
-                UnpaidTotal = customerInfo.UnpaidTotal,
-                AuthorizedAmountNotAccount = customerInfo.AuthorizedAmountNotAccount,
-                AdjustReason = customerInfo.AdjustReason,
-                AdjustArea = customerInfo.AdjustArea,
-                AdjustStartDate = customerInfo.AdjustStartDate,
-                AdjustEndDate = customerInfo.AdjustEndDate,
-                AdjustEffectAmount = customerInfo.AdjustEffectAmount,
-                VintageMonths = customerInfo.VintageMonths,
-                StatusFlag = customerInfo.StatusFlag,
-                GutrFlag = customerInfo.GutrFlag,
-                DelayCount = customerInfo.DelayCount,
-                CcasUnderpaidAmount = customerInfo.CcasUnderpaidAmount,
-                CcasUsabilityAmount = customerInfo.CcasUsabilityAmount,
-                CcasUnderpaidRate = customerInfo.CcasUnderpaidRate,
-                DataDate = customerInfo.DataDate,
-                EligibilityForWithdrawal = customerInfo.EligibilityForWithdrawal,
-                SystemAdjustRevFlag = customerInfo.SystemAdjustRevFlag,
-                AutomaticDebit = customerInfo.AutomaticDebit,
-                DebitBankCode = customerInfo.DebitBankCode,
-                EtalStatus = customerInfo.EtalStatus,
-                TelResident = customerInfo.TelResident,
-                SendType = customerInfo.SendType,
-                ElectronicBillingCustomerNote = customerInfo.ElectronicBillingCustomerNote,
-                Email = customerInfo.Email,
-                Industry = customerInfo.Industry,
-                JobTitle = customerInfo.JobTitle,
-                ResidentAddr = customerInfo.ResidentAddr,
-                MailingAddr = customerInfo.MailingAddr,
-                CompanyAddr = customerInfo.CompanyAddr,
-                AnnualIncome = customerInfo.AnnualIncome,
-                In1 = customerInfo.In1,
-                In2 = customerInfo.In2,
-                In3 = customerInfo.In3,
-                ResidentAddrPostalCode = customerInfo.ResidentAddrPostalCode,
-                MailingAddrPostalCode = customerInfo.MailingAddrPostalCode,
-                CompanyAddrPostalCode = customerInfo.CompanyAddrPostalCode,
-            };
+                CustomerId = customerId,
+                ChiefFlag = "Y",
+                PendingFlag = "Y",
+                ProjectStatus = "Y"
+            });
+
+            return ConvertAdjustEntity(adjustList);
         }
 
         /// <summary>
-        /// 轉換臨調預審名單資訊
+        /// 取得歸戶基本資料
         /// </summary>
-        /// <param name="preAdjustDO">臨調預審名單資訊</param>
-        /// <returns></returns>
-        private PreAdjustEntity ConvertPreAdjustEntity(PreAdjustDO preAdjustDO)
+        /// <param name="customerId">客戶ID</param>
+        /// <returns>檢核結果</returns>
+        private CustomerInfo GetCustomer(string customerId)
         {
-            if (preAdjustDO == null)
+            if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("preAdjustDO");
+                throw new ArgumentNullException(nameof(customerId));
             }
 
-            return new PreAdjustEntity()
-            {
-                CampaignId = preAdjustDO.CampaignId,
-                CustomerId = preAdjustDO.CustomerId,
-                ProjectName = preAdjustDO.ProjectName,
-                ProjectAmount = preAdjustDO.ProjectAmount,
-                CloseDate = preAdjustDO.CloseDate,
-                ImportDate = preAdjustDO.ImportDate,
-                ChineseName = preAdjustDO.ChineseName,
-                Kind = preAdjustDO.Kind,
-                SmsCheckResult = preAdjustDO.SmsCheckResult,
-                Status = preAdjustDO.Status,
-                ProcessingDateTime = preAdjustDO.ProcessingDateTime,
-                ProcessingUserId = preAdjustDO.ProcessingUserId,
-                DeleteDateTime = preAdjustDO.DeleteDateTime,
-                DeleteUserId = preAdjustDO.DeleteUserId,
-                Remark = preAdjustDO.Remark,
-                ClosingDay = preAdjustDO.ClosingDay,
-                PayDeadline = preAdjustDO.PayDeadline,
-                ForceAgreeUserId = preAdjustDO.ForceAgreeUserId,
-                MobileTel = preAdjustDO.MobileTel,
-                RejectReasonCode = preAdjustDO.RejectReasonCode,
-                CcasReplyCode = preAdjustDO.CcasReplyCode,
-                CcasReplyStatus = preAdjustDO.CcasReplyStatus,
-                CcasReplyDateTime = preAdjustDO.CcasReplyDateTime,
-            };
+            return new CustomerService().Get(customerId);
         }
 
         /// <summary>
-        /// 轉換臨調處理資訊
+        /// 取得生效的預審資料
+        /// 是否存在
         /// </summary>
-        /// <param name="adjustList">臨調處理資訊</param>
+        /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        private IEnumerable<AdjustInfo> ConvertAdjustInfo(IEnumerable<AdjustDO> adjustList)
+        private IEnumerable<PreAdjustEntity> GetEffectPreAdjust(string customerId)
         {
-            if (adjustList == null)
+            if (String.IsNullOrEmpty(customerId))
             {
-                throw new ArgumentNullException("adjustList");
+                throw new ArgumentNullException(nameof(customerId));
             }
 
-            return adjustList.Select(x => new AdjustInfo()
+            return new PreAdjustService().GetEffectPreAdjust(customerId);
+        }
+
+        /// <summary>
+        /// 是否為臨調生效中
+        /// </summary>
+        /// <param name="customer">客戶ID</param>
+        /// <returns></returns>
+        private bool HasAdjustEffecting(CustomerInfo customer)
+        {
+            if (customer == null)
+            {
+                throw new ArgumentNullException(nameof(customer));
+            }
+
+            DateTime currentDate = DateTime.Today;
+
+            DateTime startDate = DateTime.TryParseExact(customer.AdjustStartDate, "yyyyMMdd", null,
+                DateTimeStyles.None, out DateTime tempStartDate) ? tempStartDate :
+                throw new InvalidOperationException("Convert AdjustStartDate fail");
+
+            DateTime endDate = DateTime.TryParseExact(customer.AdjustStartDate, "yyyyMMdd", null,
+                DateTimeStyles.None, out DateTime tempEndDate) ? tempEndDate :
+                throw new InvalidOperationException("Convert AdjustEndDate fail");
+
+            return ((currentDate >= startDate) && (currentDate <= endDate));
+        }
+
+        #endregion
+
+        #region Insert/Update/Delete
+
+        /// <summary>
+        /// 新增臨調紀錄
+        /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        private void InsertLogProgress(string customerId)
+        {
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException(nameof(customerId));
+            }
+
+            DateTime currentTime = DateTime.Now;
+
+            new LogProgressDAO().Insert(new LogProgressDO()
+            {
+                ApplicationNo = customerId,
+                ApplicationKind = null,
+                ProgressCode = _progressCode,
+                ProgressId = UserInfo.Id,
+                ProgressName = UserInfo.Name,
+                ProgressDate = currentTime.ToString("yyyyMMdd"),
+                ProgressTime = currentTime.ToString("HHmmss"),
+                SerialNo = null,
+                Memo = null,
+            });
+        }
+
+        /// <summary>
+        /// 查詢臨調資料
+        /// </summary>
+        /// <param name="condition">臨調資料查詢條件</param>
+        /// <returns></returns>
+        private IEnumerable<AdjustEntity> QueryAdjust(AdjustCondition condition)
+        {
+            if (condition == null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            IEnumerable<AdjustDO> adjustList = new AdjustDAO().Query(condition);
+
+            return ConvertAdjustEntity(adjustList);
+        }
+
+        #endregion
+
+        #region Convert
+
+        /// <summary>
+        /// 轉換臨調資料
+        /// </summary>
+        /// <param name="adjustList">臨調資料</param>
+        /// <returns></returns>
+        private IEnumerable<AdjustEntity> ConvertAdjustEntity(IEnumerable<AdjustDO> adjustList)
+        {
+            return (adjustList == null) ? null : adjustList.Select(x => new AdjustEntity()
             {
                 Id = x.Id,
                 ApplyDate = x.ApplyDate,
@@ -607,108 +390,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             });
         }
 
-        /// <summary>
-        /// 轉換參數目前生效資訊
-        /// </summary>
-        /// <param name="currentlyEffectList">參數目前生效資訊</param>
-        /// <returns></returns>
-        private IEnumerable<ParamCurrentlyEffectInfo> ConvertParamCurrentlyEffectInfo(
-            IEnumerable<ParamCurrentlyEffectDO> currentlyEffectList)
-        {
-            if (currentlyEffectList == null)
-            {
-                throw new ArgumentNullException("currentlyEffectList");
-            }
-
-            return currentlyEffectList.Select(x => new ParamCurrentlyEffectInfo()
-            {
-                Reason = x.Reason,
-                EffectDate = x.EffectDate,
-                AdjustDateStart = x.AdjustDateStart,
-                AdjustDateEnd = x.AdjustDateEnd,
-                ApproveAmountMax = x.ApproveAmountMax,
-                Remark = x.Remark,
-                VerifiyCondition = x.VerifiyCondition,
-                ApproveScaleMax = x.ApproveScaleMax,
-            });
-        }
-
-        /// <summary>
-        /// 轉換調高原因代碼資訊
-        /// </summary>
-        /// <param name="increaseReasonList">調高原因代碼資訊</param>
-        /// <returns></returns>
-        private IEnumerable<IncreaseReasonCodeInfo> ConvertIncreaseReasonCodeInfo(
-            IEnumerable<IncreaseReasonCodeDO> increaseReasonList)
-        {
-            if (increaseReasonList == null || !increaseReasonList.Any())
-            {
-                throw new ArgumentNullException("increaseReasonList");
-            }
-
-            return increaseReasonList.Select(x => new IncreaseReasonCodeInfo()
-            {
-                Code = x.Code,
-                Name = x.Name,
-                UseFlag = x.UseFlag,
-            });
-        }
-
-        /// <summary>
-        /// 轉換JCIC查詢結果
-        /// </summary>
-        /// <param name="jcicQueryInfo">JCIC查詢結果</param>
-        /// <returns></returns>
-        private JcicQueryResultInfo ConvertJcicQueryResultInfo(JcicQueryResult jcicQueryInfo)
-        {
-            if (jcicQueryInfo == null)
-            {
-                throw new ArgumentNullException("jcicQueryInfo");
-            }
-
-            return new JcicQueryResultInfo()
-            {
-                JcicQueryDate = jcicQueryInfo.JcicQueryDate,
-                ResponseCode = jcicQueryInfo.ResponseCode,
-            };
-        }
-
-        /// <summary>
-        /// 轉換貴賓資訊
-        /// </summary>
-        /// <param name="vipInfo">貴賓資訊</param>
-        /// <returns></returns>
-        private VipInfo ConvertVipInfo(VipDO vipInfo)
-        {
-            if (vipInfo == null)
-            {
-                throw new ArgumentNullException("vipInfo");
-            }
-
-            return new VipInfo()
-            {
-                CustomerId = vipInfo.CustomerId,
-                DataDate = vipInfo.DataDate,
-                DataChangeDate = vipInfo.DataChangeDate,
-                ApplicableStarLevel = vipInfo.ApplicableStarLevel,
-                ApplicableStarValidityPeriod = vipInfo.ApplicableStarValidityPeriod,
-                MonthStarLevel = vipInfo.MonthStarLevel,
-                MonthStarValidityPeriod = vipInfo.MonthStarValidityPeriod,
-                BusinessBalance = vipInfo.BusinessBalance,
-                AverageBalance = vipInfo.AverageBalance,
-                InventotyBalance = vipInfo.InventotyBalance,
-                PremiunsPaid = vipInfo.PremiunsPaid,
-                AUM = vipInfo.AUM,
-                NearlyYearSwipeAmount = vipInfo.NearlyYearSwipeAmount,
-                MortgageBalance = vipInfo.MortgageBalance,
-                ForexMargin = vipInfo.ForexMargin,
-                ConvertiblePrincipal = vipInfo.ConvertiblePrincipal,
-                ReDelegate = vipInfo.ReDelegate,
-                CardVipFlag = vipInfo.CardVipFlag,
-                HouseholdExceptionStars = vipInfo.HouseholdExceptionStars,
-                LegalExceptionStars = vipInfo.LegalExceptionStars,
-            };
-        } 
+        #endregion
 
         #endregion
     }

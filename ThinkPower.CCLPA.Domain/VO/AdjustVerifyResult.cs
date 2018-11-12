@@ -4,14 +4,14 @@ using ThinkPower.CCLPA.Domain.Entity;
 namespace ThinkPower.CCLPA.Domain.VO
 {
     /// <summary>
-    /// 臨調處理檢核結果類別
+    /// 專案臨調檢核結果類別
     /// </summary>
-    public class VerifiedResult
+    public class AdjustVerifyResult
     {
         /// <summary>
-        /// 錯誤資訊(題號與訊息)
+        /// 錯誤代碼
         /// </summary>
-        public Dictionary<string, string> ErrorInfo { get; set; }
+        public IEnumerable<string> ErrorCodeList { get; set; }
         /// <summary>
         /// 預審名單資訊
         /// </summary>

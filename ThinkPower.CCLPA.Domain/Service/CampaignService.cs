@@ -41,7 +41,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (String.IsNullOrEmpty(campaignId))
             {
-                throw new ArgumentNullException("campaignId");
+                throw new ArgumentNullException(nameof(campaignId));
             }
 
             CampaignDO campaignDO = new CampaignDAO().Get(campaignId);
@@ -84,7 +84,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             if (_campaignEntity == null)
             {
-                throw new ArgumentNullException("_campaignEntity");
+                throw new ArgumentNullException(nameof(_campaignEntity));
             }
 
             return new CampaignDetailDAO().Count(_campaignEntity.CampaignId,
@@ -101,7 +101,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (_campaignEntity == null)
             {
-                throw new ArgumentNullException("_campaignEntity");
+                throw new ArgumentNullException(nameof(_campaignEntity));
             }
 
             IEnumerable<CampaignDetailDO> campaignDetailList = new CampaignDetailDAO().Get(
