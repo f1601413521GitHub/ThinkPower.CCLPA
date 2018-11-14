@@ -4,28 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ThinkPower.CCLPA.Domain.Resource
+namespace ThinkPower.CCLPA.Web.Helper
 {
     /// <summary>
     /// 工具類別
     /// </summary>
-    public class Tools
+    public class ToolHelper
     {
         /// <summary>
         /// 貨幣格式
         /// </summary>
-        public enum NumericFormats
+        public enum NumericFormat
         {
             None = 0,
             Unit,
             Thousand,
-            DecimalPointTwoBits
+            DecimalPointTwoBit
         }
 
         /// <summary>
         /// 日期時間格式
         /// </summary>
-        public enum DateTimeFormats
+        public enum DateTimeFormat
         {
             None = 0,
             Date
@@ -34,7 +34,7 @@ namespace ThinkPower.CCLPA.Domain.Resource
         /// <summary>
         /// 字串格式
         /// </summary>
-        public enum Formats
+        public enum Format
         {
             None = 0,
             Date
@@ -46,22 +46,22 @@ namespace ThinkPower.CCLPA.Domain.Resource
         /// </summary>
         /// <param name="data">來源資料</param>
         /// <param name="format">格式</param>
-        public static string FormatDecimal(decimal? data, NumericFormats format)
+        public static string FormatDecimal(decimal? data, NumericFormat format)
         {
             string formatting = null;
 
             switch (format)
             {
-                case NumericFormats.None:
+                case NumericFormat.None:
                     formatting = "N";
                     break;
-                case NumericFormats.Unit:
+                case NumericFormat.Unit:
                     formatting = "#";
                     break;
-                case NumericFormats.Thousand:
+                case NumericFormat.Thousand:
                     formatting = "#,#";
                     break;
-                case NumericFormats.DecimalPointTwoBits:
+                case NumericFormat.DecimalPointTwoBit:
                     formatting = "#.##";
                     break;
             }
@@ -75,16 +75,16 @@ namespace ThinkPower.CCLPA.Domain.Resource
         /// </summary>
         /// <param name="data">來源資料</param>
         /// <param name="format">格式</param>
-        public static string FormatDateTime(DateTime? data, DateTimeFormats format)
+        public static string FormatDateTime(DateTime? data, DateTimeFormat format)
         {
             string formatting = null;
 
             switch (format)
             {
-                case DateTimeFormats.None:
+                case DateTimeFormat.None:
                     formatting = "0"; // ISO 8601
                     break;
-                case DateTimeFormats.Date:
+                case DateTimeFormat.Date:
                     formatting = "yyyy/MM/dd";
                     break;
             }
@@ -99,7 +99,7 @@ namespace ThinkPower.CCLPA.Domain.Resource
         /// <param name="data">來源資料</param>
         /// <param name="format">格式</param>
         /// <returns></returns>
-        public static string FormatString(string data, Formats format)
+        public static string FormatString(string data, Format format)
         {
             string result = null;
 
@@ -107,10 +107,10 @@ namespace ThinkPower.CCLPA.Domain.Resource
             {
                 switch (format)
                 {
-                    case Formats.None:
+                    case Format.None:
                         result = data;
                         break;
-                    case Formats.Date:
+                    case Format.Date:
                         if (data.Length == 8)
                         {
                             result = $"{data.Substring(0, 4)}/{data.Substring(4, 2)}/{data.Substring(6, 2)}";

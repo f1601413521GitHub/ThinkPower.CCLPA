@@ -124,6 +124,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new InvalidOperationException($"{nameof(icrsAmountInfo)} not found or query fail");
             }
 
+
             JcicDateInfo jcicDateInfo = new AdjustSystemService() { UserInfo = UserInfo }.QueryJcicDate(customerId);
 
             if ((icrsAmountInfo == null) ||
@@ -147,10 +148,9 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             VipInfo vipInfo = customerSerivce.GetVip(customerId, DateTime.Today);
 
-            if (vipInfo == null)
-            {
-                throw new InvalidOperationException($"{nameof(vipInfo)} not found");
-            }
+
+            // TODO SP_ELGB_PAD02
+
 
             IEnumerable<AdjustEntity> adjustList = QueryAdjust(new AdjustCondition()
             {

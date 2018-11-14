@@ -1,6 +1,6 @@
 ﻿@model ThinkPower.CCLPA.Web.ViewModels.AdjustProcessViewModel
 
-@using ThinkPower.CCLPA.Domain.Resource
+@using ThinkPower.CCLPA.Web.Helper
 
 @{
     ViewBag.Title = "AdjustProcess";
@@ -57,7 +57,7 @@
                 <span>本月VIP星等</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.MonthStarLevel, Tools.NumericFormats.Unit)</span>
+                <span>@ToolHelper.FormatDecimal(Model.MonthStarLevel, ToolHelper.NumericFormat.Unit)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -91,7 +91,7 @@
                 <span>生日</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDateTime(Model.BirthDay, Tools.DateTimeFormats.Date)</span>
+                <span>@ToolHelper.FormatDateTime(Model.BirthDay, ToolHelper.DateTimeFormat.Date)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>歸戶狀態</span>
@@ -117,7 +117,7 @@
                 <span>最初發卡日</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDateTime(Model.IssueDate, Tools.DateTimeFormats.Date)</span>
+                <span>@ToolHelper.FormatDateTime(Model.IssueDate, ToolHelper.DateTimeFormat.Date)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -177,7 +177,7 @@
                 <span>近一年最高消費金額</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.NearlyYearMaxConsumptionAmount, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.NearlyYearMaxConsumptionAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>註記</span>
@@ -191,19 +191,19 @@
                 <span>信用額度</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.CreditLimit, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.CreditLimit, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>近期關帳</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.ClosingAmount, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.ClosingAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最低應繳</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.MinimumAmountPayable, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.MinimumAmountPayable, ToolHelper.NumericFormat.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -211,19 +211,19 @@
                 <span>臨調後額度</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.ShowAfterAdjustAmount, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.ShowAfterAdjustAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最近付款日期</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDateTime(Model.RecentPaymentDate, Tools.DateTimeFormats.Date)</span>
+                <span>@ToolHelper.FormatDateTime(Model.RecentPaymentDate, ToolHelper.DateTimeFormat.Date)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最近付款金額</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.RecentPaymentAmount, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.RecentPaymentAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -231,19 +231,19 @@
                 <span>優利餘額</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.OfferAmount, Tools.NumericFormats.Unit)</span>
+                <span>@ToolHelper.FormatDecimal(Model.OfferAmount, ToolHelper.NumericFormat.Unit)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>總未付</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.UnpaidTotal, Tools.NumericFormats.Unit)</span>
+                <span>@ToolHelper.FormatDecimal(Model.UnpaidTotal, ToolHelper.NumericFormat.Unit)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>未入帳金額</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.AuthorizedAmountNotAccount, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.AuthorizedAmountNotAccount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -251,19 +251,19 @@
                 <span>CCAS掛帳</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.CcasUnderpaidAmount, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.CcasUnderpaidAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>可用餘額</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.CcasUsabilityAmount, Tools.NumericFormats.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model.CcasUsabilityAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>掛帳比率</span>
             </div>
             <div class="col col-2">
-                <span>@Tools.FormatDecimal(Model.CcasUnderpaidRate, Tools.NumericFormats.DecimalPointTwoBits)</span>
+                <span>@ToolHelper.FormatDecimal(Model.CcasUnderpaidRate, ToolHelper.NumericFormat.DecimalPointTwoBit)</span>
             </div>
         </div>
     </div>
@@ -306,18 +306,18 @@
                     </tr>
                     <tr>
                         <td class="adjust-table-field">消費金額</td>
-                        <td>@Tools.FormatDecimal(Model.Consume1, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume2, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume3, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume4, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume5, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume6, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume7, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume8, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume9, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume10, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume11, Tools.NumericFormats.Thousand)</td>
-                        <td>@Tools.FormatDecimal(Model.Consume12, Tools.NumericFormats.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume1, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume2, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume3, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume4, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume5, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume6, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume7, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume8, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume9, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume10, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume11, ToolHelper.NumericFormat.Thousand)</td>
+                        <td>@ToolHelper.FormatDecimal(Model.Consume12, ToolHelper.NumericFormat.Thousand)</td>
                     </tr>
                     <tr>
                         <td class="adjust-table-field">預借金額</td>
@@ -519,19 +519,19 @@
                         <span>起日：</span>
                     </td>
                     <td>
-                        <span>@Tools.FormatString(Model.LatestAdjustStartDate, Tools.Formats.Date)</span>
+                        <span>@ToolHelper.FormatString(Model.LatestAdjustStartDate, ToolHelper.Format.Date)</span>
                     </td>
                     <td class="adjust-table-field">
                         <span>迄日：</span>
                     </td>
                     <td>
-                        <span>@Tools.FormatString(Model.LatestAdjustEndDate, Tools.Formats.Date)</span>
+                        <span>@ToolHelper.FormatString(Model.LatestAdjustEndDate, ToolHelper.Format.Date)</span>
                     </td>
                     <td class="adjust-table-field">
                         <span>生效金額：</span>
                     </td>
                     <td>
-                        <span>@Tools.FormatDecimal(Model.LatestAdjustEffectAmount, Tools.NumericFormats.Thousand)</span>
+                        <span>@ToolHelper.FormatDecimal(Model.LatestAdjustEffectAmount, ToolHelper.NumericFormat.Thousand)</span>
                     </td>
                 </tr>
             </tbody>
@@ -569,7 +569,7 @@
                                 <td><span>@item.Place</span></td>
                                 <td><span>@item.AdjustDateStart</span></td>
                                 <td><span>@item.AdjustDateEnd</span></td>
-                                <td><span>@Tools.FormatDecimal(item.ApproveAmount, Tools.NumericFormats.Thousand)</span></td>
+                                <td><span>@ToolHelper.FormatDecimal(item.ApproveAmount, ToolHelper.NumericFormat.Thousand)</span></td>
                                 <td><span>@item.ApproveResult</span></td>
                                 <td><span>@($"{item.ProcessDate} {item.ProcessTime}")</span></td>
                                 <td><span>@item.RejectReason</span></td>

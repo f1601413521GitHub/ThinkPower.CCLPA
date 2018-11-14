@@ -40,7 +40,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 ManualAuthorization = CreateManualAuthorizationSelectItemList(),
             };
 
-            viewModel = SetTestData(viewModel);
+            //viewModel = SetTestData(viewModel);
 
             return View(_adjustProcessPage, viewModel);
         }
@@ -226,6 +226,8 @@ namespace ThinkPower.CCLPA.Web.Controllers
 
                 CustomerInfo customer = adjustApplicationData.Customer;
 
+
+                // TODO ViewModel結構劃分 / 
                 viewModel = new AdjustProcessViewModel()
                 {
                     AccountId = customer.AccountId,
@@ -233,7 +235,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
                         (customer.LiveCardCount <= 0)) ? "N" : "Y",
                     Status = customer.Status,
                     DataDate = customer.DataDate,
-                    MonthStarLevel = adjustApplicationData.Vip.MonthStarLevel,
+                    MonthStarLevel = (adjustApplicationData.Vip == null) ? null : adjustApplicationData.Vip.MonthStarLevel,
                     ChineseName = customer.ChineseName,
                     BirthDay = customer.BirthDay,
                     AboutDataStatus = customer.AboutDataStatus,
@@ -247,7 +249,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
                     TelOffice = customer.TelOffice,
                     MobileTel = customer.MobileTel,
                     BillAddr = customer.BillAddr,
-                    NearlyYearMaxConsumptionAmount = new List<decimal?>() {
+                    NearlyYearMaxConsumptionAmount = new decimal?[]{
                         customer.Consume1, customer.Consume2, customer.Consume3, customer.Consume4,
                         customer.Consume5, customer.Consume6, customer.Consume7, customer.Consume8,
                         customer.Consume9, customer.Consume10, customer.Consume11, customer.Consume12,
