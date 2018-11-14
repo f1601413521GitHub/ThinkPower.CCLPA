@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\AdjustEntity.cs" />
+    <Compile Include="Resource\Tools.cs" />
     <Compile Include="Service\CustomerService.cs" />
     <Compile Include="Service\ParamterService.cs" />
     <Compile Include="VO\AdjustReasonCodeInfo.cs" />
@@ -93,7 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DTO\" />
-    <Folder Include="Resource\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThinkPower.CCLPA.DataAccess\ThinkPower.CCLPA.DataAccess.csproj">

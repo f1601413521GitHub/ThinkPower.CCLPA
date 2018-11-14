@@ -279,6 +279,11 @@
             tipTitle = "提示訊息";
             tipMessage = "查無相關資料，請確認是否有輸入錯誤。";
         }
+        else if (!canExecuteOperation)
+        {
+            tipTitle = "錯誤訊息";
+            tipMessage = "很抱歉，您目前尚未申請此功能權限。";
+        }
 
         <div class="modal" tabindex="-1" role="dialog" id="tip-modal">
             <div class="modal-dialog" role="document">

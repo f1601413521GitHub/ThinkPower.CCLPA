@@ -301,20 +301,16 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <summary>
         /// 取得生效的預審名單
         /// </summary>
-        /// <param name="customerId">客戶ID</param>
+        /// <param name="preAdjustCondition">預審名單查詢條件</param>
         /// <returns></returns>
-        internal IEnumerable<PreAdjustEntity> GetEffectPreAdjust(string customerId)
+        internal IEnumerable<PreAdjustEntity> GetEffectPreAdjust(PreAdjustCondition preAdjustCondition)
         {
-            if (String.IsNullOrEmpty(customerId))
+            if (preAdjustCondition == null)
             {
-                throw new ArgumentNullException(nameof(customerId));
+                throw new ArgumentNullException(nameof(preAdjustCondition));
             }
 
-            IEnumerable<PreAdjustDO> preAdjustList = new PreAdjustDAO().Query(new PreAdjustCondition()
-            {
-                CustomerId = customerId,
-                CcasReplyCode = "00",
-            });
+            IEnumerable<PreAdjustDO> preAdjustList = new PreAdjustDAO().Query(preAdjustCondition);
 
             return ConvertPreAdjustEntity(preAdjustList);
         }

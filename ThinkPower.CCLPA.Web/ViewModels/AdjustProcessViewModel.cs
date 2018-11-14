@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using ThinkPower.CCLPA.Domain.Entity;
@@ -33,7 +34,7 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// <summary>
         /// 本月VIP星等 
         /// </summary>
-        public string MonthStarLevel { get; set; }
+        public decimal? MonthStarLevel { get; set; }
         /// <summary>
         /// 中文姓名
         /// </summary>
@@ -41,7 +42,7 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// <summary>
         /// 生日
         /// </summary>
-        public string BirthDay { get; set; }
+        public DateTime? BirthDay { get; set; }
         /// <summary>
         /// 歸戶狀態
         /// </summary>
@@ -57,7 +58,7 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// <summary>
         /// 最初發卡日
         /// </summary>
-        public string IssueDate { get; set; }
+        public DateTime? IssueDate { get; set; }
         /// <summary>
         /// 關帳日
         /// </summary>
@@ -89,7 +90,7 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// <summary>
         /// 近一年最高消費金額
         /// </summary>
-        public string NearlyYearMaxConsumptionAmount { get; set; }
+        public decimal? NearlyYearMaxConsumptionAmount { get; set; }
         /// <summary>
         /// 註記
         /// </summary>
@@ -97,67 +98,289 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// <summary>
         /// 信用額度
         /// </summary>
-        public string CreditLimit { get; set; }
+        public decimal? CreditLimit { get; set; }
         /// <summary>
         /// 近期關帳
         /// </summary>
-        public string ClosingAmount { get; set; }
+        public decimal? ClosingAmount { get; set; }
         /// <summary>
         /// 最低應繳
         /// </summary>
-        public string MinimumAmountPayable { get; set; }
+        public decimal? MinimumAmountPayable { get; set; }
         /// <summary>
-        /// 繳款評等(1~12)
+        /// 近1個月繳款評等
         /// </summary>
         public string Latest1Mnth { get; set; }
+
+        /// <summary>
+        /// 近2個月繳款評等
+        /// </summary>
+        public string Latest2Mnth { get; set; }
+
+        /// <summary>
+        /// 近3個月繳款評等
+        /// </summary>
+        public string Latest3Mnth { get; set; }
+
+        /// <summary>
+        /// 近4個月繳款評等
+        /// </summary>
+        public string Latest4Mnth { get; set; }
+
+        /// <summary>
+        /// 近5個月繳款評等
+        /// </summary>
+        public string Latest5Mnth { get; set; }
+
+        /// <summary>
+        /// 近6個月繳款評等
+        /// </summary>
+        public string Latest6Mnth { get; set; }
+
+        /// <summary>
+        /// 近7個月繳款評等
+        /// </summary>
+        public string Latest7Mnth { get; set; }
+
+        /// <summary>
+        /// 近8個月繳款評等
+        /// </summary>
+        public string Latest8Mnth { get; set; }
+
+        /// <summary>
+        /// 近9個月繳款評等
+        /// </summary>
+        public string Latest9Mnth { get; set; }
+
+        /// <summary>
+        /// 近10個月繳款評等 
+        /// </summary>
+        public string Latest10Mnth { get; set; }
+
+        /// <summary>
+        /// 近11個月繳款評等 
+        /// </summary>
+        public string Latest11Mnth { get; set; }
+
+        /// <summary>
+        /// 近12個月繳款評等 
+        /// </summary>
+        public string Latest12Mnth { get; set; }
+
         /// <summary>
         /// 臨調後額度
         /// </summary>
-        public string ShowAfterAdjustAmount { get; set; }
+        public decimal? ShowAfterAdjustAmount { get; set; }
         /// <summary>
         /// 最近付款日期
         /// </summary>
-        public string RecentPaymentDate { get; set; }
+        public DateTime? RecentPaymentDate { get; set; }
         /// <summary>
         /// 最近付款金額
         /// </summary>
-        public string RecentPaymentAmount { get; set; }
+        public decimal? RecentPaymentAmount { get; set; }
         /// <summary>
-        /// 消費金額(1~12)
+        /// 前1月單月消費金額
         /// </summary>
-        public string Consume1 { get; set; }
+        public decimal? Consume1 { get; set; }
+
+        /// <summary>
+        /// 前2月單月消費金額
+        /// </summary>
+        public decimal? Consume2 { get; set; }
+
+        /// <summary>
+        /// 前3月單月消費金額
+        /// </summary>
+        public decimal? Consume3 { get; set; }
+
+        /// <summary>
+        /// 前4月單月消費金額
+        /// </summary>
+        public decimal? Consume4 { get; set; }
+
+        /// <summary>
+        /// 前5月單月消費金額
+        /// </summary>
+        public decimal? Consume5 { get; set; }
+
+        /// <summary>
+        /// 前6月單月消費金額
+        /// </summary>
+        public decimal? Consume6 { get; set; }
+
+        /// <summary>
+        /// 前7月單月消費金額
+        /// </summary>
+        public decimal? Consume7 { get; set; }
+
+        /// <summary>
+        /// 前8月單月消費金額
+        /// </summary>
+        public decimal? Consume8 { get; set; }
+
+        /// <summary>
+        /// 前9月單月消費金額
+        /// </summary>
+        public decimal? Consume9 { get; set; }
+
+        /// <summary>
+        /// 前10月單月消費金額 
+        /// </summary>
+        public decimal? Consume10 { get; set; }
+
+        /// <summary>
+        /// 前11月單月消費金額 
+        /// </summary>
+        public decimal? Consume11 { get; set; }
+
+        /// <summary>
+        /// 前12月單月消費金額 
+        /// </summary>
+        public decimal? Consume12 { get; set; }
         /// <summary>
         /// 優利餘額
         /// </summary>
-        public string OfferAmount { get; set; }
+        public decimal? OfferAmount { get; set; }
         /// <summary>
         /// 總未付
         /// </summary>
-        public string UnpaidTotal { get; set; }
+        public decimal? UnpaidTotal { get; set; }
         /// <summary>
         /// 未入帳金額
         /// </summary>
-        public string AuthorizedAmountNotAccount { get; set; }
+        public decimal? AuthorizedAmountNotAccount { get; set; }
         /// <summary>
-        /// 預借金額(1~12)
+        /// 前1月單月預借現金
         /// </summary>
-        public string PreCash1 { get; set; }
+        public decimal? PreCash1 { get; set; }
+
+        /// <summary>
+        /// 前2月單月預借現金
+        /// </summary>
+        public decimal? PreCash2 { get; set; }
+
+        /// <summary>
+        /// 前3月單月預借現金
+        /// </summary>
+        public decimal? PreCash3 { get; set; }
+
+        /// <summary>
+        /// 前4月單月預借現金
+        /// </summary>
+        public decimal? PreCash4 { get; set; }
+
+        /// <summary>
+        /// 前5月單月預借現金
+        /// </summary>
+        public decimal? PreCash5 { get; set; }
+
+        /// <summary>
+        /// 前6月單月預借現金
+        /// </summary>
+        public decimal? PreCash6 { get; set; }
+
+        /// <summary>
+        /// 前7月單月預借現金
+        /// </summary>
+        public decimal? PreCash7 { get; set; }
+
+        /// <summary>
+        /// 前8月單月預借現金
+        /// </summary>
+        public decimal? PreCash8 { get; set; }
+
+        /// <summary>
+        /// 前9月單月預借現金
+        /// </summary>
+        public decimal? PreCash9 { get; set; }
+
+        /// <summary>
+        /// 前10月單月預借現金 
+        /// </summary>
+        public decimal? PreCash10 { get; set; }
+
+        /// <summary>
+        /// 前11月單月預借現金 
+        /// </summary>
+        public decimal? PreCash11 { get; set; }
+
+        /// <summary>
+        /// 前12月單月預借現金 
+        /// </summary>
+        public decimal? PreCash12 { get; set; }
+
         /// <summary>
         /// CCAS掛帳
         /// </summary>
-        public string CcasUnderpaidAmount { get; set; }
+        public decimal? CcasUnderpaidAmount { get; set; }
         /// <summary>
         /// 可用餘額
         /// </summary>
-        public string CcasUsabilityAmount { get; set; }
+        public decimal? CcasUsabilityAmount { get; set; }
         /// <summary>
         /// 掛帳比率
         /// </summary>
-        public string CcasUnderpaidRate { get; set; }
+        public decimal? CcasUnderpaidRate { get; set; }
         /// <summary>
-        /// 信貸/AIG評等(1~12)
+        /// 前1期信貸評等
         /// </summary>
         public string CreditRating1 { get; set; }
+
+        /// <summary>
+        /// 前2期信貸評等
+        /// </summary>
+        public string CreditRating2 { get; set; }
+
+        /// <summary>
+        /// 前3期信貸評等
+        /// </summary>
+        public string CreditRating3 { get; set; }
+
+        /// <summary>
+        /// 前4期信貸評等
+        /// </summary>
+        public string CreditRating4 { get; set; }
+
+        /// <summary>
+        /// 前5期信貸評等
+        /// </summary>
+        public string CreditRating5 { get; set; }
+
+        /// <summary>
+        /// 前6期信貸評等
+        /// </summary>
+        public string CreditRating6 { get; set; }
+
+        /// <summary>
+        /// 前7期信貸評等
+        /// </summary>
+        public string CreditRating7 { get; set; }
+
+        /// <summary>
+        /// 前8期信貸評等
+        /// </summary>
+        public string CreditRating8 { get; set; }
+
+        /// <summary>
+        /// 前9期信貸評等
+        /// </summary>
+        public string CreditRating9 { get; set; }
+
+        /// <summary>
+        /// 前10期信貸評等 
+        /// </summary>
+        public string CreditRating10 { get; set; }
+
+        /// <summary>
+        /// 前11期信貸評等 
+        /// </summary>
+        public string CreditRating11 { get; set; }
+
+        /// <summary>
+        /// 前12期信貸評等 
+        /// </summary>
+        public string CreditRating12 { get; set; }
         /// <summary>
         /// JCIC日期
         /// </summary>
@@ -241,7 +464,7 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// <summary>
         /// 最近一次臨調(生效金額)
         /// </summary>
-        public string LatestAdjustEffectAmount { get; set; }
+        public decimal? LatestAdjustEffectAmount { get; set; }
         /// <summary>
         /// 最近一次臨調(清單)
         /// </summary>

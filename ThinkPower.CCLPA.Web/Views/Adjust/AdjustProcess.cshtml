@@ -1,11 +1,25 @@
 ﻿@model ThinkPower.CCLPA.Web.ViewModels.AdjustProcessViewModel
 
+@using ThinkPower.CCLPA.Domain.Resource
+
 @{
     ViewBag.Title = "AdjustProcess";
 }
 
 <div class="process-page">
+    <!--隱藏表單-->
+    <div class="d-none">
+        @using (Html.BeginForm("Load", "PreAdjust", FormMethod.Get, new { id = "preAdjustLoad" }))
+        {
 
+        }
+        @using (Html.BeginForm("GetApplicationData", "Adjust", FormMethod.Post, new { id = "adjustApplicationData" }))
+        {
+
+        }
+    </div>
+
+    <!--標題-->
     <div class="row">
         <div class="col col-auto">
             <h3>專案臨調處理</h3>
@@ -14,22 +28,19 @@
 
     <hr />
     <!--查詢-->
-    @using (Html.BeginForm("Query", "Adjust", FormMethod.Get))
-    {
-        <div class="row">
-            <div class="col col-auto">
-                <span>歸戶ID</span>
-            </div>
-
-            <div class="col col-auto">
-                <input type="text" name="name" value="" class="form-control" />
-            </div>
-
-            <div class="col col-auto">
-                <input type="button" name="name" value="查詢" class="btn btn-primary" />
-            </div>
+    <div class="row">
+        <div class="col col-auto">
+            <span>歸戶ID</span>
         </div>
-    }
+
+        <div class="col col-auto">
+            @Html.TextBoxFor(x => Model.CustomerId, new { @class = "form-control", maxlength = "11" })
+        </div>
+
+        <div class="col col-auto">
+            <input type="button" name="query" id="query" value="查詢" class="btn btn-primary" />
+        </div>
+    </div>
 
     <hr />
     <!--顯示-->
@@ -46,8 +57,7 @@
                 <span>本月VIP星等</span>
             </div>
             <div class="col col-2">
-
-                <span>@Html.DisplayFor(x => x.MonthStarLevel)</span>
+                <span>@Tools.FormatDecimal(Model.MonthStarLevel, Tools.NumericFormats.Unit)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -81,7 +91,7 @@
                 <span>生日</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.BirthDay)</span>
+                <span>@Tools.FormatDateTime(Model.BirthDay, Tools.DateTimeFormats.Date)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>歸戶狀態</span>
@@ -107,7 +117,7 @@
                 <span>最初發卡日</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.IssueDate)</span>
+                <span>@Tools.FormatDateTime(Model.IssueDate, Tools.DateTimeFormats.Date)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -167,7 +177,7 @@
                 <span>近一年最高消費金額</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.NearlyYearMaxConsumptionAmount)</span>
+                <span>@Tools.FormatDecimal(Model.NearlyYearMaxConsumptionAmount, Tools.NumericFormats.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>註記</span>
@@ -181,19 +191,19 @@
                 <span>信用額度</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.CreditLimit)</span>
+                <span>@Tools.FormatDecimal(Model.CreditLimit, Tools.NumericFormats.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>近期關帳</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.ClosingAmount)</span>
+                <span>@Tools.FormatDecimal(Model.ClosingAmount, Tools.NumericFormats.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最低應繳</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.MinimumAmountPayable)</span>
+                <span>@Tools.FormatDecimal(Model.MinimumAmountPayable, Tools.NumericFormats.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -201,19 +211,19 @@
                 <span>臨調後額度</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.ShowAfterAdjustAmount)</span>
+                <span>@Tools.FormatDecimal(Model.ShowAfterAdjustAmount, Tools.NumericFormats.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最近付款日期</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.RecentPaymentDate)</span>
+                <span>@Tools.FormatDateTime(Model.RecentPaymentDate, Tools.DateTimeFormats.Date)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最近付款金額</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.RecentPaymentAmount)</span>
+                <span>@Tools.FormatDecimal(Model.RecentPaymentAmount, Tools.NumericFormats.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -221,19 +231,19 @@
                 <span>優利餘額</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.OfferAmount)</span>
+                <span>@Tools.FormatDecimal(Model.OfferAmount, Tools.NumericFormats.Unit)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>總未付</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.UnpaidTotal)</span>
+                <span>@Tools.FormatDecimal(Model.UnpaidTotal, Tools.NumericFormats.Unit)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>未入帳金額</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.AuthorizedAmountNotAccount)</span>
+                <span>@Tools.FormatDecimal(Model.AuthorizedAmountNotAccount, Tools.NumericFormats.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -241,20 +251,106 @@
                 <span>CCAS掛帳</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.CcasUnderpaidAmount)</span>
+                <span>@Tools.FormatDecimal(Model.CcasUnderpaidAmount, Tools.NumericFormats.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>可用餘額</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.CcasUsabilityAmount)</span>
+                <span>@Tools.FormatDecimal(Model.CcasUsabilityAmount, Tools.NumericFormats.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>掛帳比率</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.CcasUnderpaidRate)</span>
+                <span>@Tools.FormatDecimal(Model.CcasUnderpaidRate, Tools.NumericFormats.DecimalPointTwoBits)</span>
             </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>  </th>
+                        <th>1 </th>
+                        <th>2 </th>
+                        <th>3 </th>
+                        <th>4 </th>
+                        <th>5 </th>
+                        <th>6 </th>
+                        <th>7 </th>
+                        <th>8 </th>
+                        <th>9 </th>
+                        <th>10</th>
+                        <th>11</th>
+                        <th>12</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="adjust-table-field">繳款評等</td>
+                        <td>@Model.Latest1Mnth</td>
+                        <td>@Model.Latest2Mnth</td>
+                        <td>@Model.Latest3Mnth</td>
+                        <td>@Model.Latest4Mnth</td>
+                        <td>@Model.Latest5Mnth</td>
+                        <td>@Model.Latest6Mnth</td>
+                        <td>@Model.Latest7Mnth</td>
+                        <td>@Model.Latest8Mnth</td>
+                        <td>@Model.Latest9Mnth</td>
+                        <td>@Model.Latest10Mnth</td>
+                        <td>@Model.Latest11Mnth</td>
+                        <td>@Model.Latest12Mnth</td>
+                    </tr>
+                    <tr>
+                        <td class="adjust-table-field">消費金額</td>
+                        <td>@Tools.FormatDecimal(Model.Consume1, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume2, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume3, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume4, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume5, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume6, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume7, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume8, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume9, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume10, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume11, Tools.NumericFormats.Thousand)</td>
+                        <td>@Tools.FormatDecimal(Model.Consume12, Tools.NumericFormats.Thousand)</td>
+                    </tr>
+                    <tr>
+                        <td class="adjust-table-field">預借金額</td>
+                        <td>@Model.PreCash1</td>
+                        <td>@Model.PreCash2</td>
+                        <td>@Model.PreCash3</td>
+                        <td>@Model.PreCash4</td>
+                        <td>@Model.PreCash5</td>
+                        <td>@Model.PreCash6</td>
+                        <td>@Model.PreCash7</td>
+                        <td>@Model.PreCash8</td>
+                        <td>@Model.PreCash9</td>
+                        <td>@Model.PreCash10</td>
+                        <td>@Model.PreCash11</td>
+                        <td>@Model.PreCash12</td>
+                    </tr>
+                    <tr>
+                        <td class="adjust-table-field">信貸 / AGI評等</td>
+                        <td>@Model.CreditRating1</td>
+                        <td>@Model.CreditRating2</td>
+                        <td>@Model.CreditRating3</td>
+                        <td>@Model.CreditRating4</td>
+                        <td>@Model.CreditRating5</td>
+                        <td>@Model.CreditRating6</td>
+                        <td>@Model.CreditRating7</td>
+                        <td>@Model.CreditRating8</td>
+                        <td>@Model.CreditRating9</td>
+                        <td>@Model.CreditRating10</td>
+                        <td>@Model.CreditRating11</td>
+                        <td>@Model.CreditRating12</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -267,7 +363,10 @@
                 <span>調高原因</span>
             </div>
             <div class="col col-2">
-                @Html.DropDownListFor(x => Model.AdjustReason, Model.AdjustReason, "請選擇", new { @class = "form-control" })
+                @if (Model.AdjustReason != null)
+                {
+                    @Html.DropDownListFor(x => Model.AdjustReason, Model.AdjustReason, "請選擇", new { @class = "form-control" })
+                }
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>調高原因備註</span>
@@ -319,7 +418,10 @@
                 <span>是否可人工授權</span>
             </div>
             <div class="col col-2">
-                @Html.DropDownListFor(x => Model.ManualAuthorization, Model.ManualAuthorization, "請選擇", new { @class = "form-control" })
+                @if (Model.ManualAuthorization != null)
+                {
+                    @Html.DropDownListFor(x => Model.ManualAuthorization, Model.ManualAuthorization, "請選擇", new { @class = "form-control" })
+                }
             </div>
         </div>
         <div class="row border-top">
@@ -327,7 +429,10 @@
                 <span>使用地點</span>
             </div>
             <div class="col col-2">
-                @Html.DropDownListFor(x => Model.UseLocation, Model.UseLocation, "請選擇", new { @class = "form-control" })
+                @if (Model.UseLocation != null)
+                {
+                    @Html.DropDownListFor(x => Model.UseLocation, Model.UseLocation, "請選擇", new { @class = "form-control" })
+                }
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>出國地點</span>
@@ -414,19 +519,19 @@
                         <span>起日：</span>
                     </td>
                     <td>
-                        <span>@Html.DisplayFor(x => x.LatestAdjustStartDate)</span>
+                        <span>@Tools.FormatString(Model.LatestAdjustStartDate, Tools.Formats.Date)</span>
                     </td>
                     <td class="adjust-table-field">
                         <span>迄日：</span>
                     </td>
                     <td>
-                        <span>@Html.DisplayFor(x => x.LatestAdjustEndDate)</span>
+                        <span>@Tools.FormatString(Model.LatestAdjustEndDate, Tools.Formats.Date)</span>
                     </td>
                     <td class="adjust-table-field">
                         <span>生效金額：</span>
                     </td>
                     <td>
-                        <span>@Html.DisplayFor(x => x.LatestAdjustEffectAmount)</span>
+                        <span>@Tools.FormatDecimal(Model.LatestAdjustEffectAmount, Tools.NumericFormats.Thousand)</span>
                     </td>
                 </tr>
             </tbody>
@@ -452,26 +557,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.LatestAdjustInfo)
+                    @if (Model.LatestAdjustInfo != null)
                     {
-                        <tr>
-                            <td><span>@item.ApplyDate</span></td>
-                            <td><span>@item.ApplyTime</span></td>
-                            <td><span>@item.Reason</span></td>
-                            <td><span>@item.UseSite</span></td>
-                            <td><span>@item.Place</span></td>
-                            <td><span>@item.AdjustDateStart</span></td>
-                            <td><span>@item.AdjustDateEnd</span></td>
-                            <td><span>@item.ApproveAmount</span></td>
-                            <td><span>@item.ApproveResult</span></td>
-                            <td><span>@($"{item.ProcessDate} {item.ProcessTime}")</span></td>
-                            <td><span>@item.RejectReason</span></td>
-                            <td><span>@($"{item.CcasCode},{item.CcasStatus}")</span></td>
-                            <td><span>@item.CcasDateTime</span></td>
-                        </tr>
+                        foreach (var item in Model.LatestAdjustInfo)
+                        {
+                            <tr>
+                                <td><span>@item.ApplyDate</span></td>
+                                <td><span>@item.ApplyTime</span></td>
+                                <td><span>@item.Reason</span></td>
+                                <td><span>@item.UseSite</span></td>
+                                <td><span>@item.Place</span></td>
+                                <td><span>@item.AdjustDateStart</span></td>
+                                <td><span>@item.AdjustDateEnd</span></td>
+                                <td><span>@Tools.FormatDecimal(item.ApproveAmount, Tools.NumericFormats.Thousand)</span></td>
+                                <td><span>@item.ApproveResult</span></td>
+                                <td><span>@($"{item.ProcessDate} {item.ProcessTime}")</span></td>
+                                <td><span>@item.RejectReason</span></td>
+                                <td><span>@($"{item.CcasCode},{item.CcasStatus}")</span></td>
+                                <td><span>@item.CcasDateTime</span></td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+
+
+
+
+@section scripts{
+    <script src="~/Scripts/AdjustProcess.js"></script>
+}

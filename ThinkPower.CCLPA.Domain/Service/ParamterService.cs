@@ -38,6 +38,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         public IEnumerable<ParamCurrentlyEffectInfo> GetParamEffectData(
             IEnumerable<string> adjustReasonCodeList)
         {
+            // TODO 尚未參考此方法。
             List<ParamCurrentlyEffectDO> result = null;
 
             if (adjustReasonCodeList == null || !adjustReasonCodeList.Any())

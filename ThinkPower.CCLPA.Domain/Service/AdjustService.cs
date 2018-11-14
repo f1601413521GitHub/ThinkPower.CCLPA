@@ -59,7 +59,6 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (adjustList.Any())
             {
-                // TODO ClientSide ErrorMsg: 此歸戶ID，目前專案臨調PENDING處理中，無法再做申請動作。
                 errorCodeList.Add("01");
             }
             else
@@ -71,22 +70,24 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             if (customer == null)
             {
-                // TODO ClientSide ErrorMsg: 查無相關資料，請確認是否有輸入錯誤。
                 errorCodeList.Add("02");
             }
 
-            IEnumerable<PreAdjustEntity> preAdjustList = GetEffectPreAdjust(customerId);
+            IEnumerable<PreAdjustEntity> preAdjustList = GetEffectPreAdjust(new PreAdjustCondition() {
+                PageIndex = 1,
+                PagingSize = 1,
+                CustomerId = customerId,
+                CcasReplyCode = "00"
+            });
 
             if (preAdjustList != null && preAdjustList.Any())
             {
-                // TODO ClientSide ErrorMsg: 此歸戶已有生效中的預審專案...。
                 errorCodeList.Add("03");
                 tempPreAdjust = preAdjustList.First();
             }
 
             if (customer != null && HasAdjustEffecting(customer))
             {
-                // TODO ClientSide ErrorMsg: 此歸戶已有生效中的臨調...您現在是否要繼續做專案臨調申請?
                 errorCodeList.Add("04");
                 tempCustomer = customer;
             }
@@ -126,8 +127,8 @@ namespace ThinkPower.CCLPA.Domain.Service
             JcicDateInfo jcicDateInfo = new AdjustSystemService() { UserInfo = UserInfo }.QueryJcicDate(customerId);
 
             if ((icrsAmountInfo == null) ||
-                (icrsAmountInfo.ResponseCode != "00") ||
-                (icrsAmountInfo.ResponseCode != "72") ||
+                (icrsAmountInfo.ResponseCode != "00") &&
+                (icrsAmountInfo.ResponseCode != "72") &&
                 (icrsAmountInfo.ResponseCode != "73"))
             {
                 throw new InvalidOperationException($"{nameof(jcicDateInfo)} not found or query fail");
@@ -245,16 +246,16 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// 取得生效的預審資料
         /// 是否存在
         /// </summary>
-        /// <param name="customerId">客戶ID</param>
+        /// <param name="preAdjustCondition">預審名單查詢條件</param>
         /// <returns></returns>
-        private IEnumerable<PreAdjustEntity> GetEffectPreAdjust(string customerId)
+        private IEnumerable<PreAdjustEntity> GetEffectPreAdjust(PreAdjustCondition preAdjustCondition)
         {
-            if (String.IsNullOrEmpty(customerId))
+            if (preAdjustCondition == null)
             {
-                throw new ArgumentNullException(nameof(customerId));
+                throw new ArgumentNullException(nameof(preAdjustCondition));
             }
 
-            return new PreAdjustService().GetEffectPreAdjust(customerId);
+            return new PreAdjustService().GetEffectPreAdjust(preAdjustCondition);
         }
 
         /// <summary>
@@ -264,22 +265,30 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <returns></returns>
         private bool HasAdjustEffecting(CustomerInfo customer)
         {
+            bool hasEffect = false;
+
             if (customer == null)
             {
                 throw new ArgumentNullException(nameof(customer));
             }
 
-            DateTime currentDate = DateTime.Today;
 
-            DateTime startDate = DateTime.TryParseExact(customer.AdjustStartDate, "yyyyMMdd", null,
-                DateTimeStyles.None, out DateTime tempStartDate) ? tempStartDate :
-                throw new InvalidOperationException("Convert AdjustStartDate fail");
+            if (customer.AdjustStartDate != null && customer.AdjustEndDate != null)
+            {
+                DateTime currentDate = DateTime.Today;
 
-            DateTime endDate = DateTime.TryParseExact(customer.AdjustStartDate, "yyyyMMdd", null,
-                DateTimeStyles.None, out DateTime tempEndDate) ? tempEndDate :
-                throw new InvalidOperationException("Convert AdjustEndDate fail");
+                DateTime startDate = DateTime.TryParseExact(customer.AdjustStartDate, "yyyyMMdd", null,
+                    DateTimeStyles.None, out DateTime tempStartDate) ? tempStartDate :
+                    throw new InvalidOperationException("Convert AdjustStartDate fail");
 
-            return ((currentDate >= startDate) && (currentDate <= endDate));
+                DateTime endDate = DateTime.TryParseExact(customer.AdjustEndDate, "yyyyMMdd", null,
+                    DateTimeStyles.None, out DateTime tempEndDate) ? tempEndDate :
+                    throw new InvalidOperationException("Convert AdjustEndDate fail");
+
+                hasEffect = ((currentDate >= startDate) && (currentDate <= endDate));
+            }
+
+            return hasEffect;
         }
 
         #endregion
@@ -295,6 +304,10 @@ namespace ThinkPower.CCLPA.Domain.Service
             if (String.IsNullOrEmpty(customerId))
             {
                 throw new ArgumentNullException(nameof(customerId));
+            }
+            else if (UserInfo == null)
+            {
+                throw new ArgumentNullException(nameof(UserInfo));
             }
 
             DateTime currentTime = DateTime.Now;

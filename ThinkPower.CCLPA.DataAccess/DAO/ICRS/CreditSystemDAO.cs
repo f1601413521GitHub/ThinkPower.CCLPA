@@ -73,10 +73,6 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
             {
                 throw new ArgumentNullException(nameof(customerId));
             }
-            else if (String.IsNullOrEmpty(serialNo))
-            {
-                throw new ArgumentNullException(nameof(serialNo));
-            }
 
 
 
@@ -90,7 +86,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.ICRS
                 };
 
                 command.Parameters.Add(new SqlParameter("@LS_CARD_ACCT_ID", SqlDbType.NVarChar, 10) { Value = customerId, Direction = ParameterDirection.Input });
-                command.Parameters.Add(new SqlParameter("@LS_CARD_ACCT_ID_SEQ", SqlDbType.NVarChar, 1) { Value = serialNo, Direction = ParameterDirection.Input });
+                command.Parameters.Add(new SqlParameter("@LS_CARD_ACCT_ID_SEQ", SqlDbType.NVarChar, 1) { Value = serialNo??Convert.DBNull, Direction = ParameterDirection.Input });
 
                 command.Parameters.Add(new SqlParameter("@LL_TOT_AMT_CONSUME", SqlDbType.Decimal, 4) { Direction = ParameterDirection.Output });
                 command.Parameters.Add(new SqlParameter("@LL_REMAIN", SqlDbType.Decimal, 4) { Direction = ParameterDirection.Output });

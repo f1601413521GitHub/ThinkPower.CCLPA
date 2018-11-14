@@ -12,7 +12,49 @@ namespace ThinkPower.CCLPA.Web.Controllers
     public class BaseController : Controller
     {
         protected Logger logger = LogManager.GetCurrentClassLogger();
-        protected PreAdjustService _preAdjustService;
+
+        private UserInfo _userInfo;
+        private AdjustService _adjustService;
+        private PreAdjustService _preAdjustService;
+
+        /// <summary>
+        /// 使用者資訊
+        /// </summary>
+        protected UserInfo UserInformation
+        {
+            get
+            {
+                if (_userInfo == null)
+                {
+                    _userInfo = new UserInfo()
+                    {
+                        Id = Session["UserId"] as string,
+                        Name = Session["UserName"] as string,
+                    };
+                }
+
+                return _userInfo;
+            }
+        }
+
+        /// <summary>
+        /// 臨調服務
+        /// </summary>
+        protected AdjustService AdjService
+        {
+            get
+            {
+                if (_adjustService == null)
+                {
+                    _adjustService = new AdjustService()
+                    {
+                        UserInfo = UserInformation
+                    };
+                }
+
+                return _adjustService;
+            }
+        }
 
         /// <summary>
         /// 臨調預審服務
@@ -25,17 +67,17 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 {
                     _preAdjustService = new PreAdjustService()
                     {
-                        UserInfo = new UserInfo()
-                        {
-                            Id = Session["UserId"] as string,
-                            Name = Session["UserName"] as string,
-                        }
+                        UserInfo = UserInformation
                     };
                 }
 
                 return _preAdjustService;
             }
         }
+
+
+
+
 
         /// <summary>
         /// 系統錯誤提示訊息
