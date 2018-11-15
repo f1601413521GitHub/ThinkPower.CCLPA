@@ -1,8 +1,8 @@
 ﻿const urlInfo = {
-    deleteNotEffect: 'DeleteNotEffect',
-    deleteEffect: 'DeleteEffect',
-    agree: 'Agree',
-    forceAgree: 'ForceAgree',
+    deleteNotEffect: 'PreAdjust/DeleteNotEffect',
+    deleteEffect: 'PreAdjust/DeleteEffect',
+    agree: 'PreAdjust/Agree',
+    forceAgree: 'PreAdjust/ForceAgree',
 };
 
 const preAdjustStatus = {

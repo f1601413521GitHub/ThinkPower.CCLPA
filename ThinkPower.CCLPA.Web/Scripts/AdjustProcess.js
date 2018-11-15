@@ -12,16 +12,6 @@ $(document).ready(function () {
             CustomerId: $('#CustomerId').val(),
         });
 
-        //let json = '{"success":true,' +
-        //    '"errorMsg":null,' +
-        //    '"info":{' +
-        //    '"ErrorCodeList":["03","04"],' +
-        //    '"PreAdjustInfo":{"CampaignId":"AA20951022X99Y99Z99A","CustomerId":"A177842053","ProjectName":"生效區測試資料","ProjectAmount":30000,"CloseDate":"2099/10/22","ImportDate":"2018/10/30","ChineseName":"王小明","Kind":"AA","SmsCheckResult":null,"Status":"生效中","ProcessingDateTime":null,"ProcessingUserId":null,"DeleteDateTime":null,"DeleteUserId":null,"Remark":null,"ClosingDay":"10","PayDeadline":"25","ForceAgreeUserId":null,"MobileTel":"0933113885","RejectReasonCode":null,"CcasReplyCode":"00","CcasReplyStatus":null,"CcasReplyDateTime":null},' +
-        //    '"CustomerInfo":{"AccountId":"A177842053","ChineseName":"王小明","BirthDay":null,"RiskLevel":null,"RiskRating":null,"CreditLimit":null,"AboutDataStatus":null,"IssueDate":null,"LiveCardCount":null,"Status":null,"Vocation":null,"BillAddr":null,"TelOffice":null,"TelHome":null,"MobileTel":"0933113885","Latest1Mnth":null,"Latest2Mnth":null,"Latest3Mnth":null,"Latest4Mnth":null,"Latest5Mnth":null,"Latest6Mnth":null,"Latest7Mnth":null,"Latest8Mnth":null,"Latest9Mnth":null,"Latest10Mnth":null,"Latest11Mnth":null,"Latest12Mnth":null,"Consume1":null,"Consume2":null,"Consume3":null,"Consume4":null,"Consume5":null,"Consume6":null,"Consume7":null,"Consume8":null,"Consume9":null,"Consume10":null,"Consume11":null,"Consume12":null,"PreCash1":null,"PreCash2":null,"PreCash3":null,"PreCash4":null,"PreCash5":null,"PreCash6":null,"PreCash7":null,"PreCash8":null,"PreCash9":null,"PreCash10":null,"PreCash11":null,"PreCash12":null,"CreditRating1":null,"CreditRating2":null,"CreditRating3":null,"CreditRating4":null,"CreditRating5":null,"CreditRating6":null,"CreditRating7":null,"CreditRating8":null,"CreditRating9":null,"CreditRating10":null,"CreditRating11":null,"CreditRating12":null,"ClosingDay":"10","PayDeadline":"25","ClosingAmount":null,"MinimumAmountPayable":null,"RecentPaymentAmount":null,"RecentPaymentDate":null,"OfferAmount":null,"UnpaidTotal":null,"AuthorizedAmountNotAccount":null,"AdjustReason":null,"AdjustArea":null,"AdjustStartDate":"20181010","AdjustEndDate":"20190101","AdjustEffectAmount":null,"VintageMonths":null,"StatusFlag":null,"GutrFlag":null,"DelayCount":null,"CcasUnderpaidAmount":null,"CcasUsabilityAmount":null,"CcasUnderpaidRate":null,"DataDate":null,"EligibilityForWithdrawal":null,"SystemAdjustRevFlag":null,"AutomaticDebit":null,"DebitBankCode":null,"EtalStatus":null,"TelResident":null,"SendType":null,"ElectronicBillingCustomerNote":null,"Email":null,"Industry":null,"JobTitle":null,"ResidentAddr":null,"MailingAddr":null,"CompanyAddr":null,"AnnualIncome":null,"In1":null,"In2":null,"In3":null,"ResidentAddrPostalCode":null,"MailingAddrPostalCode":null,"CompanyAddrPostalCode":null}},' +
-        //    '"isJson":true}';
-
-        //let ajaxResultInfo = JSON.parse(json);
-
         if (!ajaxResultInfo.success) {
 
             alert(ajaxResultInfo.errorMsg);

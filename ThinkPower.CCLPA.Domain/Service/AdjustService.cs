@@ -44,7 +44,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         {
             List<string> errorCodeList = null;
             PreAdjustEntity tempPreAdjust = null;
-            CustomerInfo tempCustomer = null;
+            Customer tempCustomer = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
@@ -66,14 +66,15 @@ namespace ThinkPower.CCLPA.Domain.Service
                 InsertLogProgress(customerId);
             }
 
-            CustomerInfo customer = GetCustomer(customerId);
+            Customer customer = GetCustomer(customerId);
 
             if (customer == null)
             {
                 errorCodeList.Add("02");
             }
 
-            IEnumerable<PreAdjustEntity> preAdjustList = GetEffectPreAdjust(new PreAdjustCondition() {
+            IEnumerable<PreAdjustEntity> preAdjustList = GetEffectPreAdjust(new PreAdjustCondition()
+            {
                 PageIndex = 1,
                 PagingSize = 1,
                 CustomerId = customerId,
@@ -105,9 +106,9 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        public AdjustApplicationInfo GetApplicationData(string customerId)
+        public AdjustApplication GetApplicationData(string customerId)
         {
-            AdjustApplicationInfo adjustApplicationInfo = null;
+            AdjustApplication adjustApplicationInfo = null;
 
             if (String.IsNullOrEmpty(customerId))
             {
@@ -125,12 +126,14 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
-            JcicDateInfo jcicDateInfo = new AdjustSystemService() { UserInfo = UserInfo }.QueryJcicDate(customerId);
+            AdjustSystemService adjustSysService = new AdjustSystemService() { UserInfo = UserInfo };
 
-            if ((icrsAmountInfo == null) ||
-                (icrsAmountInfo.ResponseCode != "00") &&
-                (icrsAmountInfo.ResponseCode != "72") &&
-                (icrsAmountInfo.ResponseCode != "73"))
+            JcicSendQueryResult jcicDateInfo = adjustSysService.JcicSendQuery(customerId);
+
+            if ((jcicDateInfo == null) ||
+                (jcicDateInfo.ResponseCode != "00") &&
+                (jcicDateInfo.ResponseCode != "72") &&
+                (jcicDateInfo.ResponseCode != "73"))
             {
                 throw new InvalidOperationException($"{nameof(jcicDateInfo)} not found or query fail");
             }
@@ -138,7 +141,7 @@ namespace ThinkPower.CCLPA.Domain.Service
 
             CustomerService customerSerivce = new CustomerService();
 
-            CustomerInfo customerInfo = customerSerivce.Get(customerId);
+            Customer customerInfo = customerSerivce.Get(customerId);
 
             if (customerInfo == null)
             {
@@ -149,7 +152,8 @@ namespace ThinkPower.CCLPA.Domain.Service
             VipInfo vipInfo = customerSerivce.GetVip(customerId, DateTime.Today);
 
 
-            // TODO SP_ELGB_PAD02
+            AdjustConditionValidateResult adjustValidateResult = adjustSysService.
+                ValidateAdjustCondition(customerId, jcicDateInfo.JcicQueryDate, customerInfo.AdjustReason);
 
 
             IEnumerable<AdjustEntity> adjustList = QueryAdjust(new AdjustCondition()
@@ -161,11 +165,12 @@ namespace ThinkPower.CCLPA.Domain.Service
             });
 
 
-            adjustApplicationInfo = new AdjustApplicationInfo()
+            adjustApplicationInfo = new AdjustApplication()
             {
+                JcicSendQuery = jcicDateInfo,
                 Customer = customerInfo,
                 Vip = vipInfo,
-                JcicDate = jcicDateInfo,
+                AdjustValidateResult = adjustValidateResult,
                 AdjustLogList = adjustList,
             };
 
@@ -232,7 +237,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns>檢核結果</returns>
-        private CustomerInfo GetCustomer(string customerId)
+        private Customer GetCustomer(string customerId)
         {
             if (String.IsNullOrEmpty(customerId))
             {
@@ -263,7 +268,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="customer">客戶ID</param>
         /// <returns></returns>
-        private bool HasAdjustEffecting(CustomerInfo customer)
+        private bool HasAdjustEffecting(Customer customer)
         {
             bool hasEffect = false;
 
@@ -354,7 +359,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// <returns></returns>
         private IEnumerable<AdjustEntity> ConvertAdjustEntity(IEnumerable<AdjustDO> adjustList)
         {
-            return (adjustList == null) ? null : adjustList.Select(x => new AdjustEntity()
+            return adjustList?.Select(x => new AdjustEntity()
             {
                 Id = x.Id,
                 ApplyDate = x.ApplyDate,

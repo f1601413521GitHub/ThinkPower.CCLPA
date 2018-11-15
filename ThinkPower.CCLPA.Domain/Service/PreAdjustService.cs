@@ -559,7 +559,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             {
                 try
                 {
-                    effectResult = adjustSysService.PreAdjustEffect(entity.CustomerId);
+                    effectResult = adjustSysService.ValidatePreAdjustEffectConfition(entity.CustomerId);
 
                     if (effectResult.ResponseCode != "00")
                     {
@@ -693,7 +693,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                     executeCCAS = true;
                     if (needValidate)
                     {
-                        effectResult = adjustSysService.PreAdjustEffect(entity.CustomerId);
+                        effectResult = adjustSysService.ValidatePreAdjustEffectConfition(entity.CustomerId);
 
                         if (effectResult.ResponseCode != "00")
                         {

@@ -79,7 +79,8 @@
     <Compile Include="Helper\DbHelper.cs" />
     <Compile Include="Condition\PreAdjustCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VO\JcicDateResult.cs" />
+    <Compile Include="VO\JcicQueryResult.cs" />
+    <Compile Include="VO\AdjustValidateResult.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

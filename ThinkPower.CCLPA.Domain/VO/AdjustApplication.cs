@@ -9,12 +9,12 @@ namespace ThinkPower.CCLPA.Domain.VO
     /// <summary>
     /// 專案臨調申請資料類別
     /// </summary>
-    public class AdjustApplicationInfo
+    public class AdjustApplication
     {
         /// <summary>
         /// 歸戶基本資料
         /// </summary>
-        public CustomerInfo Customer { get; set; }
+        public Customer Customer { get; set; }
         /// <summary>
         /// 貴賓資料
         /// </summary>
@@ -22,10 +22,14 @@ namespace ThinkPower.CCLPA.Domain.VO
         /// <summary>
         /// JCIC送查日期
         /// </summary>
-        public JcicDateInfo JcicDate { get; set; }
+        public JcicSendQueryResult JcicSendQuery { get; set; }
         /// <summary>
         /// 專案臨調紀錄
         /// </summary>
         public IEnumerable<AdjustEntity> AdjustLogList { get; set; }
+        /// <summary>
+        /// 專案臨調條件檢核結果
+        /// </summary>
+        public AdjustConditionValidateResult AdjustValidateResult { get; set; }
     }
 }

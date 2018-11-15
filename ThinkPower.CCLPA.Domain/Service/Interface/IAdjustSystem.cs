@@ -12,19 +12,13 @@ namespace ThinkPower.CCLPA.Domain.Service.Interface
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        JcicDateInfo QueryJcicDate(string customerId);
-
-        /// <summary>
-        /// 專案臨調條件檢核
-        /// </summary>
-        /// <returns></returns>
-        object Adjust();
+        JcicSendQueryResult JcicSendQuery(string customerId);
 
         /// <summary>
         /// 預審生效條件檢核
         /// </summary>
         /// <param name="id">客戶ID</param>
         /// <returns></returns>
-        PreAdjustEffectResult PreAdjustEffect(string id);
+        PreAdjustEffectResult ValidatePreAdjustEffectConfition(string id);
     }
 }

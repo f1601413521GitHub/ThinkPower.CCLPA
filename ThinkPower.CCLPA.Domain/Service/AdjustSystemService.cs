@@ -12,6 +12,8 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// </summary>
     public class AdjustSystemService : BaseService, IAdjustSystem
     {
+        #region Property
+
         private AdjustSystemDAO _creditDAO;
 
         /// <summary>
@@ -30,12 +32,18 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
         }
 
+        #endregion
+
+
+
+        #region PublicMethod
+
         /// <summary>
         /// JCIC送查日期回傳
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        public JcicDateInfo QueryJcicDate(string customerId)
+        public JcicSendQueryResult JcicSendQuery(string customerId)
         {
             if (String.IsNullOrEmpty(customerId))
             {
@@ -46,38 +54,46 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new ArgumentNullException(nameof(UserInfo));
             }
 
-            JcicDateResult jcicDateResult = new AdjustSystemDAO().
-                QueryJcicDate(customerId, UserInfo.Id, UserInfo.Name);
+            JcicQueryResult jcicDateResult = new AdjustSystemDAO().
+                JcicSendQuery(customerId, UserInfo.Id, UserInfo.Name);
 
             if (jcicDateResult == null)
             {
                 throw new InvalidOperationException($"{nameof(jcicDateResult)} not found");
             }
 
-            return ConvertJcicDateInfo(jcicDateResult);
-        }
-
-        /// <summary>
-        /// 轉換JCIC送查日期
-        /// </summary>
-        /// <param name="jcicDateResult">JCIC送查日期</param>
-        /// <returns></returns>
-        private JcicDateInfo ConvertJcicDateInfo(JcicDateResult jcicDateResult)
-        {
-            return (jcicDateResult == null) ? null : new JcicDateInfo()
-            {
-                JcicQueryDate = jcicDateResult.JcicQueryDate,
-                ResponseCode = jcicDateResult.ResponseCode,
-            };
+            return ConvertJcicSendQueryResult(jcicDateResult);
         }
 
         /// <summary>
         /// 專案臨調條件檢核
         /// </summary>
+        /// <param name="customerId">客戶ID</param>
+        /// <param name="jcicQueryDate">JCIC送查日期</param>
+        /// <param name="adjustReasonCode">臨調原因代碼</param>
         /// <returns></returns>
-        public object Adjust()
+        public AdjustConditionValidateResult ValidateAdjustCondition(string customerId, string jcicQueryDate,
+            string adjustReasonCode)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrEmpty(customerId))
+            {
+                throw new ArgumentNullException(nameof(customerId));
+            }
+            else if (String.IsNullOrEmpty(jcicQueryDate))
+            {
+                throw new ArgumentNullException(nameof(jcicQueryDate));
+            }
+            else if (String.IsNullOrEmpty(adjustReasonCode))
+            {
+                throw new ArgumentNullException(nameof(adjustReasonCode));
+            }
+
+
+
+            AdjustValidateResult result = CreditDAO.
+                ValidateAdjustCondition(customerId, jcicQueryDate, adjustReasonCode);
+
+            return ConvertAdjustConditionResult(result);
         }
 
         /// <summary>
@@ -85,7 +101,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="id">身分證字號</param>
         /// <returns></returns>
-        public PreAdjustEffectResult PreAdjustEffect(string id)
+        public PreAdjustEffectResult ValidatePreAdjustEffectConfition(string id)
         {
             PreAdjustEffectResult result = null;
 
@@ -94,11 +110,48 @@ namespace ThinkPower.CCLPA.Domain.Service
                 throw new ArgumentNullException(nameof(id));
             }
 
-            PreAdjustEffectResultDO preAdjustEffect = CreditDAO.PreAdjustEffectCondition(id);
+            PreAdjustEffectResultDO preAdjustEffect = CreditDAO.ValidatePreAdjustEffectConfition(id);
 
             result = ConvertPreAdjustEffectEntity(preAdjustEffect);
 
             return result;
+        }
+
+        #endregion
+
+
+
+        #region PrivateMethod
+
+        /// <summary>
+        /// 轉換JCIC送查日期
+        /// </summary>
+        /// <param name="jcicDateResult">JCIC送查日期</param>
+        /// <returns></returns>
+        private JcicSendQueryResult ConvertJcicSendQueryResult(JcicQueryResult jcicDateResult)
+        {
+            return (jcicDateResult == null) ? null : new JcicSendQueryResult()
+            {
+                JcicQueryDate = jcicDateResult.JcicQueryDate,
+                ResponseCode = jcicDateResult.ResponseCode,
+            };
+        }
+
+        /// <summary>
+        /// 轉換臨調檢核結果
+        /// </summary>
+        /// <param name="adjustValidateResult">臨調檢核結果</param>
+        /// <returns></returns>
+        private AdjustConditionValidateResult ConvertAdjustConditionResult(AdjustValidateResult adjustValidateResult)
+        {
+            return (adjustValidateResult == null) ? null : new AdjustConditionValidateResult()
+            {
+                EstimateResult = adjustValidateResult.EstimateResult,
+                ProjectRejectReason = adjustValidateResult.ProjectRejectReason,
+                ProjectResult = adjustValidateResult.ProjectResult,
+                RejectReason = adjustValidateResult.RejectReason,
+                ResponseCode = adjustValidateResult.ResponseCode,
+            };
         }
 
         /// <summary>
@@ -119,5 +172,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 ResponseCode = preAdjustEffect.ResponseCode,
             };
         }
+
+        #endregion
     }
 }

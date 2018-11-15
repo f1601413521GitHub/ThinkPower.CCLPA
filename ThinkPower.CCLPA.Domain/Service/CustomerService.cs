@@ -15,7 +15,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="customerId">客戶ID</param>
         /// <returns></returns>
-        public CustomerInfo Get(string customerId)
+        public Customer Get(string customerId)
         {
             if (String.IsNullOrEmpty(customerId))
             {
@@ -90,9 +90,9 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="customer">歸戶基本資料</param>
         /// <returns></returns>
-        private CustomerInfo ConvertCustomerInfo(CustomerDO customer)
+        private Customer ConvertCustomerInfo(CustomerDO customer)
         {
-            return (customer == null) ? null : new CustomerInfo()
+            return (customer == null) ? null : new Customer()
             {
                 AccountId = customer.AccountId,
                 ChineseName = customer.ChineseName,

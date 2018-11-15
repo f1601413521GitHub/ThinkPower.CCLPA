@@ -20,7 +20,7 @@ namespace ThinkPower.CCLPA.DataAccess.DAO.CDRM.Tests
             var expected = true;
 
             // Actual
-            var result = dao.PreAdjustEffectCondition(id);
+            var result = dao.ValidatePreAdjustEffectConfition(id);
             var actual = (result != null);
 
             // Assert

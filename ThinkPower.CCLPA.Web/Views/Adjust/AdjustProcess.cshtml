@@ -50,14 +50,13 @@
                 <span>資料日期</span>
             </div>
             <div class="col col-2">
-
-                <span>@Html.DisplayFor(x => x.DataDate)</span>
+                <span>@(Model?.Customer?.DataDate)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>本月VIP星等</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.MonthStarLevel, ToolHelper.NumericFormat.Unit)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Vip?.MonthStarLevel, ToolHelper.NumericFormat.Unit)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -65,19 +64,19 @@
                 <span>身分證字號</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.AccountId)</span>
+                <span>@(Model?.Customer?.AccountId)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>正卡有效卡</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.LiveCardCount)</span>
+                <span>@(Model?.Customer?.LiveCardCount)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>停卡狀態中是否有3-77</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.Status)</span>
+                <span>@(Model?.Customer?.Status)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -85,19 +84,19 @@
                 <span>中文姓名</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.ChineseName)</span>
+                <span>@(Model?.Customer?.ChineseName)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>生日</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDateTime(Model.BirthDay, ToolHelper.DateTimeFormat.Date)</span>
+                <span>@ToolHelper.FormatDateTime(Model?.Customer?.BirthDay, ToolHelper.DateTimeFormat.Date)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>歸戶狀態</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.AboutDataStatus)</span>
+                <span>@(Model?.Customer?.AboutDataStatus)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -105,19 +104,19 @@
                 <span>卡戶等級</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.RiskLevel)</span>
+                <span>@(Model?.Customer?.RiskLevel)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>風險評等</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.RiskRating)</span>
+                <span>@(Model?.Customer?.RiskRating)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最初發卡日</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDateTime(Model.IssueDate, ToolHelper.DateTimeFormat.Date)</span>
+                <span>@ToolHelper.FormatDateTime(Model?.Customer?.IssueDate, ToolHelper.DateTimeFormat.Date)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -125,13 +124,13 @@
                 <span>關帳日</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.ClosingDay)</span>
+                <span>@(Model?.Customer?.ClosingDay)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>繳款期限</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.PayDeadline)</span>
+                <span>@(Model?.Customer?.PayDeadline)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -139,7 +138,7 @@
                 <span>職業／職級</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.Vocation)</span>
+                <span>@(Model?.Customer?.Vocation)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -147,19 +146,19 @@
                 <span>住家電話</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.TelHome)</span>
+                <span>@(Model?.Customer?.TelHome)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>公司電話</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.TelOffice)</span>
+                <span>@(Model?.Customer?.TelOffice)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>行動電話</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.MobileTel)</span>
+                <span>@(Model?.Customer?.MobileTel)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -169,7 +168,7 @@
                 </span>
             </div>
             <div class="col col-10">
-                <span>@Html.DisplayFor(x => x.BillAddr)</span>
+                <span>@(Model?.Customer?.BillAddr)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -177,13 +176,13 @@
                 <span>近一年最高消費金額</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.NearlyYearMaxConsumptionAmount, ToolHelper.NumericFormat.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.NearlyYearRating?.ConsumeList?.Max(x => x.Amount), ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>註記</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.SystemAdjustRevFlag)</span>
+                <span>@(Model?.Customer?.SystemAdjustRevFlag)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -191,19 +190,19 @@
                 <span>信用額度</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.CreditLimit, ToolHelper.NumericFormat.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.CreditLimit, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>近期關帳</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.ClosingAmount, ToolHelper.NumericFormat.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.ClosingAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最低應繳</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.MinimumAmountPayable, ToolHelper.NumericFormat.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.MinimumAmountPayable, ToolHelper.NumericFormat.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -211,19 +210,23 @@
                 <span>臨調後額度</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.ShowAfterAdjustAmount, ToolHelper.NumericFormat.Thousand)</span>
+                <span>
+                    @ToolHelper.FormatDecimal((
+                        (Model?.Customer?.CcasUnderpaidAmount ?? 0) +
+                        (Model?.Customer?.CcasUsabilityAmount ?? 0)), ToolHelper.NumericFormat.Thousand)
+                </span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最近付款日期</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDateTime(Model.RecentPaymentDate, ToolHelper.DateTimeFormat.Date)</span>
+                <span>@ToolHelper.FormatDateTime(Model?.Customer?.RecentPaymentDate, ToolHelper.DateTimeFormat.Date)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>最近付款金額</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.RecentPaymentAmount, ToolHelper.NumericFormat.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.RecentPaymentAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -231,19 +234,19 @@
                 <span>優利餘額</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.OfferAmount, ToolHelper.NumericFormat.Unit)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.OfferAmount, ToolHelper.NumericFormat.Unit)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>總未付</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.UnpaidTotal, ToolHelper.NumericFormat.Unit)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.UnpaidTotal, ToolHelper.NumericFormat.Unit)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>未入帳金額</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.AuthorizedAmountNotAccount, ToolHelper.NumericFormat.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.AuthorizedAmountNotAccount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
         </div>
         <div class="row border-top">
@@ -251,19 +254,19 @@
                 <span>CCAS掛帳</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.CcasUnderpaidAmount, ToolHelper.NumericFormat.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.CcasUnderpaidAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>可用餘額</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.CcasUsabilityAmount, ToolHelper.NumericFormat.Thousand)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.CcasUsabilityAmount, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>掛帳比率</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model.CcasUnderpaidRate, ToolHelper.NumericFormat.DecimalPointTwoBit)</span>
+                <span>@ToolHelper.FormatDecimal(Model?.Customer?.CcasUnderpaidRate, ToolHelper.NumericFormat.DecimalPointTwoBit)</span>
             </div>
         </div>
     </div>
@@ -291,63 +294,43 @@
                 <tbody>
                     <tr>
                         <td class="adjust-table-field">繳款評等</td>
-                        <td>@Model.Latest1Mnth</td>
-                        <td>@Model.Latest2Mnth</td>
-                        <td>@Model.Latest3Mnth</td>
-                        <td>@Model.Latest4Mnth</td>
-                        <td>@Model.Latest5Mnth</td>
-                        <td>@Model.Latest6Mnth</td>
-                        <td>@Model.Latest7Mnth</td>
-                        <td>@Model.Latest8Mnth</td>
-                        <td>@Model.Latest9Mnth</td>
-                        <td>@Model.Latest10Mnth</td>
-                        <td>@Model.Latest11Mnth</td>
-                        <td>@Model.Latest12Mnth</td>
+                        @if (Model?.NearlyYearRating?.LatestMnthList != null)
+                        {
+                            foreach (var item in Model.NearlyYearRating.LatestMnthList.OrderBy(x => x.Month))
+                            {
+                                <td>@item.Rating</td>
+                            }
+                        }
                     </tr>
                     <tr>
                         <td class="adjust-table-field">消費金額</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume1, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume2, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume3, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume4, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume5, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume6, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume7, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume8, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume9, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume10, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume11, ToolHelper.NumericFormat.Thousand)</td>
-                        <td>@ToolHelper.FormatDecimal(Model.Consume12, ToolHelper.NumericFormat.Thousand)</td>
+                        @if (Model?.NearlyYearRating?.ConsumeList != null)
+                        {
+                            foreach (var item in Model.NearlyYearRating.ConsumeList.OrderBy(x => x.Month))
+                            {
+                                <td>@ToolHelper.FormatDecimal(item.Amount, ToolHelper.NumericFormat.Thousand)</td>
+                            }
+                        }
                     </tr>
                     <tr>
                         <td class="adjust-table-field">預借金額</td>
-                        <td>@Model.PreCash1</td>
-                        <td>@Model.PreCash2</td>
-                        <td>@Model.PreCash3</td>
-                        <td>@Model.PreCash4</td>
-                        <td>@Model.PreCash5</td>
-                        <td>@Model.PreCash6</td>
-                        <td>@Model.PreCash7</td>
-                        <td>@Model.PreCash8</td>
-                        <td>@Model.PreCash9</td>
-                        <td>@Model.PreCash10</td>
-                        <td>@Model.PreCash11</td>
-                        <td>@Model.PreCash12</td>
+                        @if (Model?.NearlyYearRating?.PreCashList != null)
+                        {
+                            foreach (var item in Model.NearlyYearRating.PreCashList.OrderBy(x => x.Month))
+                            {
+                                <td>@ToolHelper.FormatDecimal(item.Amount, ToolHelper.NumericFormat.Thousand)</td>
+                            }
+                        }
                     </tr>
                     <tr>
                         <td class="adjust-table-field">信貸 / AGI評等</td>
-                        <td>@Model.CreditRating1</td>
-                        <td>@Model.CreditRating2</td>
-                        <td>@Model.CreditRating3</td>
-                        <td>@Model.CreditRating4</td>
-                        <td>@Model.CreditRating5</td>
-                        <td>@Model.CreditRating6</td>
-                        <td>@Model.CreditRating7</td>
-                        <td>@Model.CreditRating8</td>
-                        <td>@Model.CreditRating9</td>
-                        <td>@Model.CreditRating10</td>
-                        <td>@Model.CreditRating11</td>
-                        <td>@Model.CreditRating12</td>
+                        @if (Model?.NearlyYearRating?.CreditRatingList != null)
+                        {
+                            foreach (var item in Model.NearlyYearRating.CreditRatingList.OrderBy(x => x.Month))
+                            {
+                                <td>@item.Rating</td>
+                            }
+                        }
                     </tr>
                 </tbody>
             </table>
@@ -363,10 +346,8 @@
                 <span>調高原因</span>
             </div>
             <div class="col col-2">
-                @if (Model.AdjustReason != null)
-                {
-                    @Html.DropDownListFor(x => Model.AdjustReason, Model.AdjustReason, "請選擇", new { @class = "form-control" })
-                }
+                @Html.DropDownListFor(x => Model.AdjustReasonSelectListItem,
+                    Model.AdjustReasonSelectListItem,"請選擇", new { @class = "form-control" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>調高原因備註</span>
@@ -386,7 +367,7 @@
                 <span>調額上限</span>
             </div>
             <div class="col col-2">
-                @Html.TextBoxFor(x => Model.AdjustmentAmountCeiling, new { @class = "form-control", disabled = "disabled" })
+                @*@Html.TextBoxFor(x => Model.AdjustmentAmountCeiling, new { @class = "form-control", disabled = "disabled" })*@
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>刷卡金額(不含額度)</span>
@@ -418,10 +399,8 @@
                 <span>是否可人工授權</span>
             </div>
             <div class="col col-2">
-                @if (Model.ManualAuthorization != null)
-                {
-                    @Html.DropDownListFor(x => Model.ManualAuthorization, Model.ManualAuthorization, "請選擇", new { @class = "form-control" })
-                }
+                @Html.DropDownListFor(x => Model.ManualAuthorizationSelectListItem,
+                    Model.ManualAuthorizationSelectListItem,"請選擇", new { @class = "form-control" })
             </div>
         </div>
         <div class="row border-top">
@@ -429,10 +408,8 @@
                 <span>使用地點</span>
             </div>
             <div class="col col-2">
-                @if (Model.UseLocation != null)
-                {
-                    @Html.DropDownListFor(x => Model.UseLocation, Model.UseLocation, "請選擇", new { @class = "form-control" })
-                }
+                @Html.DropDownListFor(x => Model.UseLocationSelectListItem,
+                    Model.UseLocationSelectListItem, "請選擇", new { @class = "form-control" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>出國地點</span>
@@ -452,13 +429,13 @@
                 <span>專案臨調結果</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.ProjectAdjustResult)</span>
+                <span>@(Model?.ProjectAdjustResult)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>拒絕原因(專案)</span>
             </div>
             <div class="col col-6">
-                <span>@Html.DisplayFor(x => x.ProjectRejectReason)</span>
+                <span>@(Model?.ProjectRejectReason)</span>
             </div>
         </div>
         <div class="row">
@@ -466,13 +443,13 @@
                 <span>一般臨調結果</span>
             </div>
             <div class="col col-2">
-                <span>@Html.DisplayFor(x => x.GeneralAdjustResult)</span>
+                <span>@(Model?.GeneralAdjustResult)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>拒絕原因(一般)</span>
             </div>
             <div class="col col-6">
-                <span>@Html.DisplayFor(x => x.GeneralRejectReason)</span>
+                <span>@(Model?.GeneralRejectReason)</span>
             </div>
         </div>
         <div class="row justify-content-between">
@@ -507,31 +484,31 @@
                         <span>原因：</span>
                     </td>
                     <td>
-                        <span>@Html.DisplayFor(x => x.LatestAdjustReason)</span>
+                        <span>@(Model?.AdjustLog?.AdjustReason)</span>
                     </td>
                     <td class="adjust-table-field">
                         <span>區域：</span>
                     </td>
                     <td>
-                        <span>@Html.DisplayFor(x => x.LatestAdjustArea)</span>
+                        <span>@(Model?.AdjustLog?.AdjustArea)</span>
                     </td>
                     <td class="adjust-table-field">
                         <span>起日：</span>
                     </td>
                     <td>
-                        <span>@ToolHelper.FormatString(Model.LatestAdjustStartDate, ToolHelper.Format.Date)</span>
+                        <span>@ToolHelper.FormatString(Model?.AdjustLog?.AdjustStartDate, ToolHelper.Format.Date)</span>
                     </td>
                     <td class="adjust-table-field">
                         <span>迄日：</span>
                     </td>
                     <td>
-                        <span>@ToolHelper.FormatString(Model.LatestAdjustEndDate, ToolHelper.Format.Date)</span>
+                        <span>@ToolHelper.FormatString(Model?.AdjustLog?.AdjustEndDate, ToolHelper.Format.Date)</span>
                     </td>
                     <td class="adjust-table-field">
                         <span>生效金額：</span>
                     </td>
                     <td>
-                        <span>@ToolHelper.FormatDecimal(Model.LatestAdjustEffectAmount, ToolHelper.NumericFormat.Thousand)</span>
+                        <span>@ToolHelper.FormatDecimal(Model?.AdjustLog?.AdjustEffectAmount, ToolHelper.NumericFormat.Thousand)</span>
                     </td>
                 </tr>
             </tbody>
@@ -557,9 +534,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.LatestAdjustInfo != null)
+                    @if (Model?.AdjustLog?.AdjustLogList != null)
                     {
-                        foreach (var item in Model.LatestAdjustInfo)
+                        foreach (var item in Model.AdjustLog.AdjustLogList)
                         {
                             <tr>
                                 <td><span>@item.ApplyDate</span></td>

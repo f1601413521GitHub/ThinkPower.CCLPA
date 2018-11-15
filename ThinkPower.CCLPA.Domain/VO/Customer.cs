@@ -5,7 +5,7 @@ namespace ThinkPower.CCLPA.Domain.VO
     /// <summary>
     /// 歸戶基本資料類別
     /// </summary>
-    public class CustomerInfo 
+    public class Customer 
     {
         /// <summary>
         /// 身份證字號 

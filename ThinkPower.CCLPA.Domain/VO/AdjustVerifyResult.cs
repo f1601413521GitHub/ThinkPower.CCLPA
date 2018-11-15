@@ -19,6 +19,6 @@ namespace ThinkPower.CCLPA.Domain.VO
         /// <summary>
         /// 歸戶基本資料
         /// </summary>
-        public CustomerInfo CustomerInfo { get; set; }
+        public Customer CustomerInfo { get; set; }
     }
 }
