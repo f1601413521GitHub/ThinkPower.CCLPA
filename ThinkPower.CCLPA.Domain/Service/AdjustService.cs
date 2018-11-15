@@ -161,7 +161,8 @@ namespace ThinkPower.CCLPA.Domain.Service
                 PageIndex = 1,
                 PagingSize = 5,
                 CustomerId = customerId,
-                OrderBy = AdjustCondition.OrderByKind.ProcessDateByDescendingAndProcessTimeByDescending
+                Type = new string[] { "2", "3" },
+                OrderBy = AdjustCondition.OrderByKind.ApplyDateByDescendingAndApplyTimeByDescending
             });
 
 

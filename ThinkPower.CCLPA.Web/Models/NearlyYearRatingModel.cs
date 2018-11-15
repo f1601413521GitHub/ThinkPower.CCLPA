@@ -10,18 +10,18 @@ namespace ThinkPower.CCLPA.Web.Models
         /// <summary>
         /// 繳款評等
         /// </summary>
-        public IEnumerable<AdjustProcessLatestMnth> LatestMnthList { get; set; }
+        public AdjustProcessLatestMnth[] LatestMnthList { get; set; }
         /// <summary>
         /// 消費金額
         /// </summary>
-        public IEnumerable<AdjustProcessConsume> ConsumeList { get; set; }
+        public AdjustProcessConsume[] ConsumeList { get; set; }
         /// <summary>
         /// 預借金額
         /// </summary>
-        public IEnumerable<AdjustProcessPreCash> PreCashList { get; set; }
+        public AdjustProcessPreCash[] PreCashList { get; set; }
         /// <summary>
         /// 信貸/AIG評等
         /// </summary>
-        public IEnumerable<AdjustProcessCreditRating> CreditRatingList { get; set; }
+        public AdjustProcessCreditRating[] CreditRatingList { get; set; }
     }
 }

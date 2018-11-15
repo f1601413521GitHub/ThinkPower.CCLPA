@@ -179,6 +179,25 @@ FROM [RG_ADJUST]");
                 });
             }
 
+            if (condition.Type != null)
+            {
+                var loopCount = 0;
+                List<string> tempCommand = new List<string>();
+
+                foreach (string adjustType in condition.Type.Where(x => !String.IsNullOrEmpty(x)))
+                {
+                    tempCommand.Add($"[TYPE] = @Type{loopCount}");
+                    sqlParameters.Add(new SqlParameter($"@Type{loopCount}", SqlDbType.NVarChar)
+                    {
+                        Value = adjustType
+                    });
+
+                    loopCount++;
+                }
+
+                queryCommand.Add($"({String.Join(" OR ", tempCommand)})");
+            }
+
             switch (condition.OrderBy)
             {
                 case AdjustCondition.OrderByKind.None:
@@ -186,6 +205,9 @@ FROM [RG_ADJUST]");
                     break;
                 case AdjustCondition.OrderByKind.ProcessDateByDescendingAndProcessTimeByDescending:
                     pagingCommand.Add("ORDER BY [PROC_DATE] DESC, [PROC_TIME] DESC");
+                    break;
+                case AdjustCondition.OrderByKind.ApplyDateByDescendingAndApplyTimeByDescending:
+                    pagingCommand.Add("ORDER BY [APPLY_DATE] DESC, [APPLY_TIME] DESC");
                     break;
             }
 

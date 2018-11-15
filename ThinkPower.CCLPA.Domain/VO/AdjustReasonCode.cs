@@ -3,7 +3,7 @@
     /// <summary>
     /// 調整原因代碼類別
     /// </summary>
-    public class AdjustReasonCodeInfo
+    public class AdjustReasonCode
     {
         /// <summary>
         /// 調整原因代碼

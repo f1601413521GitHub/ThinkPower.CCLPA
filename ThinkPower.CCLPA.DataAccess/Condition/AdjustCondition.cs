@@ -3,24 +3,8 @@
     /// <summary>
     /// 專案臨調資料查詢條件類別
     /// </summary>
-    public class AdjustCondition
+    public class AdjustCondition : BaseCondition
     {
-        #region PagingCondition
-
-        /// <summary>
-        /// 資料分頁頁碼
-        /// </summary>
-        public int? PageIndex { get; set; }
-
-        /// <summary>
-        /// 資料分頁每頁筆數
-        /// </summary>
-        public int? PagingSize { get; set; }
-
-        #endregion
-
-
-
         #region SortCondition
 
         /// <summary>
@@ -34,7 +18,8 @@
         public enum OrderByKind
         {
             None = 0,
-            ProcessDateByDescendingAndProcessTimeByDescending = 1,
+            ProcessDateByDescendingAndProcessTimeByDescending,
+            ApplyDateByDescendingAndApplyTimeByDescending,
         }
 
         #endregion
@@ -59,6 +44,10 @@
         /// 專案進件
         /// </summary>
         public string ProjectStatus { get; set; }
+        /// <summary>
+        /// 臨調類型
+        /// </summary>
+        public string[] Type { get; set; }
 
         #endregion
     }

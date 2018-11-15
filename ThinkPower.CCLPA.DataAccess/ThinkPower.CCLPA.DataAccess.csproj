@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Condition\AdjustCondition.cs" />
+    <Compile Include="Condition\AdjustReasonCodeCondition.cs" />
+    <Compile Include="Condition\BaseCondition.cs" />
     <Compile Include="DAO\BaseDAO.cs" />
     <Compile Include="DAO\CDRM\AccountCorrespondDAO.cs" />
     <Compile Include="DAO\CDRM\AdjustDAO.cs" />

@@ -9,25 +9,8 @@ namespace ThinkPower.CCLPA.DataAccess.Condition
     /// <summary>
     /// 臨調預審名單資料查詢條件類別
     /// </summary>
-    public class PreAdjustCondition
+    public class PreAdjustCondition : BaseCondition
     {
-        #region PagingCondition
-
-        /// <summary>
-        /// 資料分頁頁碼
-        /// </summary>
-        public int? PageIndex { get; set; }
-
-        /// <summary>
-        /// 資料分頁每頁筆數
-        /// </summary>
-        public int? PagingSize { get; set; }
-
-        #endregion
-
-
-
-
         #region SortCondition
 
         /// <summary>
@@ -48,7 +31,6 @@ namespace ThinkPower.CCLPA.DataAccess.Condition
         }
 
         #endregion
-
 
 
 

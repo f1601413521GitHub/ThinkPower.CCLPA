@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ThinkPower.CCLPA.DataAccess.Condition;
 using ThinkPower.CCLPA.DataAccess.DAO.CDRM;
 using ThinkPower.CCLPA.DataAccess.DO.CDRM;
+using ThinkPower.CCLPA.Domain.Condition;
 using ThinkPower.CCLPA.Domain.VO;
 
 namespace ThinkPower.CCLPA.Domain.Service
@@ -17,17 +19,21 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// 取得調整原因代碼
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<AdjustReasonCodeInfo> GetActiveAdjustReasonCode()
+        public IEnumerable<AdjustReasonCode> GetActiveAdjustReasonCode()
         {
-            IEnumerable<AdjustReasonCodeDO> adjustReasonList = new AdjustReasonCodeDAO().GetAll().
-                Where(x => x.UseFlag == "Y");
+            IEnumerable<AdjustReasonCodeDO> adjustReasonList = new AdjustReasonCodeDAO().
+                Query(new AdjustReasonCodeCondition()
+                {
+                    UseFlag = "Y",
+                    OrderBy = AdjustReasonCodeCondition.OrderByKind.None,
+                });
 
             if (!adjustReasonList.Any())
             {
                 throw new InvalidOperationException($"{nameof(adjustReasonList)} not found");
             }
 
-            return ConvertAdjustReasonCodeInfo(adjustReasonList);
+            return ConvertAdjustReasonCode(adjustReasonList);
         }
 
         /// <summary>
@@ -35,8 +41,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="adjustReasonCodeList">調整原因代碼</param>
         /// <returns></returns>
-        public IEnumerable<ParamCurrentlyEffectInfo> GetParamEffectData(
-            IEnumerable<string> adjustReasonCodeList)
+        public IEnumerable<ParamCurrentlyEffect> GetParamEffectData(IEnumerable<string> adjustReasonCodeList)
         {
             // TODO 尚未參考此方法。
             List<ParamCurrentlyEffectDO> result = null;
@@ -82,7 +87,7 @@ namespace ThinkPower.CCLPA.Domain.Service
             }
 
 
-            return ConvertParamCurrentlyEffectInfo(result);
+            return ConvertParamCurrentlyEffect(result);
         }
 
         /// <summary>
@@ -90,21 +95,20 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="paramEffectList">參數生效資料</param>
         /// <returns></returns>
-        private IEnumerable<ParamCurrentlyEffectInfo> ConvertParamCurrentlyEffectInfo(
+        private IEnumerable<ParamCurrentlyEffect> ConvertParamCurrentlyEffect(
             IEnumerable<ParamCurrentlyEffectDO> paramEffectList)
         {
-            return (paramEffectList == null) ? null : paramEffectList.Select(x =>
-                new ParamCurrentlyEffectInfo()
-                {
-                    Reason = x.Reason,
-                    VerifiyCondition = x.VerifiyCondition,
-                    ApproveScaleMax = x.ApproveScaleMax,
-                    Remark = x.Remark,
-                    ApproveAmountMax = x.ApproveAmountMax,
-                    AdjustDateStart = x.AdjustDateStart,
-                    AdjustDateEnd = x.AdjustDateEnd,
-                    EffectDate = x.EffectDate,
-                });
+            return paramEffectList?.Select(x => new ParamCurrentlyEffect()
+            {
+                Reason = x.Reason,
+                VerifiyCondition = x.VerifiyCondition,
+                ApproveScaleMax = x.ApproveScaleMax,
+                Remark = x.Remark,
+                ApproveAmountMax = x.ApproveAmountMax,
+                AdjustDateStart = x.AdjustDateStart,
+                AdjustDateEnd = x.AdjustDateEnd,
+                EffectDate = x.EffectDate,
+            });
         }
 
         /// <summary>
@@ -112,16 +116,14 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// </summary>
         /// <param name="adjustReasonList">調整原因</param>
         /// <returns></returns>
-        private IEnumerable<AdjustReasonCodeInfo> ConvertAdjustReasonCodeInfo(
-            IEnumerable<AdjustReasonCodeDO> adjustReasonList)
+        private IEnumerable<AdjustReasonCode> ConvertAdjustReasonCode(IEnumerable<AdjustReasonCodeDO> adjustReasonList)
         {
-            return (adjustReasonList == null) ? null :
-                adjustReasonList.Select(x => new AdjustReasonCodeInfo()
-                {
-                    Code = x.Code,
-                    Name = x.Name,
-                    UseFlag = x.UseFlag
-                });
+            return adjustReasonList?.Select(x => new AdjustReasonCode()
+            {
+                Code = x.Code,
+                Name = x.Name,
+                UseFlag = x.UseFlag
+            });
         }
     }
 }

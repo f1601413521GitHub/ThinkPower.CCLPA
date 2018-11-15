@@ -34,12 +34,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            AdjustProcessViewModel viewModel = new AdjustProcessViewModel()
-            {
-                AdjustReasonSelectListItem = GetAdjustReasonCodeSelectItemList(),
-                UseLocationSelectListItem = CreateUseLocationSelectItemList(),
-                ManualAuthorizationSelectListItem = CreateManualAuthorizationSelectItemList(),
-            };
+            AdjustProcessViewModel viewModel = InitialAdjustProcessViewModel();
 
             return View(_adjustProcessPage, viewModel);
         }
@@ -83,21 +78,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
         [HttpPost]
         public ActionResult GetApplicationData(AdjustApplicationActionModel actionModel)
         {
-            AdjustProcessViewModel viewModel = new AdjustProcessViewModel()
-            {
-                AdjustReasonSelectListItem = GetAdjustReasonCodeSelectItemList(),
-                UseLocationSelectListItem = CreateUseLocationSelectItemList(),
-                ManualAuthorizationSelectListItem = CreateManualAuthorizationSelectItemList(),
-
-                CustomerId = null,
-                AdjustReasonRemark = null,
-                SwipeAmount = null,
-                AfterAdjustAmount = null,
-                ValidDateStart = null,
-                ValidDateEnd = null,
-                PlaceOfGoingAbroad = null,
-                TransferSupervisorReason = null,
-            };
+            AdjustProcessViewModel viewModel = InitialAdjustProcessViewModel();
 
             try
             {
@@ -109,20 +90,18 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 AdjustApplication application = AdjService.GetApplicationData(actionModel.CustomerId);
 
                 Customer customer = application.Customer;
-                VipInfo vip = application.Vip;
-                AdjustConditionValidateResult adjValidateResult = application.AdjustValidateResult;
 
                 viewModel.JcicQueryDate = application.JcicSendQuery.JcicQueryDate;
 
-                viewModel.ProjectAdjustResult = adjValidateResult?.ProjectResult;
-                viewModel.ProjectRejectReason = adjValidateResult?.ProjectRejectReason;
-                viewModel.GeneralAdjustResult = adjValidateResult?.EstimateResult;
-                viewModel.GeneralRejectReason = adjValidateResult?.RejectReason;
+                viewModel.ProjectAdjustResult = application?.AdjustValidateResult?.ProjectResult;
+                viewModel.ProjectRejectReason = application?.AdjustValidateResult?.ProjectRejectReason;
+                viewModel.GeneralAdjustResult = application?.AdjustValidateResult?.EstimateResult;
+                viewModel.GeneralRejectReason = application?.AdjustValidateResult?.RejectReason;
 
                 // TODO RG_PARA_M_ACTIVE
                 //AdjustmentAmountCeiling = null,
 
-                viewModel.Vip = new AdjustProcessVip() { MonthStarLevel = vip?.MonthStarLevel };
+                viewModel.Vip = new AdjustProcessVip() { MonthStarLevel = application?.Vip?.MonthStarLevel };
 
                 viewModel.Customer = new AdjustProcessCustomer
                 {
@@ -249,17 +228,16 @@ namespace ThinkPower.CCLPA.Web.Controllers
         /// <returns></returns>
         private IEnumerable<SelectListItem> GetAdjustReasonCodeSelectItemList()
         {
-            IEnumerable<AdjustReasonCodeInfo> adjustReasonCodeList = new ParamterService().
-                GetActiveAdjustReasonCode();
+            IEnumerable<AdjustReasonCode> adjustReasonCodeList = new ParamterService().GetActiveAdjustReasonCode();
 
-            if (adjustReasonCodeList == null || !adjustReasonCodeList.Any())
+            if ((adjustReasonCodeList == null) || !adjustReasonCodeList.Any())
             {
                 throw new InvalidOperationException($"{nameof(adjustReasonCodeList)} not found");
             }
 
             List<SelectListItem> selectItemList = new List<SelectListItem>();
 
-            foreach (AdjustReasonCodeInfo adjustReasonCode in adjustReasonCodeList)
+            foreach (AdjustReasonCode adjustReasonCode in adjustReasonCodeList)
             {
                 selectItemList.Add(new SelectListItem()
                 {
@@ -298,6 +276,28 @@ namespace ThinkPower.CCLPA.Web.Controllers
             };
         }
 
+        /// <summary>
+        /// 初始化臨調檢視模型
+        /// </summary>
+        /// <returns></returns>
+        private AdjustProcessViewModel InitialAdjustProcessViewModel()
+        {
+            return new AdjustProcessViewModel()
+            {
+                AdjustReasonSelectListItem = GetAdjustReasonCodeSelectItemList(),
+                UseLocationSelectListItem = CreateUseLocationSelectItemList(),
+                ManualAuthorizationSelectListItem = CreateManualAuthorizationSelectItemList(),
+
+                CustomerId = null,
+                AdjustReasonRemark = null,
+                SwipeAmount = null,
+                AfterAdjustAmount = null,
+                ValidDateStart = null,
+                ValidDateEnd = null,
+                PlaceOfGoingAbroad = null,
+                TransferSupervisorReason = null,
+            };
+        }
         #endregion
     }
 }

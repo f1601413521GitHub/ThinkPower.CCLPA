@@ -5,7 +5,7 @@ namespace ThinkPower.CCLPA.Domain.VO
     /// <summary>
     /// 專案參數目前生效主檔資料類別
     /// </summary>
-    public class ParamCurrentlyEffectInfo
+    public class ParamCurrentlyEffect
     {
         /// <summary> 
         /// 臨調原因 
