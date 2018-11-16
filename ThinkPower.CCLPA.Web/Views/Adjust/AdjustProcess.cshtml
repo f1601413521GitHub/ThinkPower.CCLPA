@@ -11,11 +11,11 @@
     <div class="d-none">
         <!--表單-->
         <div>
-            @using (Html.BeginForm("Load", "PreAdjust", FormMethod.Get, new { id = "preAdjustLoad" }))
+            @using (Html.BeginForm("Load", "PreAdjust", FormMethod.Get, new { id = "pre-adjust-load" }))
             {
 
             }
-            @using (Html.BeginForm("GetApplicationData", "Adjust", FormMethod.Post, new { id = "adjustApplicationData" }))
+            @using (Html.BeginForm("GetApplicationData", "Adjust", FormMethod.Post, new { id = "adjust-application-data" }))
             {
 
             }
@@ -211,7 +211,7 @@
                 <span>信用額度</span>
             </div>
             <div class="col col-2">
-                <span>@ToolHelper.FormatDecimal(Model?.Customer?.CreditLimit, ToolHelper.NumericFormat.Thousand)</span>
+                <span id="credit-limit">@ToolHelper.FormatDecimal(Model?.Customer?.CreditLimit, ToolHelper.NumericFormat.Thousand)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>近期關帳</span>
@@ -405,7 +405,7 @@
                 <span>調高原因備註</span>
             </div>
             <div class="col col-2">
-                @Html.TextBoxFor(x => Model.AdjustReasonRemark, new { @class = "form-control" })
+                @Html.TextBoxFor(x => Model.AdjustReasonRemark, new { @class = "form-control", maxlength = "30" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>JCIC日期</span>
@@ -419,19 +419,19 @@
                 <span>調額上限</span>
             </div>
             <div class="col col-2">
-                @*@Html.TextBoxFor(x => Model.AdjustmentAmountCeiling, new { @class = "form-control", disabled = "disabled" })*@
+                @Html.TextBoxFor(x => Model.AdjustmentAmountCeiling, new { @class = "form-control", disabled = "disabled" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>刷卡金額(不含額度)</span>
             </div>
             <div class="col col-2">
-                @Html.TextBoxFor(x => Model.SwipeAmount, new { @class = "form-control", disabled = "disabled" })
+                @Html.TextBoxFor(x => Model.SwipeAmount, new { @class = "form-control", disabled = "disabled", maxlength = "9", data_minlength = "5" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>臨調後額度</span>
             </div>
             <div class="col col-2">
-                @Html.TextBoxFor(x => Model.AfterAdjustAmount, new { @class = "form-control" })
+                @Html.TextBoxFor(x => Model.AfterAdjustAmount, new { @class = "form-control", maxlength = "9", data_minlength = "5" })
             </div>
         </div>
         <div class="row border-top">
@@ -439,13 +439,14 @@
                 <span>有效日期(起)</span>
             </div>
             <div class="col col-2">
-                @Html.TextBoxFor(x => Model.ValidDateStart, new { @class = "form-control" })
+                @Html.TextBoxFor(x => Model.ValidDateStart, new { @class = "form-control", type = "date" })
+                
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>有效日期(迄)</span>
             </div>
             <div class="col col-2">
-                @Html.TextBoxFor(x => Model.ValidDateEnd, new { @class = "form-control" })
+                @Html.TextBoxFor(x => Model.ValidDateEnd, new { @class = "form-control", type = "date" })
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>是否可人工授權</span>
@@ -467,7 +468,7 @@
                 <span>出國地點</span>
             </div>
             <div class="col col-2">
-                @Html.TextBoxFor(x => Model.PlaceOfGoingAbroad, new { @class = "form-control", disabled = "disabled" })
+                @Html.TextBoxFor(x => Model.PlaceOfGoingAbroad, new { @class = "form-control", disabled = "disabled", maxlength = "40" })
             </div>
         </div>
     </div>
@@ -516,9 +517,9 @@
             </div>
 
             <div class="col offset-1">
-                <input type="button" name="Approved" id="Approved" value="核准" class="btn btn-success" disabled />
-                <input type="button" name="Refuse" id="Refuse" value="拒絕" class="btn btn-danger" disabled />
-                <input type="button" name="Cancel" id="Cancel" value="取消" class="btn btn-primary" disabled />
+                <input type="button" name="approved" id="approved" value="核准" class="btn btn-success" disabled />
+                <input type="button" name="refuse" id="refuse" value="拒絕" class="btn btn-danger" disabled />
+                <input type="button" name="cancel" id="cancel" value="取消" class="btn btn-primary" disabled />
             </div>
         </div>
     </div>

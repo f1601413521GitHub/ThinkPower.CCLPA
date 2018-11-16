@@ -1,5 +1,5 @@
 ﻿function showFalsyValue() {
-    [undefined, null, NaN, 0, 1, false, true, '', ' ','0','1', 'false', 'true'].forEach(function (e, i) {
+    [undefined, null, NaN, 0, 1, false, true, '', ' ', '0', '1', 'false', 'true'].forEach(function (e, i) {
         console.log({
             index: i,
             value: e,
@@ -7,6 +7,20 @@
         });
     });
 }
+
+function getHalfAndFull() {
+
+    let result = [];
+    for (var i = 0; i <= 65536; i++) {
+        let str = String.fromCharCode(i);
+        result.push({
+            index: i,
+            value: str
+        });
+    }
+    console.log(JSON.stringify(result));
+}
+
 
 
 function callAjax(type, url, data) {

@@ -91,6 +91,8 @@ namespace ThinkPower.CCLPA.Web.Controllers
 
                 Customer customer = application.Customer;
 
+                viewModel.CustomerId = actionModel.CustomerId;
+
                 viewModel.JcicQueryDate = application.JcicSendQuery.JcicQueryDate;
 
                 viewModel.ProjectAdjustResult = application?.AdjustValidateResult?.ProjectResult;
@@ -315,6 +317,8 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 ValidDateEnd = null,
                 PlaceOfGoingAbroad = null,
                 TransferSupervisorReason = null,
+
+                AdjustmentAmountCeiling = null,
             };
         }
 

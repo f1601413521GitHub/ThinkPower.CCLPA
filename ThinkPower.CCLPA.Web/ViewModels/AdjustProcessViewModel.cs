@@ -74,6 +74,11 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         #region DisplayData
 
         /// <summary>
+        /// 調額上限
+        /// </summary>
+        public string AdjustmentAmountCeiling { get; set; }
+
+        /// <summary>
         /// JCIC日期
         /// </summary>
         public string JcicQueryDate { get; set; }

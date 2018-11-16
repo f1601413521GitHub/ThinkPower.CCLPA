@@ -3,8 +3,11 @@ const urlInfo = {
     query: 'Adjust/Query',
 };
 
+const scale = 100;
 
 $(document).ready(function () {
+
+    toggleButtonShowType();
 
     $('#query').on('click', function () {
 
@@ -49,7 +52,7 @@ $(document).ready(function () {
 
                         adjustApplicationFlag = false;
 
-                        let form = $('#preAdjustLoad');
+                        let form = $('#pre-adjust-load');
 
                         if (form.length > 0) {
 
@@ -92,7 +95,7 @@ $(document).ready(function () {
 
                 if (window.confirm(msg)) {
 
-                    let form = $('#adjustApplicationData');
+                    let form = $('#adjust-application-data');
 
                     if (form.length > 0) {
 
@@ -104,29 +107,30 @@ $(document).ready(function () {
         }
     });
 
-    $('#AdjustReasonSelectListItem').on('click', function () {
+    $('#approved').on('click', function () {
+        validateField();
+    });
+
+    $('#AdjustReasonSelectListItem').on('change', function () {
 
         let selectedItem = $(this).find(':selected');
         let reasonCode = selectedItem.val();
+
         if (reasonCode) {
 
             let reasonEffectInfo = $('.reason-effect-info').filter(function (i, e) {
                 let dataList = $(e).data();
-                console.log([JSON.stringify(dataList)], reasonCode);
                 return (dataList.reason.toString() === reasonCode);
             });
 
             let reasonEffectData = reasonEffectInfo.data();
-
-            console.log(JSON.stringify(reasonEffectData));
 
             let result = null;
 
             if (reasonEffectData) {
                 if (reasonEffectData.approveAmountMax) {
                     if (reasonEffectData.approveScaleMax) {
-                        // TODO 倍率計算公式?
-                        result = (reasonEffectData.approveAmountMax * (reasonEffectData.approveScaleMax / 100));
+                        result = (reasonEffectData.approveAmountMax * (reasonEffectData.approveScaleMax / scale));
                     } else {
                         result = reasonEffectData.approveAmountMax;
                     }
@@ -137,25 +141,351 @@ $(document).ready(function () {
                 }
             }
 
-            console.log({
-                result: result
-            });
+            $('#AdjustmentAmountCeiling').val(result);
         }
+
+        toggleReasonCodeShowObject(reasonCode);
+    });
+
+    $('#UseLocationSelectListItem').on('change', function () {
+
+        let selectedItem = $(this).find(':selected');
+        let selectedItemValue = selectedItem.val();
+
+        toggleUseLocationShowObject(selectedItemValue);
     });
 });
 
-
 function adjustDateFormat(dateTime, format) {
-
     let tempDateTime = null;
 
     if (dateTime) {
-
         if (format === 'yyyy/MM/dd' && dateTime.length === 8) {
-
             tempDateTime = dateTime.substr(0, 4) + '/' + dateTime.substr(4, 2) + '/' + dateTime.substr(6, 2);
         }
     }
 
     return tempDateTime;
+}
+
+function toggleButtonShowType() {
+
+    if ($('#CustomerId').val()) {
+        $('#approved').prop('disabled', false);
+    }
+}
+
+function validateField() {
+    let adjustReasonSelectListItem = $('#AdjustReasonSelectListItem');
+
+    if (adjustReasonSelectListItem) {
+
+        let selectedItem = adjustReasonSelectListItem.find(':selected');
+        let reasonCode = selectedItem.val();
+
+        if (!reasonCode) {
+            alert('請輸入「調高原因」。');
+        }
+    }
+
+
+
+    let adjustReasonRemark = $('#AdjustReasonRemark');
+
+    if (checkInputFieldCanUse(adjustReasonRemark)) {
+
+        let value = adjustReasonRemark.val();
+
+        if (!value) {
+            alert('請輸入「調高原因備註」。');
+
+        } else {
+            let valueByte = calculationValueByte(value);
+            let maxlength = adjustReasonRemark.prop('maxlength');
+
+            if (valueByte > maxlength) {
+                alert('「調高原因備註」輸入資料超出限制長度，請重新確認。');
+            }
+        }
+    }
+
+
+
+    let swipeAmount = $('#SwipeAmount');
+
+    if (checkInputFieldCanUse(swipeAmount)) {
+
+        let value = swipeAmount.val();
+        let minlength = swipeAmount.data('minlength');
+        let maxlength = swipeAmount.prop('maxlength');
+
+        if (!checkValueLength(value, minlength, maxlength) ||
+            !checkNumerical(value)) {
+
+            alert('「刷卡金額(不限額度)」必須輸入5~9位數金額。');
+        }
+    }
+
+
+
+    let afterAdjustAmount = $('#AfterAdjustAmount');
+
+    if (checkInputFieldCanUse(afterAdjustAmount)) {
+
+        let value = afterAdjustAmount.val();
+        let minlength = afterAdjustAmount.data('minlength');
+        let maxlength = afterAdjustAmount.prop('maxlength');
+
+        if (!checkValueLength(value, minlength, maxlength) ||
+            !checkNumerical(value)) {
+
+            alert('「臨調後額度」必須輸入5~9位數金額。');
+
+        } else if (checkInputFieldCanUse(swipeAmount) &&
+            value < swipeAmount.val()) {
+
+            alert('「臨調後額度」必須大於等於「刷卡金額(不含額度)」。');
+
+        } else {
+            let creditLimit = $('#credit-limit');
+
+            if (creditLimit) {
+                let creditLimitValue = creditLimit.text().replace(',', '');
+
+                if (value < creditLimitValue) {
+
+                    alert('「臨調後額度」必須大於等於「目前信用額度」。');
+                }
+            }
+        }
+    }
+
+
+
+    let placeOfGoingAbroad = $('#PlaceOfGoingAbroad');
+
+    if (checkInputFieldCanUse(placeOfGoingAbroad)) {
+
+        let value = placeOfGoingAbroad.val();
+        let fullValue = ConvertHalfOrFull(value, true);
+        let valueByte = calculationValueByte(fullValue);
+        let maxlength = placeOfGoingAbroad.prop('maxlength');
+
+        if (!value) {
+            alert('請輸入「出國地點」。');
+
+        } else if (valueByte > maxlength) {
+            alert('「出國地點」輸入資料超出限制長度，請重新確認。');
+        }
+    }
+
+
+
+    let validDateStart = $('#ValidDateStart');
+
+    if (checkInputFieldCanUse(validDateStart)) {
+
+        let value = validDateStart.val();
+
+        if (!value) {
+            alert('請輸入「有效日期(起)」。');
+
+        } else {
+            let valueDate = new Date(value);
+            let currentDateTime = new Date();
+            let tempDate = [currentDateTime.getFullYear(), (currentDateTime.getMonth() + 1), currentDateTime.getDate()];
+            let currentDate = new Date(tempDate.join('/'));
+
+            if (valueDate === 'Invalid Date') {
+                alert('「有效日期(起)」請輸入正常日期。');
+
+            } else if (valueDate < currentDate) {
+                alert('「有效日期(起)」不得小於系統日期。');
+            }
+        }
+    }
+
+
+
+    let validDateEnd = $('#ValidDateEnd');
+
+    if (checkInputFieldCanUse(validDateEnd)) {
+
+        let value = validDateEnd.val();
+
+        if (!value) {
+            alert('請輸入「有效日期(迄)」。');
+
+        } else {
+            let valueDate = new Date(value);
+
+            if (valueDate === 'Invalid Date') {
+                alert('「有效日期(迄)」請輸入正常日期。');
+
+            } else if (checkInputFieldCanUse(validDateStart)) {
+
+                let startDateValue = validDateStart.val();
+                let startDate = new Date(startDateValue);
+
+                if (startDateValue &&
+                    startDate !== 'Invalid Date' &&
+                    startDate > valueDate) {
+
+                    alert('「有效日期(起)」不可大於「有效日期(迄)」。');
+                }
+            }
+        }
+    }
+
+
+
+    let useLocationSelectListItem = $('#UseLocationSelectListItem');
+
+    if (useLocationSelectListItem) {
+
+        let selectedItem = useLocationSelectListItem.find(':selected');
+        let selectedItemValue = selectedItem.val();
+
+        if (!selectedItemValue) {
+            alert('請輸入「使用地點」。');
+        }
+    }
+
+
+
+    let manualAuthorizationSelectListItem = $('#ManualAuthorizationSelectListItem');
+
+    if (manualAuthorizationSelectListItem) {
+
+        let selectedItem = manualAuthorizationSelectListItem.find(':selected');
+        let selectedItemValue = selectedItem.val();
+
+        if (!selectedItemValue) {
+            alert('請輸入「是否可人工授權」。');
+        }
+    }
+}
+
+function calculationValueByte(value) {
+
+    // 計算有幾個全型字、中文字...
+    let chinese = value.match(/[^ -~]/g);
+    return (value.length + (chinese ? chinese.length : 0));
+}
+
+function checkNumerical(value) {
+    let regular = /^[0-9]+$/;
+    return regular.test(value);
+}
+
+function toggleReasonCodeShowObject(reasonCode) {
+    let swipeAmount = $('#SwipeAmount');
+
+    if (reasonCode === '12') {
+        swipeAmount.prop('disabled', false);
+    } else {
+        swipeAmount.prop('disabled', true);
+    }
+
+    swipeAmount.val('');
+}
+
+function toggleUseLocationShowObject(selectItemValue) {
+    let placeOfGoingAbroad = $('#PlaceOfGoingAbroad');
+
+    if (selectItemValue === '1' ||
+        selectItemValue === '3') {
+        placeOfGoingAbroad.prop('disabled', false);
+    } else {
+        placeOfGoingAbroad.prop('disabled', true);
+    }
+
+    placeOfGoingAbroad.val('');
+}
+
+function checkValueLength(value, minlength, maxlength) {
+
+    let validateResult = false;
+
+    if (value) {
+
+        if (minlength && maxlength) {
+            validateResult = (value.length >= minlength && value.length <= maxlength);
+
+        } else if (minlength) {
+            validateResult = (value.length >= minlength);
+
+        } else if (maxlength) {
+            validateResult = (value.length <= maxlength);
+        }
+    }
+
+    return validateResult;
+}
+
+function checkInputFieldCanUse(element) {
+
+    let canUse = false;
+
+    if (element && element.length > 0 && !element.prop('disabled')) {
+        canUse = true;
+    }
+
+    return canUse;
+}
+
+function ConvertHalfOrFull(value, halfToFull) {
+
+    let result = [];
+
+    if (value) {
+
+        //unicode編碼範圍是所有的英文字母以及各種字元
+        //{"index":32,"value":" "},     +12256
+        //{"index":33,"value":"!"},     +65248
+        //{"index":126,"value":"~"},    +65248
+        //
+        //{"index":12288,"value":"　"},  -12256
+        //{"index":65281,"value":"！"},  -65248
+        //{"index":65374,"value":"～"},  -65248
+
+        if (halfToFull) {
+            for (let i = 0; i < value.length; i++) {
+
+                let charUnicode = value.charCodeAt(i);
+
+                if (charUnicode >= 33 && charUnicode <= 126) {
+                    result.push(String.fromCharCode(charUnicode + 65248));
+
+                } else if (charUnicode == 32) {
+                    // Blank
+                    result.push(String.fromCharCode(charUnicode + 12256));
+
+                } else {
+                    // OriginalChar
+                    result.push(value.charAt(i));
+                }
+            }
+
+        } else {
+            for (let i = 0; i < value.length; i++) {
+
+                let charUnicode = value.charCodeAt(i);
+
+                if (charUnicode >= 65281 && charUnicode <= 65374) {
+                    result.push(String.fromCharCode(charUnicode - 65248));
+
+                } else if (charUnicode == 12288) {
+                    // Blank
+                    result.push(String.fromCharCode(charUnicode - 12256));
+
+                } else {
+                    // OriginalChar
+                    result.push(value.charAt(i));
+                }
+            }
+        }
+    }
+
+    return result.join('');
 }
