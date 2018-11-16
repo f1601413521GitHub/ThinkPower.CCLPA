@@ -7,16 +7,37 @@
 }
 
 <div class="process-page">
-    <!--隱藏表單-->
+    <!--隱藏-->
     <div class="d-none">
-        @using (Html.BeginForm("Load", "PreAdjust", FormMethod.Get, new { id = "preAdjustLoad" }))
-        {
+        <!--表單-->
+        <div>
+            @using (Html.BeginForm("Load", "PreAdjust", FormMethod.Get, new { id = "preAdjustLoad" }))
+            {
 
-        }
-        @using (Html.BeginForm("GetApplicationData", "Adjust", FormMethod.Post, new { id = "adjustApplicationData" }))
-        {
+            }
+            @using (Html.BeginForm("GetApplicationData", "Adjust", FormMethod.Post, new { id = "adjustApplicationData" }))
+            {
 
-        }
+            }
+        </div>
+
+        <!--資料-->
+        <div>
+            @{
+                var reasonEffectInfoList = Model?.ReasonEffectInfoList;
+
+                if (reasonEffectInfoList != null)
+                {
+                    foreach (var item in reasonEffectInfoList)
+                    {
+                        <div class="reason-effect-info"
+                             data-reason="@item.Reason"
+                             data-approve-amount-max="@item.ApproveAmountMax"
+                             data-approve-scale-max="@item.ApproveScaleMax"></div>
+                    }
+                }
+            }
+        </div>
     </div>
 
     <!--標題-->
@@ -372,7 +393,6 @@
     <hr />
     <!--調整-->
     <div>
-
         <div class="row border-top">
             <div class="col col-2 adjust-table-field">
                 <span>調高原因</span>

@@ -53,6 +53,7 @@
     <Compile Include="Service\CustomerService.cs" />
     <Compile Include="Service\ParamterService.cs" />
     <Compile Include="VO\AdjustConditionValidateResult.cs" />
+    <Compile Include="VO\AdjustReason.cs" />
     <Compile Include="VO\AdjustReasonCode.cs" />
     <Compile Include="VO\Customer.cs" />
     <Compile Include="Service\UserService.cs" />

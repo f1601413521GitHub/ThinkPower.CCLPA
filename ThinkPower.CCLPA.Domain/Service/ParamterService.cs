@@ -15,90 +15,132 @@ namespace ThinkPower.CCLPA.Domain.Service
     /// </summary>
     public class ParamterService
     {
+        #region PublicMethod
+
         /// <summary>
         /// 取得調整原因代碼
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<AdjustReasonCode> GetActiveAdjustReasonCode()
+        public IEnumerable<AdjustReasonCode> GetAdjustReasonCode()
         {
-            IEnumerable<AdjustReasonCodeDO> adjustReasonList = new AdjustReasonCodeDAO().
+
+            IEnumerable<AdjustReasonCodeDO> adjustReasonCodeList = new AdjustReasonCodeDAO().
                 Query(new AdjustReasonCodeCondition()
                 {
                     UseFlag = "Y",
                     OrderBy = AdjustReasonCodeCondition.OrderByKind.None,
                 });
 
-            if (!adjustReasonList.Any())
+            if (!adjustReasonCodeList.Any())
             {
-                throw new InvalidOperationException($"{nameof(adjustReasonList)} not found");
+                throw new InvalidOperationException($"{nameof(adjustReasonCodeList)} not found");
             }
 
-            return ConvertAdjustReasonCode(adjustReasonList);
+            return ConvertAdjustReasonCode(adjustReasonCodeList);
         }
 
         /// <summary>
-        /// 取得目前生效主檔資料
+        /// 取得參數生效資料
         /// </summary>
         /// <param name="adjustReasonCodeList">調整原因代碼</param>
         /// <returns></returns>
-        public IEnumerable<ParamCurrentlyEffect> GetParamEffectData(IEnumerable<string> adjustReasonCodeList)
+        public IEnumerable<ParamCurrentlyEffect> GetParamEffect(IEnumerable<string> adjustReasonCodeList)
         {
-            // TODO 尚未參考此方法。
-            List<ParamCurrentlyEffectDO> result = null;
+            List<ParamCurrentlyEffectDO> effectList = null;
 
-            if (adjustReasonCodeList == null || !adjustReasonCodeList.Any())
+            if ((adjustReasonCodeList == null) || !adjustReasonCodeList.Any())
             {
                 throw new ArgumentNullException(nameof(adjustReasonCodeList));
             }
 
-            result = new List<ParamCurrentlyEffectDO>();
+            effectList = new List<ParamCurrentlyEffectDO>();
 
-            ParamCurrentlyEffectDAO paramEffectDAO = new ParamCurrentlyEffectDAO();
-            ParamCurrentlyEffectDO temp = null;
+            ParamCurrentlyEffectDAO effectDAO = new ParamCurrentlyEffectDAO();
+            ParamCurrentlyEffectDO tempEffect = null;
 
-            DateTime currentTime = DateTime.Today;
+            DateTime currentDate = DateTime.Today;
             DateTime tempStartTime;
             DateTime tempEndTime;
 
 
             foreach (string adjustReasonCode in adjustReasonCodeList)
             {
-                temp = paramEffectDAO.Get(adjustReasonCode);
+                tempEffect = effectDAO.Get(adjustReasonCode);
 
-                if (temp == null)
+                if (tempEffect == null)
                 {
                     continue;
                 }
-                else if (!DateTime.TryParseExact(temp.AdjustDateStart, "yyyy/MM/dd", null,
+                else if (!DateTime.TryParseExact(tempEffect.AdjustDateStart, "yyyy/MM/dd", null,
                         DateTimeStyles.None, out tempStartTime))
                 {
                     throw new InvalidOperationException("Convert AdjustDateStart fail");
                 }
-                else if (!DateTime.TryParseExact(temp.AdjustDateEnd, "yyyy/MM/dd", null,
+                else if (!DateTime.TryParseExact(tempEffect.AdjustDateEnd, "yyyy/MM/dd", null,
                         DateTimeStyles.None, out tempEndTime))
                 {
                     throw new InvalidOperationException("Convert AdjustDateEnd fail");
                 }
-                else if ((currentTime >= tempStartTime) &&
-                         (currentTime <= tempEndTime))
+                else if ((currentDate >= tempStartTime) &&
+                         (currentDate <= tempEndTime))
                 {
-                    result.Add(temp);
+                    effectList.Add(tempEffect);
                 }
             }
 
-
-            return ConvertParamCurrentlyEffect(result);
+            return ConvertParamCurrentlyEffect(effectList);
         }
+
+        /// <summary>
+        /// 取得目前生效的調整原因
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<AdjustReason> GetActiveAdjustReason()
+        {
+            IEnumerable<AdjustReasonCode> adjustReasonCodeList = GetAdjustReasonCode();
+
+            if ((adjustReasonCodeList == null) || !adjustReasonCodeList.Any())
+            {
+                throw new InvalidOperationException($"{nameof(adjustReasonCodeList)} not found");
+            }
+
+
+            IEnumerable<ParamCurrentlyEffect> paramCurrentlyEffectList =
+                GetParamEffect(adjustReasonCodeList.Select(x => x.Code));
+
+            if ((paramCurrentlyEffectList == null) || !paramCurrentlyEffectList.Any())
+            {
+                throw new InvalidOperationException($"{nameof(paramCurrentlyEffectList)} not found");
+            }
+
+
+            List<AdjustReason> adjustReasonList = new List<AdjustReason>();
+
+            foreach (ParamCurrentlyEffect effectReason in paramCurrentlyEffectList)
+            {
+                adjustReasonList.Add(new AdjustReason() {
+                    ReasonCode = adjustReasonCodeList.Where(x => x.Code == effectReason.Reason).First(),
+                    ReasonEffectInfo = effectReason,
+                });
+            }
+
+            return adjustReasonList;
+        }
+
+        #endregion
+
+
+
+        #region PrivateMethod
 
         /// <summary>
         /// 轉換參數生效資料
         /// </summary>
-        /// <param name="paramEffectList">參數生效資料</param>
+        /// <param name="currentlyEffectList">參數生效資料</param>
         /// <returns></returns>
         private IEnumerable<ParamCurrentlyEffect> ConvertParamCurrentlyEffect(
-            IEnumerable<ParamCurrentlyEffectDO> paramEffectList)
+            IEnumerable<ParamCurrentlyEffectDO> currentlyEffectList)
         {
-            return paramEffectList?.Select(x => new ParamCurrentlyEffect()
+            return currentlyEffectList?.Select(x => new ParamCurrentlyEffect()
             {
                 Reason = x.Reason,
                 VerifiyCondition = x.VerifiyCondition,
@@ -125,5 +167,7 @@ namespace ThinkPower.CCLPA.Domain.Service
                 UseFlag = x.UseFlag
             });
         }
+
+        #endregion
     }
 }

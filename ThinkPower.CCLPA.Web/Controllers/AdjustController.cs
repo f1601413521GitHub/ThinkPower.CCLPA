@@ -98,8 +98,6 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 viewModel.GeneralAdjustResult = application?.AdjustValidateResult?.EstimateResult;
                 viewModel.GeneralRejectReason = application?.AdjustValidateResult?.RejectReason;
 
-                // TODO RG_PARA_M_ACTIVE
-                //AdjustmentAmountCeiling = null,
 
                 viewModel.Vip = new AdjustProcessVip() { MonthStarLevel = application?.Vip?.MonthStarLevel };
 
@@ -223,18 +221,29 @@ namespace ThinkPower.CCLPA.Web.Controllers
         #region Private Method
 
         /// <summary>
-        /// 取得調整原因代碼選單資料
+        /// 取得目前生效的調整原因
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<SelectListItem> GetAdjustReasonCodeSelectItemList()
+        private static IEnumerable<AdjustReason> GetActiveAdjustReason()
         {
-            IEnumerable<AdjustReasonCode> adjustReasonCodeList = new ParamterService().GetActiveAdjustReasonCode();
+            IEnumerable<AdjustReason> adjustReasonList = new ParamterService().GetActiveAdjustReason();
 
-            if ((adjustReasonCodeList == null) || !adjustReasonCodeList.Any())
+            if ((adjustReasonList == null) || !adjustReasonList.Any())
             {
-                throw new InvalidOperationException($"{nameof(adjustReasonCodeList)} not found");
+                throw new InvalidOperationException($"{nameof(adjustReasonList)} not found");
             }
 
+            return adjustReasonList;
+        }
+
+        /// <summary>
+        /// 轉換調整原因代碼選單資料
+        /// </summary>
+        /// <param name="adjustReasonCodeList">調整原因代碼</param>
+        /// <returns></returns>
+        private IEnumerable<SelectListItem> ConvertAdjustReasonCodeSelectItemList(
+            IEnumerable<AdjustReasonCode> adjustReasonCodeList)
+        {
             List<SelectListItem> selectItemList = new List<SelectListItem>();
 
             foreach (AdjustReasonCode adjustReasonCode in adjustReasonCodeList)
@@ -282,11 +291,21 @@ namespace ThinkPower.CCLPA.Web.Controllers
         /// <returns></returns>
         private AdjustProcessViewModel InitialAdjustProcessViewModel()
         {
+            IEnumerable<AdjustReason> adjustReasonList = GetActiveAdjustReason();
+
+            if ((adjustReasonList == null) || !adjustReasonList.Any())
+            {
+                throw new InvalidOperationException($"{nameof(adjustReasonList)} not found");
+            }
+
             return new AdjustProcessViewModel()
             {
-                AdjustReasonSelectListItem = GetAdjustReasonCodeSelectItemList(),
+                AdjustReasonSelectListItem = ConvertAdjustReasonCodeSelectItemList(
+                    adjustReasonList.Select(x => x.ReasonCode)),
                 UseLocationSelectListItem = CreateUseLocationSelectItemList(),
                 ManualAuthorizationSelectListItem = CreateManualAuthorizationSelectItemList(),
+
+                ReasonEffectInfoList = adjustReasonList.Select(x => x.ReasonEffectInfo),
 
                 CustomerId = null,
                 AdjustReasonRemark = null,
@@ -298,6 +317,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
                 TransferSupervisorReason = null,
             };
         }
+
         #endregion
     }
 }

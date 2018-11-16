@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using ThinkPower.CCLPA.Domain.Entity;
+using ThinkPower.CCLPA.Domain.VO;
 using ThinkPower.CCLPA.Web.Models;
 
 namespace ThinkPower.CCLPA.Web.ViewModels
@@ -109,6 +110,17 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// 近年評等紀錄
         /// </summary>
         public NearlyYearRatingModel NearlyYearRating { get; set; }
+
+        #endregion
+
+
+
+        #region HiddenField
+
+        /// <summary>
+        /// 調整原因生效資訊
+        /// </summary>
+        public IEnumerable<ParamCurrentlyEffect> ReasonEffectInfoList { get; set; }
 
         #endregion
     }

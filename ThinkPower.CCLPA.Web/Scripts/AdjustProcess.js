@@ -103,6 +103,45 @@ $(document).ready(function () {
             }
         }
     });
+
+    $('#AdjustReasonSelectListItem').on('click', function () {
+
+        let selectedItem = $(this).find(':selected');
+        let reasonCode = selectedItem.val();
+        if (reasonCode) {
+
+            let reasonEffectInfo = $('.reason-effect-info').filter(function (i, e) {
+                let dataList = $(e).data();
+                console.log([JSON.stringify(dataList)], reasonCode);
+                return (dataList.reason.toString() === reasonCode);
+            });
+
+            let reasonEffectData = reasonEffectInfo.data();
+
+            console.log(JSON.stringify(reasonEffectData));
+
+            let result = null;
+
+            if (reasonEffectData) {
+                if (reasonEffectData.approveAmountMax) {
+                    if (reasonEffectData.approveScaleMax) {
+                        // TODO 倍率計算公式?
+                        result = (reasonEffectData.approveAmountMax * (reasonEffectData.approveScaleMax / 100));
+                    } else {
+                        result = reasonEffectData.approveAmountMax;
+                    }
+
+
+                } else if (reasonEffectData.approveAmountMax.toString() === '0') {
+                    result = '不設限';
+                }
+            }
+
+            console.log({
+                result: result
+            });
+        }
+    });
 });
 
 

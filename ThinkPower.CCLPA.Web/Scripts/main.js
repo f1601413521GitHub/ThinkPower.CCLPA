@@ -1,4 +1,14 @@
-﻿
+﻿function showFalsyValue() {
+    [undefined, null, NaN, 0, 1, false, true, '', ' ','0','1', 'false', 'true'].forEach(function (e, i) {
+        console.log({
+            index: i,
+            value: e,
+            notFalsyValue: (e) ? true : false,
+        });
+    });
+}
+
+
 function callAjax(type, url, data) {
 
     let resultInfo = { success: false, errorMsg: null, info: null, isJson: false };
