@@ -1,12 +1,16 @@
 ﻿
 const urlInfo = {
     query: 'Adjust/Query',
+    queryJcic: 'Adjust/QueryJcic',
+    verifyAdjustCondition: 'Adjust/VerifyAdjustCondition',
 };
 
 const scale = 100;
 
+
 $(document).ready(function () {
 
+    showErrorMessage();
     toggleButtonShowType();
 
     $('#query').on('click', function () {
@@ -107,8 +111,25 @@ $(document).ready(function () {
         }
     });
 
-    $('#approved').on('click', function () {
-        validateField();
+    $('#adjust-application').on('click', function (e) {
+
+        if (validateField()) {
+            let jcicElement = $('#JcicQueryDate');
+
+            if (checkElementExist(jcicElement)) {
+                let jcicQueryDate = jcicElement.val();
+                let customerId = $('#CustomerId').val();
+                let adjustReasonCode = $('#AdjustReasonSelectListItem :selected').val();
+
+                if (!jcicQueryDate) {
+                    queryJcic(customerId);
+                }
+                else {
+                    verifyAdjustCondition(customerId, jcicQueryDate, adjustReasonCode);
+                    toggleButtonShowType(e.target.id);
+                }
+            }
+        }
     });
 
     $('#AdjustReasonSelectListItem').on('change', function () {
@@ -168,23 +189,127 @@ function adjustDateFormat(dateTime, format) {
     return tempDateTime;
 }
 
-function toggleButtonShowType() {
+function showErrorMessage() {
+    let errorMsg = $('#ErrorMessage');
 
-    if ($('#CustomerId').val()) {
-        $('#approved').prop('disabled', false);
+    if (checkElementExist(errorMsg)) {
+        alert(errorMsg.val());
     }
 }
 
+function toggleButtonShowType(event) {
+    $('#adjust-application').prop('disabled', true);
+    $('#approved').prop('disabled', true);
+    $('#refuse').prop('disabled', true);
+    $('#cancel').prop('disabled', true);
+
+    if ($('#CustomerId').val()) {
+        $('#adjust-application').prop('disabled', false);
+    }
+
+    if (event === 'adjust-application') {
+
+        if (!$('#ProjectRejectReason').text()) {
+            $('#approved').prop('disabled', false);
+        }
+
+        if (!$('#ProjectResult').text()) {
+            $('#refuse').prop('disabled', false);
+            $('#cancel').prop('disabled', false);
+        }
+    }
+}
+
+function queryJcic(customerId) {
+
+    let ajaxResultInfo = callAjax('post', urlInfo.queryJcic, {
+        CustomerId: customerId,
+    });
+
+    if (!ajaxResultInfo.success) {
+
+        alert(ajaxResultInfo.errorMsg);
+
+    } else if (ajaxResultInfo.isJson) {
+        let infoModel = ajaxResultInfo.info;
+        let msg = null;
+
+        if (infoModel.ResponseCode === '73') {
+            msg = '該筆資料EJCIC On-Line送查等待中，請稍後再按『申請臨調』按鈕。';
+            alert(msg);
+
+        } else if (infoModel.ResponseCode === '72') {
+            msg = '該筆資料EJCIC On-Line於' + infoModel.JcicQueryDate + '送查失敗，是否啟動重送機制?';
+
+            if (window.confirm(msg)) {
+                queryJcic(customerId);
+            }
+        } else if (infoModel.ResponseCode === '00') {
+            $('#JcicQueryDate').val(infoModel.JcicQueryDate);
+
+        } else {
+            msg = '系統發生錯誤，請於上班時段來電客服中心0800-123-456，造成不便敬請見諒。';
+            alert(msg);
+        }
+    }
+}
+
+function verifyAdjustCondition(customerId, jcicQueryDate, adjustReasonCode) {
+
+    let ajaxResultInfo = callAjax('post', urlInfo.verifyAdjustCondition, {
+        CustomerId: customerId,
+        JcicQueryDate: jcicQueryDate,
+        AdjustReasonCode: adjustReasonCode,
+    });
+
+    if (!ajaxResultInfo.success) {
+
+        alert(ajaxResultInfo.errorMsg);
+
+    } else if (ajaxResultInfo.isJson) {
+        let infoModel = ajaxResultInfo.info;
+
+        if (infoModel.ResponseCode === '00') {
+            $('#EstimateResult').text(infoModel.EstimateResult);
+            $('#RejectReason').text(infoModel.RejectReason);
+            $('#ProjectResult').text(infoModel.ProjectResult);
+            $('#ProjectRejectReason').text(infoModel.ProjectRejectReason);
+
+        } else {
+            alert('系統發生錯誤，請於上班時段來電客服中心0800-123-456，造成不便敬請見諒。');
+        }
+    }
+}
+
+function createErrorInfo(errorMsg, element) {
+    let errorInfo = null;
+
+    if (errorMsg && element && element.length > 0) {
+        errorInfo = {
+            errorMessage: errorMsg,
+            htmlElement: element,
+        };
+    }
+
+    return errorInfo;
+}
+
 function validateField() {
+    let verifyInfoArray = [];
+    let errorInfo = null;
+
+
+
     let adjustReasonSelectListItem = $('#AdjustReasonSelectListItem');
 
-    if (adjustReasonSelectListItem) {
+    if (checkInputFieldCanUse(adjustReasonSelectListItem)) {
 
         let selectedItem = adjustReasonSelectListItem.find(':selected');
         let reasonCode = selectedItem.val();
 
         if (!reasonCode) {
-            alert('請輸入「調高原因」。');
+            errorInfo = createErrorInfo('請輸入「調高原因」。', adjustReasonSelectListItem);
+            verifyInfoArray.push(errorInfo);
         }
     }
 
@@ -197,14 +322,16 @@ function validateField() {
         let value = adjustReasonRemark.val();
 
         if (!value) {
-            alert('請輸入「調高原因備註」。');
+            errorInfo = createErrorInfo('請輸入「調高原因備註」。', adjustReasonRemark);
+            verifyInfoArray.push(errorInfo);
 
         } else {
             let valueByte = calculationValueByte(value);
             let maxlength = adjustReasonRemark.prop('maxlength');
 
             if (valueByte > maxlength) {
-                alert('「調高原因備註」輸入資料超出限制長度，請重新確認。');
+                errorInfo = createErrorInfo('「調高原因備註」輸入資料超出限制長度，請重新確認。', adjustReasonRemark);
+                verifyInfoArray.push(errorInfo);
             }
         }
     }
@@ -221,8 +348,8 @@ function validateField() {
 
         if (!checkValueLength(value, minlength, maxlength) ||
             !checkNumerical(value)) {
-
-            alert('「刷卡金額(不限額度)」必須輸入5~9位數金額。');
+            errorInfo = createErrorInfo('「刷卡金額(不限額度)」必須輸入5~9位數金額。', swipeAmount);
+            verifyInfoArray.push(errorInfo);
         }
     }
 
@@ -238,13 +365,13 @@ function validateField() {
 
         if (!checkValueLength(value, minlength, maxlength) ||
             !checkNumerical(value)) {
-
-            alert('「臨調後額度」必須輸入5~9位數金額。');
+            errorInfo = createErrorInfo('「臨調後額度」必須輸入5~9位數金額。', afterAdjustAmount);
+            verifyInfoArray.push(errorInfo);
 
         } else if (checkInputFieldCanUse(swipeAmount) &&
             value < swipeAmount.val()) {
-
-            alert('「臨調後額度」必須大於等於「刷卡金額(不含額度)」。');
+            errorInfo = createErrorInfo('「臨調後額度」必須大於等於「刷卡金額(不含額度)」。', afterAdjustAmount);
+            verifyInfoArray.push(errorInfo);
 
         } else {
             let creditLimit = $('#credit-limit');
@@ -253,10 +380,103 @@ function validateField() {
                 let creditLimitValue = creditLimit.text().replace(',', '');
 
                 if (value < creditLimitValue) {
-
-                    alert('「臨調後額度」必須大於等於「目前信用額度」。');
+                    errorInfo = createErrorInfo('「臨調後額度」必須大於等於「目前信用額度」。', afterAdjustAmount);
+                    verifyInfoArray.push(errorInfo);
                 }
             }
+        }
+    }
+
+
+
+    let validDateStart = $('#ValidDateStart');
+
+    if (checkInputFieldCanUse(validDateStart)) {
+
+        let value = validDateStart.val();
+
+        if (!value) {
+            errorInfo = createErrorInfo('請輸入「有效日期(起)」。', validDateStart);
+            verifyInfoArray.push(errorInfo);
+
+        } else {
+            let valueDate = new Date(value);
+            let currentDateTime = new Date();
+            let tempDate = [currentDateTime.getFullYear(), (currentDateTime.getMonth() + 1), currentDateTime.getDate()];
+            let currentDate = new Date(tempDate.join('/'));
+
+            if (valueDate === 'Invalid Date') {
+                errorInfo = createErrorInfo('「有效日期(起)」請輸入正常日期。', validDateStart);
+                verifyInfoArray.push(errorInfo);
+
+            } else if (valueDate < currentDate) {
+                errorInfo = createErrorInfo('「有效日期(起)」不得小於系統日期。', validDateStart);
+                verifyInfoArray.push(errorInfo);
+            }
+        }
+    }
+
+
+
+    let validDateEnd = $('#ValidDateEnd');
+
+    if (checkInputFieldCanUse(validDateEnd)) {
+
+        let value = validDateEnd.val();
+
+        if (!value) {
+            errorInfo = createErrorInfo('請輸入「有效日期(迄)」。', validDateEnd);
+            verifyInfoArray.push(errorInfo);
+
+        } else {
+            let valueDate = new Date(value);
+
+            if (valueDate === 'Invalid Date') {
+                errorInfo = createErrorInfo('「有效日期(迄)」請輸入正常日期。', validDateEnd);
+                verifyInfoArray.push(errorInfo);
+
+            } else if (checkInputFieldCanUse(validDateStart)) {
+
+                let startDateValue = validDateStart.val();
+                let startDate = new Date(startDateValue);
+
+                if (startDateValue &&
+                    startDate !== 'Invalid Date' &&
+                    startDate > valueDate) {
+                    errorInfo = createErrorInfo('「有效日期(起)」不可大於「有效日期(迄)」。', validDateEnd);
+                    verifyInfoArray.push(errorInfo);
+                }
+            }
+        }
+    }
+
+
+
+    let manualAuthorizationSelectListItem = $('#ManualAuthorizationSelectListItem');
+
+    if (checkInputFieldCanUse(manualAuthorizationSelectListItem)) {
+
+        let selectedItem = manualAuthorizationSelectListItem.find(':selected');
+        let selectedItemValue = selectedItem.val();
+
+        if (!selectedItemValue) {
+            errorInfo = createErrorInfo('請輸入「是否可人工授權」。', manualAuthorizationSelectListItem);
+            verifyInfoArray.push(errorInfo);
+        }
+    }
+
+
+
+    let useLocationSelectListItem = $('#UseLocationSelectListItem');
+
+    if (checkInputFieldCanUse(useLocationSelectListItem)) {
+
+        let selectedItem = useLocationSelectListItem.find(':selected');
+        let selectedItemValue = selectedItem.val();
+
+        if (!selectedItemValue) {
+            errorInfo = createErrorInfo('請輸入「使用地點」。', useLocationSelectListItem);
+            verifyInfoArray.push(errorInfo);
         }
     }
 
@@ -272,98 +492,25 @@ function validateField() {
         let maxlength = placeOfGoingAbroad.prop('maxlength');
 
         if (!value) {
-            alert('請輸入「出國地點」。');
+            errorInfo = createErrorInfo('請輸入「出國地點」。', placeOfGoingAbroad);
+            verifyInfoArray.push(errorInfo);
 
         } else if (valueByte > maxlength) {
-            alert('「出國地點」輸入資料超出限制長度，請重新確認。');
+            errorInfo = createErrorInfo('「出國地點」輸入資料超出限制長度，請重新確認。', placeOfGoingAbroad);
+            verifyInfoArray.push(errorInfo);
         }
     }
 
 
 
-    let validDateStart = $('#ValidDateStart');
+    $(verifyInfoArray).each(function (i, e) {
 
-    if (checkInputFieldCanUse(validDateStart)) {
+        alert(e.errorMessage);
+        e.htmlElement.focus();
+        return false;
+    });
 
-        let value = validDateStart.val();
-
-        if (!value) {
-            alert('請輸入「有效日期(起)」。');
-
-        } else {
-            let valueDate = new Date(value);
-            let currentDateTime = new Date();
-            let tempDate = [currentDateTime.getFullYear(), (currentDateTime.getMonth() + 1), currentDateTime.getDate()];
-            let currentDate = new Date(tempDate.join('/'));
-
-            if (valueDate === 'Invalid Date') {
-                alert('「有效日期(起)」請輸入正常日期。');
-
-            } else if (valueDate < currentDate) {
-                alert('「有效日期(起)」不得小於系統日期。');
-            }
-        }
-    }
-
-
-
-    let validDateEnd = $('#ValidDateEnd');
-
-    if (checkInputFieldCanUse(validDateEnd)) {
-
-        let value = validDateEnd.val();
-
-        if (!value) {
-            alert('請輸入「有效日期(迄)」。');
-
-        } else {
-            let valueDate = new Date(value);
-
-            if (valueDate === 'Invalid Date') {
-                alert('「有效日期(迄)」請輸入正常日期。');
-
-            } else if (checkInputFieldCanUse(validDateStart)) {
-
-                let startDateValue = validDateStart.val();
-                let startDate = new Date(startDateValue);
-
-                if (startDateValue &&
-                    startDate !== 'Invalid Date' &&
-                    startDate > valueDate) {
-
-                    alert('「有效日期(起)」不可大於「有效日期(迄)」。');
-                }
-            }
-        }
-    }
-
-
-
-    let useLocationSelectListItem = $('#UseLocationSelectListItem');
-
-    if (useLocationSelectListItem) {
-
-        let selectedItem = useLocationSelectListItem.find(':selected');
-        let selectedItemValue = selectedItem.val();
-
-        if (!selectedItemValue) {
-            alert('請輸入「使用地點」。');
-        }
-    }
-
-
-
-    let manualAuthorizationSelectListItem = $('#ManualAuthorizationSelectListItem');
-
-    if (manualAuthorizationSelectListItem) {
-
-        let selectedItem = manualAuthorizationSelectListItem.find(':selected');
-        let selectedItemValue = selectedItem.val();
-
-        if (!selectedItemValue) {
-            alert('請輸入「是否可人工授權」。');
-        }
-    }
+    return (verifyInfoArray.length === 0);
 }
 
 function calculationValueByte(value) {
@@ -427,11 +574,16 @@ function checkInputFieldCanUse(element) {
 
     let canUse = false;
 
-    if (element && element.length > 0 && !element.prop('disabled')) {
+    if (checkElementExist(element) &&
+        !element.prop('disabled')) {
         canUse = true;
     }
 
     return canUse;
+}
+
+function checkElementExist(element) {
+    return (element && element.length > 0);
 }
 
 function ConvertHalfOrFull(value, halfToFull) {

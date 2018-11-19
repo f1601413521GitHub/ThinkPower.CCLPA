@@ -210,10 +210,82 @@ namespace ThinkPower.CCLPA.Web.Controllers
             catch (Exception e)
             {
                 logger.Error(e);
+                viewModel.ErrorMessage = _systemErrorMsg;
             }
 
-
             return View(_adjustProcessPage, viewModel);
+        }
+
+        /// <summary>
+        /// 查詢JCIC送查日期
+        /// </summary>
+        /// <param name="actionModel">來源資料</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult QueryJcic(QueryJcicActionModel actionModel)
+        {
+            JcicSendQueryResult result = null;
+
+            try
+            {
+                if (!Request.IsAjaxRequest())
+                {
+                    throw new InvalidOperationException("Not ajax request");
+                }
+                else if (actionModel == null)
+                {
+                    throw new ArgumentNullException(nameof(actionModel));
+                }
+                else if (!CheckUserPermission())
+                {
+                    throw new InvalidOperationException("User does not permissions.");
+                }
+
+                result = new AdjustSystemService() { UserInfo = UserInformation }.JcicSendQuery(actionModel.CustomerId);
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+            }
+
+            return Json(result, "application/json", Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// 檢核專案臨調條件
+        /// </summary>
+        /// <param name="actionModel">來源資料</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult VerifyAdjustCondition(VerifyAdjustConditionActionModel actionModel)
+        {
+            AdjustConditionValidateResult result = null;
+
+            try
+            {
+                if (!Request.IsAjaxRequest())
+                {
+                    throw new InvalidOperationException("Not ajax request");
+                }
+                else if (actionModel == null)
+                {
+                    throw new ArgumentNullException(nameof(actionModel));
+                }
+                else if (!CheckUserPermission())
+                {
+                    throw new InvalidOperationException("User does not permissions.");
+                }
+
+                result = new AdjustSystemService() { UserInfo = UserInformation }.
+                    ValidateAdjustCondition(actionModel.CustomerId, actionModel.JcicQueryDate,
+                        actionModel.AdjustReasonCode);
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+            }
+
+            return Json(result, "application/json", Encoding.UTF8);
         }
 
         #endregion

@@ -167,6 +167,8 @@
     <Compile Include="ActionModels\PreAdjustImportActionModel.cs" />
     <Compile Include="ActionModels\PreAdjustLoadActionModel.cs" />
     <Compile Include="ActionModels\PreAdjustValidateActionModel.cs" />
+    <Compile Include="ActionModels\QueryJcicActionModel.cs" />
+    <Compile Include="ActionModels\VerifyAdjustConditionActionModel.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />

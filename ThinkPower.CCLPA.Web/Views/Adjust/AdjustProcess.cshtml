@@ -38,6 +38,12 @@
                 }
             }
         </div>
+        <div>
+            @if (!String.IsNullOrEmpty(Model?.ErrorMessage))
+            {
+                @Html.HiddenFor(x => Model.ErrorMessage)
+            }
+        </div>
     </div>
 
     <!--標題-->
@@ -440,7 +446,7 @@
             </div>
             <div class="col col-2">
                 @Html.TextBoxFor(x => Model.ValidDateStart, new { @class = "form-control", type = "date" })
-                
+
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>有效日期(迄)</span>
@@ -471,6 +477,9 @@
                 @Html.TextBoxFor(x => Model.PlaceOfGoingAbroad, new { @class = "form-control", disabled = "disabled", maxlength = "40" })
             </div>
         </div>
+        <div class="row">
+            <input type="button" name="adjust-application" id="adjust-application" value="申請臨調" class="btn btn-primary" disabled />
+        </div>
     </div>
 
     <hr />
@@ -482,13 +491,13 @@
                 <span>專案臨調結果</span>
             </div>
             <div class="col col-2">
-                <span>@(Model?.ProjectAdjustResult)</span>
+                <span id="ProjectResult">@(Model?.ProjectAdjustResult)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>拒絕原因(專案)</span>
             </div>
             <div class="col col-6">
-                <span>@(Model?.ProjectRejectReason)</span>
+                <span id="ProjectRejectReason">@(Model?.ProjectRejectReason)</span>
             </div>
         </div>
         <div class="row">
@@ -496,13 +505,13 @@
                 <span>一般臨調結果</span>
             </div>
             <div class="col col-2">
-                <span>@(Model?.GeneralAdjustResult)</span>
+                <span id="EstimateResult">@(Model?.GeneralAdjustResult)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>拒絕原因(一般)</span>
             </div>
             <div class="col col-6">
-                <span>@(Model?.GeneralRejectReason)</span>
+                <span id="RejectReason">@(Model?.GeneralRejectReason)</span>
             </div>
         </div>
         <div class="row justify-content-between">

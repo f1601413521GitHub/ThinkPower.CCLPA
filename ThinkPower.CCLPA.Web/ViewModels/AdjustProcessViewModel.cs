@@ -127,6 +127,11 @@ namespace ThinkPower.CCLPA.Web.ViewModels
         /// </summary>
         public IEnumerable<ParamCurrentlyEffect> ReasonEffectInfoList { get; set; }
 
+        /// <summary>
+        /// 錯誤訊息
+        /// </summary>
+        public string ErrorMessage { get; set; }
+
         #endregion
     }
 }
