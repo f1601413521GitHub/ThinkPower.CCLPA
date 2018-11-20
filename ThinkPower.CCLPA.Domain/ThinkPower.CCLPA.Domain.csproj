@@ -53,6 +53,7 @@
     <Compile Include="Service\CustomerService.cs" />
     <Compile Include="Service\ParamterService.cs" />
     <Compile Include="VO\AdjustConditionValidateResult.cs" />
+    <Compile Include="VO\AdjustProcess.cs" />
     <Compile Include="VO\AdjustReason.cs" />
     <Compile Include="VO\AdjustReasonCode.cs" />
     <Compile Include="VO\Customer.cs" />
@@ -67,10 +68,12 @@
     <Compile Include="Service\Interface\ICreditSystem.cs" />
     <Compile Include="VO\AdjustApplication.cs" />
     <Compile Include="VO\CheckResult.cs" />
+    <Compile Include="VO\ForwardingSupervisor.cs" />
     <Compile Include="VO\IcrsAmountInfo.cs" />
     <Compile Include="VO\IncomeTaxCardAdjustInfo.cs" />
     <Compile Include="VO\IncreaseReasonCodeInfo.cs" />
     <Compile Include="VO\JcicSendQueryResult.cs" />
+    <Compile Include="VO\LogProgress.cs" />
     <Compile Include="VO\ParamCurrentlyEffect.cs" />
     <Compile Include="VO\PreAdjustEffectResult.cs" />
     <Compile Include="Entity\PreAdjustEntity.cs" />

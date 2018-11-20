@@ -161,6 +161,7 @@
   <ItemGroup>
     <Compile Include="ActionModels\AdjustApplicationActionModel.cs" />
     <Compile Include="ActionModels\AdjustQueryActionModel.cs" />
+    <Compile Include="ActionModels\ForwardingSupervisorActionModel.cs" />
     <Compile Include="ActionModels\PreAdjustAgreeActionModel.cs" />
     <Compile Include="ActionModels\PreAdjustDeleteActionModel.cs" />
     <Compile Include="ActionModels\PreAdjustForceAgreeActionModel.cs" />

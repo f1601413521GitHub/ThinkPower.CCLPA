@@ -19,6 +19,10 @@
             {
 
             }
+            @using (Html.BeginForm("Index", "Adjust", FormMethod.Get, new { id = "adjust-index" }))
+            {
+
+            }
         </div>
 
         <!--資料-->
@@ -111,7 +115,7 @@
                 <span>中文姓名</span>
             </div>
             <div class="col col-2">
-                <span>@(Model?.Customer?.ChineseName)</span>
+                <span id="chinese-name">@(Model?.Customer?.ChineseName)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>生日</span>
@@ -491,13 +495,13 @@
                 <span>專案臨調結果</span>
             </div>
             <div class="col col-2">
-                <span id="ProjectResult">@(Model?.ProjectAdjustResult)</span>
+                <span id="project-result">@(Model?.ProjectAdjustResult)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>拒絕原因(專案)</span>
             </div>
             <div class="col col-6">
-                <span id="ProjectRejectReason">@(Model?.ProjectRejectReason)</span>
+                <span id="project-reject-reason">@(Model?.ProjectRejectReason)</span>
             </div>
         </div>
         <div class="row">
@@ -505,13 +509,13 @@
                 <span>一般臨調結果</span>
             </div>
             <div class="col col-2">
-                <span id="EstimateResult">@(Model?.GeneralAdjustResult)</span>
+                <span id="estimate-result">@(Model?.GeneralAdjustResult)</span>
             </div>
             <div class="col col-2 adjust-table-field">
                 <span>拒絕原因(一般)</span>
             </div>
             <div class="col col-6">
-                <span id="RejectReason">@(Model?.GeneralRejectReason)</span>
+                <span id="reject-reason">@(Model?.GeneralRejectReason)</span>
             </div>
         </div>
         <div class="row justify-content-between">
@@ -519,10 +523,10 @@
                 <span>轉授信主管原因</span>
             </div>
             <div class="col col-4">
-                @Html.TextBoxFor(x => Model.TransferSupervisorReason, new { @class = "form-control" })
+                @Html.TextBoxFor(x => Model.TransferSupervisorReason, new { @class = "form-control", maxlength = "40" })
             </div>
             <div class="col col-2">
-                <input type="button" name="forwarding" id="forwarding" value="轉授信主管" class="btn btn-primary" disabled />
+                <input type="button" name="forwarding-supervisor" " id="forwarding-supervisor" value="轉授信主管" class="btn btn-primary" disabled />
             </div>
 
             <div class="col offset-1">

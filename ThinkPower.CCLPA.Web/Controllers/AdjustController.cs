@@ -288,6 +288,61 @@ namespace ThinkPower.CCLPA.Web.Controllers
             return Json(result, "application/json", Encoding.UTF8);
         }
 
+        /// <summary>
+        /// 轉授信主管
+        /// </summary>
+        /// <param name="actionModel">來源資料</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ForwardingSupervisor(ForwardingSupervisorActionModel actionModel)
+        {
+            bool processResult = false;
+
+            try
+            {
+                if (!Request.IsAjaxRequest())
+                {
+                    throw new InvalidOperationException("Not ajax request");
+                }
+                else if (actionModel == null)
+                {
+                    throw new ArgumentNullException(nameof(actionModel));
+                }
+                else if (!CheckUserPermission())
+                {
+                    throw new InvalidOperationException("User does not permissions.");
+                }
+
+                AdjService.ForwardingSupervisor(new ForwardingSupervisor()
+                {
+                    CustomerId = actionModel.CustomerId,
+                    ApplyAmount = actionModel.ApplyAmount,
+                    UseSite = actionModel.UseSite,
+                    Place = actionModel.Place,
+                    AdjustDateStart = actionModel.AdjustDateStart,
+                    AdjustDateEnd = actionModel.AdjustDateEnd,
+                    Reason = actionModel.Reason,
+                    Remark = actionModel.Remark,
+                    ForceAuthenticate = actionModel.ForceAuthenticate,
+                    EstimateResult = actionModel.EstimateResult,
+                    RejectReason = actionModel.RejectReason,
+                    ChiefRemark = actionModel.ChiefRemark,
+                    JcicDate = actionModel.JcicDate,
+                    ProjectAdjustResult = actionModel.ProjectAdjustResult,
+                    ProjectAdjustRejectReason = actionModel.ProjectAdjustRejectReason,
+                    CreditAmount = actionModel.CreditAmount,
+                });
+
+                processResult = true;
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+            }
+
+            return Json(new { ProcessResult = processResult }, "application/json", Encoding.UTF8);
+        }
+
         #endregion
 
 
@@ -300,7 +355,7 @@ namespace ThinkPower.CCLPA.Web.Controllers
         /// <returns></returns>
         private static IEnumerable<AdjustReason> GetActiveAdjustReason()
         {
-            IEnumerable<AdjustReason> adjustReasonList = new ParamterService().GetActiveAdjustReason();
+            IEnumerable<AdjustReason> adjustReasonList = new ParamterService().GetEffectiveAdjustReason();
 
             if ((adjustReasonList == null) || !adjustReasonList.Any())
             {

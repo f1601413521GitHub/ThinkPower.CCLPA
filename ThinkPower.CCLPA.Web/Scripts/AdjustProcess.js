@@ -3,6 +3,7 @@ const urlInfo = {
     query: 'Adjust/Query',
     queryJcic: 'Adjust/QueryJcic',
     verifyAdjustCondition: 'Adjust/VerifyAdjustCondition',
+    forwardingSupervisor: 'Adjust/ForwardingSupervisor',
 };
 
 const scale = 100;
@@ -11,7 +12,8 @@ const scale = 100;
 $(document).ready(function () {
 
     showErrorMessage();
-    toggleButtonShowType();
+    disabledButton();
+    enableButton();
 
     $('#query').on('click', function () {
 
@@ -126,9 +128,36 @@ $(document).ready(function () {
                 }
                 else {
                     verifyAdjustCondition(customerId, jcicQueryDate, adjustReasonCode);
-                    toggleButtonShowType(e.target.id);
+                    disabledButton();
+                    enableButton(e.target.id);
                 }
             }
+        }
+    });
+
+    $('#forwarding-supervisor').on('click', function (e) {
+        if (validateField(e.target.id)) {
+
+            let ajaxDataModel = {
+                CustomerId: GetElementValue('CustomerId', 'value'),
+                ApplyAmount: GetElementValue('AfterAdjustAmount', 'value'),
+                UseSite: GetElementValue('UseLocationSelectListItem :selected', 'value'),
+                Place: ConvertHalfOrFull(GetElementValue('PlaceOfGoingAbroad', 'value'), true),
+                AdjustDateStart: GetElementValue('ValidDateStart', 'value'),
+                AdjustDateEnd: GetElementValue('ValidDateEnd', 'value'),
+                Reason: GetElementValue('AdjustReasonSelectListItem :selected', 'value'),
+                Remark: GetElementValue('AdjustReasonRemark', 'value'),
+                ForceAuthenticate: GetElementValue('ManualAuthorizationSelectListItem :selected', 'value'),
+                EstimateResult: GetElementValue('estimate-result', 'text'),
+                RejectReason: GetElementValue('reject-reason', 'text'),
+                ChiefRemark: GetElementValue('TransferSupervisorReason', 'value'),
+                JcicDate: GetElementValue('JcicQueryDate', 'value'),
+                ProjectAdjustResult: GetElementValue('project-result', 'text'),
+                ProjectAdjustRejectReason: GetElementValue('project-reject-reason', 'text'),
+                CreditAmount: GetElementValue('SwipeAmount', 'value'),
+            };
+
+            forwardingSupervisor(ajaxDataModel);
         }
     });
 
@@ -150,19 +179,22 @@ $(document).ready(function () {
 
             if (reasonEffectData) {
                 if (reasonEffectData.approveAmountMax) {
-                    if (reasonEffectData.approveScaleMax) {
-                        result = (reasonEffectData.approveAmountMax * (reasonEffectData.approveScaleMax / scale));
-                    } else {
-                        result = reasonEffectData.approveAmountMax;
-                    }
-
+                    result = reasonEffectData.approveAmountMax;
 
                 } else if (reasonEffectData.approveAmountMax.toString() === '0') {
                     result = '不設限';
+
+                } else if (reasonEffectData.approveScaleMax) {
+                    let creditLimit = parseInt($('#credit-limit').text().replace(',', ''));
+                    result = (creditLimit * (reasonEffectData.approveScaleMax / scale));
                 }
             }
 
             $('#AdjustmentAmountCeiling').val(result);
+
+        } else {
+            $('#AdjustmentAmountCeiling').val('');
+
         }
 
         toggleReasonCodeShowObject(reasonCode);
@@ -176,6 +208,28 @@ $(document).ready(function () {
         toggleUseLocationShowObject(selectedItemValue);
     });
 });
+
+function GetElementValue(id, type, replace, replaceTo) {
+    let element = $('#' + id);
+    let value = null;
+
+    if (checkElementExist(element)) {
+
+        if (type === 'text') {
+            value = element.text();
+        } else if (type === 'value') {
+            value = element.val();
+        }
+
+        if (replace && replaceTo) {
+            value = value.replace(replace, replaceTo);
+        } else if (replace) {
+            value = value.replace(replace, '');
+        }
+    }
+
+    return value;
+}
 
 function adjustDateFormat(dateTime, format) {
     let tempDateTime = null;
@@ -197,27 +251,32 @@ function showErrorMessage() {
     }
 }
 
-function toggleButtonShowType(event) {
-    $('#adjust-application').prop('disabled', true);
-    $('#approved').prop('disabled', true);
-    $('#refuse').prop('disabled', true);
-    $('#cancel').prop('disabled', true);
+function enableButton(event) {
 
     if ($('#CustomerId').val()) {
         $('#adjust-application').prop('disabled', false);
     }
 
     if (event === 'adjust-application') {
+        $('#forwarding-supervisor').prop('disabled', false);
 
-        if (!$('#ProjectRejectReason').text()) {
+        if (!$('#project-reject-reason').text()) {
             $('#approved').prop('disabled', false);
         }
 
-        if (!$('#ProjectResult').text()) {
+        if (!$('#project-result').text()) {
             $('#refuse').prop('disabled', false);
             $('#cancel').prop('disabled', false);
         }
     }
+}
+
+function disabledButton() {
+    $('#adjust-application').prop('disabled', true);
+    $('#forwarding-supervisor').prop('disabled', true);
+    $('#approved').prop('disabled', true);
+    $('#refuse').prop('disabled', true);
+    $('#cancel').prop('disabled', true);
 }
 
 function queryJcic(customerId) {
@@ -270,15 +329,45 @@ function verifyAdjustCondition(customerId, jcicQueryDate, adjustReasonCode) {
         let infoModel = ajaxResultInfo.info;
 
         if (infoModel.ResponseCode === '00') {
-            $('#EstimateResult').text(infoModel.EstimateResult);
-            $('#RejectReason').text(infoModel.RejectReason);
-            $('#ProjectResult').text(infoModel.ProjectResult);
-            $('#ProjectRejectReason').text(infoModel.ProjectRejectReason);
+            $('#estimate-result').text(infoModel.EstimateResult);
+            $('#reject-reason').text(infoModel.RejectReason);
+            $('#project-result').text(infoModel.ProjectResult);
+            $('#project-reject-reason').text(infoModel.ProjectRejectReason);
 
         } else {
             alert('系統發生錯誤，請於上班時段來電客服中心0800-123-456，造成不便敬請見諒。');
         }
     }
+}
+
+function forwardingSupervisor(ajaxDataModel) {
+
+    let ajaxResultInfo = callAjax('post', urlInfo.forwardingSupervisor, ajaxDataModel);
+
+    if (!ajaxResultInfo.success) {
+
+        alert(ajaxResultInfo.errorMsg);
+
+    } else if (ajaxResultInfo.isJson) {
+        let infoModel = ajaxResultInfo.info;
+        let msg = null;
+
+        if (infoModel.ProcessResult) {
+            msg = '轉授信主管Pending完成。';
+            alert(msg);
+
+            refreshAdjustPage();
+
+        } else {
+            msg = '系統發生錯誤，請於上班時段來電客服中心0800-123-456，造成不便敬請見諒。';
+            alert(msg);
+        }
+    }
+}
+
+function refreshAdjustPage() {
+
+    $('#adjust-index').submit();
 }
 
 function createErrorInfo(errorMsg, element) {
@@ -294,8 +383,8 @@ function createErrorInfo(errorMsg, element) {
     return errorInfo;
 }
 
-function validateField() {
-    let verifyInfoArray = [];
+function validateField(event) {
+    let validateInfoArray = [];
     let errorInfo = null;
 
 
@@ -309,7 +398,7 @@ function validateField() {
 
         if (!reasonCode) {
             errorInfo = createErrorInfo('請輸入「調高原因」。', adjustReasonSelectListItem);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
         }
     }
 
@@ -323,7 +412,7 @@ function validateField() {
 
         if (!value) {
             errorInfo = createErrorInfo('請輸入「調高原因備註」。', adjustReasonRemark);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
 
         } else {
             let valueByte = calculationValueByte(value);
@@ -331,7 +420,7 @@ function validateField() {
 
             if (valueByte > maxlength) {
                 errorInfo = createErrorInfo('「調高原因備註」輸入資料超出限制長度，請重新確認。', adjustReasonRemark);
-                verifyInfoArray.push(errorInfo);
+                validateInfoArray.push(errorInfo);
             }
         }
     }
@@ -349,7 +438,7 @@ function validateField() {
         if (!checkValueLength(value, minlength, maxlength) ||
             !checkNumerical(value)) {
             errorInfo = createErrorInfo('「刷卡金額(不限額度)」必須輸入5~9位數金額。', swipeAmount);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
         }
     }
 
@@ -366,12 +455,12 @@ function validateField() {
         if (!checkValueLength(value, minlength, maxlength) ||
             !checkNumerical(value)) {
             errorInfo = createErrorInfo('「臨調後額度」必須輸入5~9位數金額。', afterAdjustAmount);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
 
         } else if (checkInputFieldCanUse(swipeAmount) &&
             value < swipeAmount.val()) {
             errorInfo = createErrorInfo('「臨調後額度」必須大於等於「刷卡金額(不含額度)」。', afterAdjustAmount);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
 
         } else {
             let creditLimit = $('#credit-limit');
@@ -381,7 +470,7 @@ function validateField() {
 
                 if (value < creditLimitValue) {
                     errorInfo = createErrorInfo('「臨調後額度」必須大於等於「目前信用額度」。', afterAdjustAmount);
-                    verifyInfoArray.push(errorInfo);
+                    validateInfoArray.push(errorInfo);
                 }
             }
         }
@@ -397,7 +486,7 @@ function validateField() {
 
         if (!value) {
             errorInfo = createErrorInfo('請輸入「有效日期(起)」。', validDateStart);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
 
         } else {
             let valueDate = new Date(value);
@@ -407,11 +496,11 @@ function validateField() {
 
             if (valueDate === 'Invalid Date') {
                 errorInfo = createErrorInfo('「有效日期(起)」請輸入正常日期。', validDateStart);
-                verifyInfoArray.push(errorInfo);
+                validateInfoArray.push(errorInfo);
 
             } else if (valueDate < currentDate) {
                 errorInfo = createErrorInfo('「有效日期(起)」不得小於系統日期。', validDateStart);
-                verifyInfoArray.push(errorInfo);
+                validateInfoArray.push(errorInfo);
             }
         }
     }
@@ -426,14 +515,14 @@ function validateField() {
 
         if (!value) {
             errorInfo = createErrorInfo('請輸入「有效日期(迄)」。', validDateEnd);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
 
         } else {
             let valueDate = new Date(value);
 
             if (valueDate === 'Invalid Date') {
                 errorInfo = createErrorInfo('「有效日期(迄)」請輸入正常日期。', validDateEnd);
-                verifyInfoArray.push(errorInfo);
+                validateInfoArray.push(errorInfo);
 
             } else if (checkInputFieldCanUse(validDateStart)) {
 
@@ -444,7 +533,7 @@ function validateField() {
                     startDate !== 'Invalid Date' &&
                     startDate > valueDate) {
                     errorInfo = createErrorInfo('「有效日期(起)」不可大於「有效日期(迄)」。', validDateEnd);
-                    verifyInfoArray.push(errorInfo);
+                    validateInfoArray.push(errorInfo);
                 }
             }
         }
@@ -461,7 +550,7 @@ function validateField() {
 
         if (!selectedItemValue) {
             errorInfo = createErrorInfo('請輸入「是否可人工授權」。', manualAuthorizationSelectListItem);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
         }
     }
 
@@ -476,7 +565,7 @@ function validateField() {
 
         if (!selectedItemValue) {
             errorInfo = createErrorInfo('請輸入「使用地點」。', useLocationSelectListItem);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
         }
     }
 
@@ -493,24 +582,46 @@ function validateField() {
 
         if (!value) {
             errorInfo = createErrorInfo('請輸入「出國地點」。', placeOfGoingAbroad);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
 
         } else if (valueByte > maxlength) {
             errorInfo = createErrorInfo('「出國地點」輸入資料超出限制長度，請重新確認。', placeOfGoingAbroad);
-            verifyInfoArray.push(errorInfo);
+            validateInfoArray.push(errorInfo);
         }
     }
 
 
 
-    $(verifyInfoArray).each(function (i, e) {
+    if (event === 'forwarding-supervisor') {
+        let transferSupervisorReason = $('#TransferSupervisorReason');
+
+        if (checkInputFieldCanUse(transferSupervisorReason)) {
+            let value = transferSupervisorReason.val();
+            let fullValue = ConvertHalfOrFull(value, true);
+            let valueByte = calculationValueByte(fullValue);
+            let maxlength = transferSupervisorReason.prop('maxlength');
+
+            if (!value) {
+                errorInfo = createErrorInfo('「轉授信主管原因」必須輸入。', transferSupervisorReason);
+                validateInfoArray.push(errorInfo);
+
+            } else if (valueByte > maxlength) {
+                errorInfo = createErrorInfo('「轉授信主管原因」輸入資料超出限制長度，請重新確認。', transferSupervisorReason);
+                validateInfoArray.push(errorInfo);
+            }
+        }
+    }
+
+
+
+    $(validateInfoArray).each(function (i, e) {
 
         alert(e.errorMessage);
         e.htmlElement.focus();
         return false;
     });
 
-    return (verifyInfoArray.length === 0);
+    return (validateInfoArray.length === 0);
 }
 
 function calculationValueByte(value) {

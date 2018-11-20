@@ -94,7 +94,7 @@ namespace ThinkPower.CCLPA.Domain.Service
         /// 取得目前生效的調整原因
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<AdjustReason> GetActiveAdjustReason()
+        public IEnumerable<AdjustReason> GetEffectiveAdjustReason()
         {
             IEnumerable<AdjustReasonCode> adjustReasonCodeList = GetAdjustReasonCode();
 
